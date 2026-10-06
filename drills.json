@@ -1,0 +1,112 @@
+{
+  "title": "Hockey Skills & Drills",
+  "tags": [
+    { "id": "full-ice", "label": "Full ice" },
+    { "id": "half-ice", "label": "Half ice" },
+    { "id": "zone-entry", "label": "Zone entry" },
+    { "id": "passing", "label": "Passing" },
+    { "id": "shooting", "label": "Shooting" },
+    { "id": "defence", "label": "Defence" }
+  ],
+  "drills": [
+    {
+      "slug": "follow-the-pass",
+      "title": "Follow the Pass",
+      "subtitle": "Pass, follow your pass to that spot. Catch it at cone 3, drive and shoot.",
+      "blurb": "Full ice, two-sided. Lines along each goal line; the front player at the boards passes first. Catch at cone 3, drive, shoot, and join the other line.",
+      "diagramAlt": "Full-ice diagram of Follow the Pass. Lines sit on both goal lines, three cones mark each side, and the flow ends with a shot before joining the far line.",
+      "tags": ["full-ice", "passing", "shooting"],
+      "excalidrawUrl": "https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ",
+      "coachingPoints": [
+        "Full ice and two-sided. Both ends run at the same time.",
+        "The front player starts at the boards and makes the first pass.",
+        "Three cones per side: near blue line at centre, boards at the red line, far blue line at centre.",
+        "Catch the puck at cone 3, drive the net, and shoot. Then join the line at the other end."
+      ],
+      "steps": [
+        "Set a line along each goal line. The first player in each line starts on the boards with a puck.",
+        "Place three cones on each side of the rink: centre ice at the near blue line, on the boards at the red line, and centre ice at the far blue line.",
+        "The front player passes to the next player in line, then follows that pass along the cones.",
+        "Each player who receives the puck passes it on and follows their own pass. Keep the puck and the skaters moving up the ice.",
+        "The player who catches the puck at cone 3 (far blue line, centre) drives the net and shoots.",
+        "After the shot, that player joins the line at the far end. The same pattern is already coming back the other way."
+      ],
+      "related": []
+    },
+    {
+      "slug": "low-to-high-shot",
+      "title": "Low-to-High: D Shot",
+      "subtitle": "Carry in, drive to the dot, curl, pass up to the D. D shoots.",
+      "blurb": "Half-ice zone entry. Carry in, drive to the dot, curl toward the boards, and pass up to the D. The D shoots and the forward drives the net.",
+      "diagramAlt": "Half-ice diagram of Low-to-High D Shot. The forward curls at the dot, passes up the wall to the defence, the defence shoots, and the forward drives the net.",
+      "tags": ["half-ice", "zone-entry", "passing", "shooting", "defence"],
+      "series": "Low-to-high",
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Half-ice zone entry with one defence inside the blue line.",
+        "Carry in with speed, drive to the faceoff dot, then curl toward the boards.",
+        "The pass is low-to-high: from the curl, up the wall, onto the defence.",
+        "Defence shoots. The forward drives the net front, then returns to the line."
+      ],
+      "steps": [
+        "Forwards line up just outside the blue line with pucks. One defence stands inside the blue line, on the boards side of the entry.",
+        "Carry the puck over the blue line and drive toward the faceoff dot.",
+        "At the dot, curl toward the boards so you are looking back up the wall.",
+        "Pass low-to-high, up the boards, to the defence.",
+        "The defence catches and shoots. Drive to the front of the net for a tip or a rebound.",
+        "Leave the net and return to the back of the line. The next forward goes."
+      ],
+      "related": ["low-to-high-give-and-go", "low-to-high-d-to-d"]
+    },
+    {
+      "slug": "low-to-high-give-and-go",
+      "title": "Low-to-High: Give-and-Go",
+      "subtitle": "Carry in, drive to the dot, curl, pass up to the D. Give-and-go.",
+      "blurb": "Same zone entry. After the low-to-high pass, the D gives it back to the forward cutting the slot, and the forward shoots.",
+      "diagramAlt": "Half-ice diagram of the low-to-high give-and-go. The forward passes up to the defence, cuts to the slot, takes the return pass, and shoots.",
+      "tags": ["half-ice", "zone-entry", "passing", "shooting", "defence"],
+      "series": "Low-to-high",
+      "excalidrawUrl": "https://excalidraw.com/#json=PKA09mlyorcRyYW7XvmM5,sz7tsIEBbCT4iNpaD84QZA",
+      "coachingPoints": [
+        "Use the same entry as D Shot: carry, dot, curl, pass up the wall.",
+        "The forward leaves as the pass goes. The cut to the slot starts with the pass.",
+        "Defence returns the puck. One touch back if it is there.",
+        "The forward shoots from the slot, then returns to the line."
+      ],
+      "steps": [
+        "Set it up like Low-to-High: D Shot. Forwards outside the blue line, one defence inside on the strong-side wall.",
+        "Carry in, drive to the faceoff dot, and curl toward the boards.",
+        "Pass low-to-high to the defence.",
+        "As soon as the pass leaves your stick, cut to the slot.",
+        "Defence passes the puck back to the forward on that cut.",
+        "The forward shoots, then returns to the back of the line."
+      ],
+      "related": ["low-to-high-shot", "low-to-high-d-to-d"]
+    },
+    {
+      "slug": "low-to-high-d-to-d",
+      "title": "Low-to-High: D-to-D",
+      "subtitle": "Carry in, drive to the dot, curl, pass up to the D. D-to-D, shot.",
+      "blurb": "Same zone entry. The bottom D passes across to the top D, the top D shoots, and the forward screens.",
+      "diagramAlt": "Half-ice diagram of low-to-high D-to-D. The forward passes to the bottom defence, the puck goes across to the top defence for a shot, and the forward screens.",
+      "tags": ["half-ice", "zone-entry", "passing", "shooting", "defence"],
+      "series": "Low-to-high",
+      "excalidrawUrl": "https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA",
+      "coachingPoints": [
+        "Same forward entry, with two defence on the ice.",
+        "Bottom D is on the strong-side wall and moves the puck. Top D is across the blue line and shoots.",
+        "The D-to-D pass stays up near the blue line, firm and flat.",
+        "The forward screens the goalie, stick on the ice, then clears the front."
+      ],
+      "steps": [
+        "Forwards line up outside the blue line with pucks. Bottom defence stands inside the blue line on the boards side of the entry. Top defence stands on the far side of the blue line.",
+        "Carry in, drive to the faceoff dot, and curl toward the boards.",
+        "Pass low-to-high to the bottom defence.",
+        "Bottom defence passes across the blue line to the top defence.",
+        "Top defence shoots. The forward drives the net and screens the goalie.",
+        "Clear the front of the net and return to the back of the line."
+      ],
+      "related": ["low-to-high-shot", "low-to-high-give-and-go"]
+    }
+  ]
+}
