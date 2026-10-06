@@ -284,8 +284,8 @@ main {
 }
 
 .filter[aria-pressed="true"] {
-  background: var(--navy);
-  border-color: var(--navy);
+  background: #1f4e79;
+  border-color: #1f4e79;
   color: #f7fafc;
 }
 
@@ -419,7 +419,8 @@ main {
 }
 
 .video-frame {
-  margin: 0;
+  margin: 0 auto;
+  max-width: 100%;
   background: var(--frame);
   border-radius: var(--radius);
   overflow: hidden;
@@ -428,11 +429,10 @@ main {
 .drill-video {
   display: block;
   width: 100%;
-  max-height: min(72vh, 740px);
   height: auto;
-  margin: 0 auto;
-  background: var(--frame);
+  max-height: min(72vh, 740px);
   object-fit: contain;
+  background: #000;
 }
 
 .video-frame figcaption,

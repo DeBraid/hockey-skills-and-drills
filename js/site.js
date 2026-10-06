@@ -6,6 +6,26 @@
     });
   }
 
+  function fitVideos() {
+    document.querySelectorAll(".drill-video").forEach(function (video) {
+      if (!video.videoWidth || !video.videoHeight) return;
+      var frame = video.closest(".video-frame");
+      if (!frame) return;
+      var column = frame.parentElement.clientWidth;
+      var maxHeight = Math.min(window.innerHeight * 0.72, 740);
+      var width = Math.min(column, (maxHeight * video.videoWidth) / video.videoHeight);
+      frame.style.width = Math.max(1, Math.round(width)) + "px";
+      video.style.aspectRatio = video.videoWidth + " / " + video.videoHeight;
+      video.style.maxHeight = "none";
+    });
+  }
+
+  document.querySelectorAll(".drill-video").forEach(function (video) {
+    if (video.readyState >= 1) fitVideos();
+    video.addEventListener("loadedmetadata", fitVideos);
+  });
+  window.addEventListener("resize", fitVideos);
+
   var buttons = document.querySelectorAll("[data-filter]");
   if (!buttons.length) return;
 
