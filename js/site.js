@@ -6,23 +6,41 @@
     });
   }
 
+  function fitFrame(media, width, height) {
+    if (!width || !height) return;
+    var frame = media.closest(".video-frame");
+    if (!frame) return;
+    var column = frame.parentElement.clientWidth;
+    var maxHeight = Math.min(window.innerHeight * 0.72, 740);
+    var fitted = Math.min(column, (maxHeight * width) / height);
+    frame.style.width = Math.max(1, Math.round(fitted)) + "px";
+    media.style.aspectRatio = width + " / " + height;
+    media.style.maxHeight = "none";
+  }
+
   function fitVideos() {
     document.querySelectorAll(".drill-video").forEach(function (video) {
-      if (!video.videoWidth || !video.videoHeight) return;
-      var frame = video.closest(".video-frame");
-      if (!frame) return;
-      var column = frame.parentElement.clientWidth;
-      var maxHeight = Math.min(window.innerHeight * 0.72, 740);
-      var width = Math.min(column, (maxHeight * video.videoWidth) / video.videoHeight);
-      frame.style.width = Math.max(1, Math.round(width)) + "px";
-      video.style.aspectRatio = video.videoWidth + " / " + video.videoHeight;
-      video.style.maxHeight = "none";
+      fitFrame(video, video.videoWidth, video.videoHeight);
+    });
+    document.querySelectorAll(".drill-gif").forEach(function (img) {
+      fitFrame(img, img.naturalWidth, img.naturalHeight);
     });
   }
 
   document.querySelectorAll(".drill-video").forEach(function (video) {
     if (video.readyState >= 1) fitVideos();
     video.addEventListener("loadedmetadata", fitVideos);
+  });
+  document.querySelectorAll(".drill-gif").forEach(function (img) {
+    var still = img.getAttribute("data-still");
+    function showStill() {
+      if (!still || img.getAttribute("src") === still) return;
+      img.src = still;
+    }
+    img.addEventListener("error", showStill);
+    if (reduceMotion) showStill();
+    if (img.complete && img.naturalWidth) fitVideos();
+    img.addEventListener("load", fitVideos);
   });
   window.addEventListener("resize", fitVideos);
 

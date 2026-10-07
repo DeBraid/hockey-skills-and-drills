@@ -1,12 +1,12 @@
 # Hockey Skills & Drills
 
-A coaching library of on-ice drills: one full-ice passing circuit and three half-ice low-to-high entries. Each drill has a rink diagram, a short silent MP4, a GIF, the Excalidraw source, and the steps in plain language.
+A coaching library of on-ice drills. Each drill has a rink diagram, an animation (a silent MP4 or a GIF), the Excalidraw source, and the steps in plain language.
 
 ## How to read it
 
-On GitHub, open a drill note below. The diagram, the steps, and the file links render on github.com. The MP4 link opens GitHub's video player.
+On GitHub, open a drill note below. The diagram, the steps, and the file links render on github.com. When a drill has an MP4, that link opens GitHub's video player. When it does not, the note shows the GIF.
 
-The phone-friendly pages live in [`index.html`](index.html). Each one embeds the MP4, uses the PNG as the poster, and keeps the GIF as a download. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser. Send the MP4 when you share a drill on WhatsApp.
+The phone-friendly pages live in [`index.html`](index.html). A page with an MP4 plays that video and uses the PNG as the poster. A page without an MP4 shows the GIF inline, with the PNG as the fallback still and the home-page thumbnail. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser. Send the MP4 when a drill has one.
 
 ## GitHub Pages
 

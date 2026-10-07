@@ -1,12 +1,12 @@
 # Hockey Skills & Drills
 
-A coaching library of on-ice drills: one full-ice passing circuit and three half-ice low-to-high entries. Each drill has a rink diagram, a short silent MP4, a GIF, the Excalidraw source, and the steps in plain language.
+A coaching library of on-ice drills. Each drill has a rink diagram, an animation (a silent MP4 or a GIF), the Excalidraw source, and the steps in plain language.
 
 ## How to read it
 
-On GitHub, open a drill note below. The diagram, the steps, and the file links render on github.com. The MP4 link opens GitHub's video player.
+On GitHub, open a drill note below. The diagram, the steps, and the file links render on github.com. When a drill has an MP4, that link opens GitHub's video player. When it does not, the note shows the GIF.
 
-The phone-friendly pages live in [`index.html`](index.html). Each one embeds the MP4, uses the PNG as the poster, and keeps the GIF as a download. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser. Send the MP4 when you share a drill on WhatsApp.
+The phone-friendly pages live in [`index.html`](index.html). A page with an MP4 plays that video and uses the PNG as the poster. A page without an MP4 shows the GIF inline, with the PNG as the fallback still and the home-page thumbnail. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser. Send the MP4 when a drill has one.
 
 ## GitHub Pages
 
@@ -45,6 +45,46 @@ Same zone entry. The bottom D passes across to the top D, the top D shoots, and 
 **Tags:** `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`
 
 [Note](drills/low-to-high-d-to-d.md) · [Video page](drills/low-to-high-d-to-d/index.html) · [MP4](media/low-to-high-d-to-d/low-to-high-d-to-d.mp4) · [GIF](media/low-to-high-d-to-d/low-to-high-d-to-d.gif) · [PNG](media/low-to-high-d-to-d/low-to-high-d-to-d.png) · [Excalidraw](media/low-to-high-d-to-d/low-to-high-d-to-d.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA)
+
+### [1 Up / 1 Down](drills/one-up-one-down.md)
+
+Corner 1v1. On 'Go' the D touches the goal line and the F touches the blue line. The coach puts the puck in, the F attacks for a shot and a rebound, and the D gaps up and angles.
+
+**Tags:** `defence`, `small-area-game`
+
+[Note](drills/one-up-one-down.md) · [Drill page](drills/one-up-one-down/index.html) · [GIF](media/one-up-one-down/one-up-one-down.gif) · [PNG](media/one-up-one-down/one-up-one-down.png) · [Excalidraw](media/one-up-one-down/one-up-one-down.excalidraw)
+
+### [Olympic Breakout Pass](drills/olympic-breakout-pass.md)
+
+Continuous groups of three in one zone. F passes low to X, pivots on the wall, takes it back, one-touches across to O, and curls into the slot for a one-timer from X.
+
+**Tags:** `passing`, `shooting`, `breakout`
+
+[Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/index.html) · [GIF](media/olympic-breakout-pass/olympic-breakout-pass.gif) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
+
+### [Zone Exits: Bounce Pass](drills/zone-exit-bounce-pass.md)
+
+Defensive-zone exits from a line in each corner. Start with a self-pass off the boards around a cone, swap the cone for a coach as a soft D, then finish with a bounce stretch pass to a teammate past the D holding the line.
+
+**Tags:** `passing`, `breakout`
+
+[Note](drills/zone-exit-bounce-pass.md) · [Drill page](drills/zone-exit-bounce-pass/index.html) · [GIF](media/zone-exit-bounce-pass/zone-exit-bounce-pass.gif) · [PNG](media/zone-exit-bounce-pass/zone-exit-bounce-pass.png) · [Excalidraw](media/zone-exit-bounce-pass/zone-exit-bounce-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ)
+
+### [Tip-and-Dig Shooting](drills/tip-and-dig-shooting.md)
+
+Zone shooting with two nets: an empty net at the hash marks and the regular net with a goalie. Tip the point shot into the empty net, dig it out, and shoot on the goalie.
+
+**Tags:** `shooting`
+
+[Note](drills/tip-and-dig-shooting.md) · [Drill page](drills/tip-and-dig-shooting/index.html) · [GIF](media/tip-and-dig-shooting/tip-and-dig-shooting.gif) · [PNG](media/tip-and-dig-shooting/tip-and-dig-shooting.png) · [Excalidraw](media/tip-and-dig-shooting/tip-and-dig-shooting.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA)
+
+### [4-Lane Warm-up](drills/four-lane-warmup.md)
+
+Full-ice warm-up. Cones split the ice into four lanes and one line starts in the corner. Skate lane 1 on inside edges, lane 2 with crossovers, then carry a puck two-handed in lane 3 and one-handed in lane 4, with a shot at the end of each.
+
+**Tags:** `full-ice`, `skating`, `shooting`
+
+[Note](drills/four-lane-warmup.md) · [Drill page](drills/four-lane-warmup/index.html) · [GIF](media/four-lane-warmup/four-lane-warmup.gif) · [PNG](media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
 
 
 ## Add a drill

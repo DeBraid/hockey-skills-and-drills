@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-MEDIA_EXTS = ("png", "gif", "mp4", "excalidraw")
+REQUIRED_MEDIA = ("png", "gif", "excalidraw")
 LINK_RE = re.compile(r"(?:href|src|poster)=\"([^\"]+)\"|\[[^\]]*\]\(([^)\s]+)\)")
 SERIES_NOTE = (
     "Same entry for every low-to-high drill: carry in, drive to the dot, "
@@ -30,6 +30,14 @@ def media_name(slug: str, ext: str) -> str:
 
 def media_rel(slug: str, ext: str) -> str:
     return f"media/{slug}/{media_name(slug, ext)}"
+
+
+def media_path(slug: str, ext: str) -> Path:
+    return ROOT / "media" / slug / media_name(slug, ext)
+
+
+def has_mp4(drill: dict) -> bool:
+    return media_path(drill["slug"], "mp4").is_file()
 
 
 def load() -> dict:
@@ -84,8 +92,8 @@ def validate(data: dict) -> None:
         url = drill.get("excalidrawUrl", None)
         if url is not None and (not isinstance(url, str) or not url.startswith("https://excalidraw.com/")):
             raise SystemExit(f"{slug} excalidrawUrl must be an excalidraw.com link or null")
-        for ext in MEDIA_EXTS:
-            path = ROOT / "media" / slug / media_name(slug, ext)
+        for ext in REQUIRED_MEDIA:
+            path = media_path(slug, ext)
             if not path.is_file():
                 raise SystemExit(f"Missing media file: {path.relative_to(ROOT)}")
     if len(slugs) != len(set(slugs)):
@@ -105,6 +113,13 @@ def png_size(path: Path) -> tuple[int, int]:
     if data[:8] != b"\x89PNG\r\n\x1a\n":
         raise SystemExit(f"Not a PNG: {path}")
     return struct.unpack(">II", data[16:24])
+
+
+def gif_size(path: Path) -> tuple[int, int]:
+    data = path.read_bytes()[:10]
+    if data[:6] not in (b"GIF87a", b"GIF89a"):
+        raise SystemExit(f"Not a GIF: {path}")
+    return struct.unpack("<HH", data[6:10])
 
 
 def tag_labels(data: dict) -> dict[str, str]:
@@ -186,7 +201,7 @@ def write_index(data: dict, labels: dict[str, str]) -> None:
     <section class="hero">
       <p class="kicker">On-ice coaching</p>
       <h1>{esc(data['title'])}</h1>
-      <p class="lede">Diagrams, silent MP4s, and bench-side steps for full-ice work and half-ice low-to-high entries. Each drill page plays the MP4 and uses the PNG as the poster.</p>
+      <p class="lede">Diagrams, animations, and bench-side steps. A drill page plays the silent MP4 when the drill has one, and shows the GIF when it does not. The PNG is the card thumbnail and the still diagram.</p>
     </section>
     <div class="toolbar">
       <p class="drill-count" id="drill-count">{count} drills</p>
@@ -208,10 +223,11 @@ def download_links(drill: dict, prefix: str) -> str:
     slug = drill["slug"]
     items = [
         ("PNG diagram", "png", False),
-        ("GIF animation", "gif", False),
-        ("MP4 video", "mp4", True),
-        ("Excalidraw file", "excalidraw", False),
+        ("GIF animation", "gif", not has_mp4(drill)),
     ]
+    if has_mp4(drill):
+        items.append(("MP4 video", "mp4", True))
+    items.append(("Excalidraw file", "excalidraw", False))
     parts = []
     for label, ext, primary in items:
         href = f"{prefix}{media_rel(slug, ext)}"
@@ -246,9 +262,10 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
             f'        <li><a href="../{other}/index.html">{esc(by_slug[other]["title"])}</a></li>'
             for other in drill["related"]
         )
+        related_heading = "Same series" if drill.get("series") else "Related drills"
         related_html = f"""
     <section class="panel">
-      <h2>Same series</h2>
+      <h2>{related_heading}</h2>
       <ul class="related">
 {links}
       </ul>
@@ -256,18 +273,11 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     edit_note = ""
     if not drill.get("excalidrawUrl"):
         edit_note = '\n      <p class="file-note">Open the Excalidraw file in Excalidraw to change the diagram.</p>'
-    video_src = f"{prefix}{media_rel(slug, 'mp4')}"
     poster = f"{prefix}{media_rel(slug, 'png')}"
     gif = f"{prefix}{media_rel(slug, 'gif')}"
-    body = f"""  <main id="content" class="wrap-read">
-    <p class="back"><a href="{prefix}index.html">All drills</a></p>
-    <header class="drill-head">{kicker}
-      <h1>{esc(drill['title'])}</h1>
-      <p class="lede">{esc(drill['subtitle'])}</p>
-      {tag_list(drill, labels)}{series}
-    </header>
-
-    <section class="panel" aria-labelledby="watch-heading">
+    if has_mp4(drill):
+        video_src = f"{prefix}{media_rel(slug, 'mp4')}"
+        watch = f"""    <section class="panel" aria-labelledby="watch-heading">
       <h2 id="watch-heading">Watch</h2>
       <figure class="video-frame">
         <video class="drill-video" controls loop playsinline preload="metadata" poster="{poster}" aria-label="Silent animation of {esc(drill['title'])}">
@@ -276,7 +286,25 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
         </video>
         <figcaption>Silent MP4. The PNG is the poster until the video plays, and it is the still diagram below. The GIF stays a download.</figcaption>
       </figure>
-    </section>
+    </section>"""
+    else:
+        gif_width, gif_height = gif_size(media_path(slug, "gif"))
+        watch = f"""    <section class="panel" aria-labelledby="watch-heading">
+      <h2 id="watch-heading">Watch</h2>
+      <figure class="video-frame">
+        <img class="drill-gif" src="{gif}" width="{gif_width}" height="{gif_height}" alt="Animation of {esc(drill['title'])}" data-still="{poster}">
+        <figcaption>GIF animation. The PNG is the still if this image cannot play, and it is the diagram below and the home-page thumbnail.</figcaption>
+      </figure>
+    </section>"""
+    body = f"""  <main id="content" class="wrap-read">
+    <p class="back"><a href="{prefix}index.html">All drills</a></p>
+    <header class="drill-head">{kicker}
+      <h1>{esc(drill['title'])}</h1>
+      <p class="lede">{esc(drill['subtitle'])}</p>
+      {tag_list(drill, labels)}{series}
+    </header>
+
+{watch}
 
     <section class="panel" aria-labelledby="diagram-heading">
       <h2 id="diagram-heading">Diagram</h2>
@@ -315,16 +343,37 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
 
 def md_links(drill: dict, root_prefix: str, page_prefix: str) -> str:
     slug = drill["slug"]
-    parts = [
-        f"[Video page]({page_prefix}{slug}/index.html)",
-        f"[MP4]({root_prefix}{media_rel(slug, 'mp4')})",
-        f"[GIF]({root_prefix}{media_rel(slug, 'gif')})",
-        f"[PNG]({root_prefix}{media_rel(slug, 'png')})",
-        f"[Excalidraw]({root_prefix}{media_rel(slug, 'excalidraw')})",
-    ]
+    page_label = "Video page" if has_mp4(drill) else "Drill page"
+    parts = [f"[{page_label}]({page_prefix}{slug}/index.html)"]
+    if has_mp4(drill):
+        parts.append(f"[MP4]({root_prefix}{media_rel(slug, 'mp4')})")
+    parts.extend(
+        [
+            f"[GIF]({root_prefix}{media_rel(slug, 'gif')})",
+            f"[PNG]({root_prefix}{media_rel(slug, 'png')})",
+            f"[Excalidraw]({root_prefix}{media_rel(slug, 'excalidraw')})",
+        ]
+    )
     if drill.get("excalidrawUrl"):
         parts.append(f"[Edit in Excalidraw]({drill['excalidrawUrl']})")
     return " · ".join(parts)
+
+
+def media_block(drill: dict) -> str:
+    slug = drill["slug"]
+    png = f"![{drill['diagramAlt']}](../{media_rel(slug, 'png')})"
+    if has_mp4(drill):
+        return (
+            f"{png}\n\n"
+            "The video page embeds the MP4 and uses this PNG as the poster. "
+            "On GitHub, the MP4 link above opens the video. The GIF is the downloadable animation."
+        )
+    gif = f"![Animation of {drill['title']}](../{media_rel(slug, 'gif')})"
+    return (
+        f"{png}\n\n"
+        f"{gif}\n\n"
+        "The drill page shows this GIF. The PNG is the still diagram and the home-page thumbnail."
+    )
 
 
 def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]) -> None:
@@ -338,7 +387,8 @@ def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]
     related = ""
     if drill.get("related"):
         lines = "\n".join(f"- [{by_slug[other]['title']}]({other}.md)" for other in drill["related"])
-        related = f"\n## Same series\n\n{lines}\n"
+        related_heading = "Same series" if drill.get("series") else "Related drills"
+        related = f"\n## {related_heading}\n\n{lines}\n"
     edit_note = ""
     if not drill.get("excalidrawUrl"):
         edit_note = "\nOpen the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.\n"
@@ -350,9 +400,7 @@ def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]
 {series}
 [All drills](../README.md) · {md_links(drill, '../', '')}
 
-![{drill['diagramAlt']}](../{media_rel(slug, 'png')})
-
-The video page embeds the MP4 and uses this PNG as the poster. On GitHub, the MP4 link above opens the video. The GIF is the downloadable animation.
+{media_block(drill)}
 
 ## Coaching points
 
@@ -414,19 +462,34 @@ def check_output(drills: list[dict]) -> None:
         page = (ROOT / "drills" / drill["slug"] / "index.html").read_text(encoding="utf-8")
         slug = drill["slug"]
         poster = f"../../media/{slug}/{slug}.png"
-        video = f"../../media/{slug}/{slug}.mp4"
-        if f'poster="{poster}"' not in page or f'src="{video}"' not in page:
-            raise SystemExit(f"{slug} page is missing the MP4 or PNG poster")
-        if "playsinline" not in page or "controls" not in page:
-            raise SystemExit(f"{slug} video is missing controls or playsinline")
+        gif = f"../../media/{slug}/{slug}.gif"
+        if poster not in page:
+            raise SystemExit(f"{slug} page is missing the PNG")
         url = drill.get("excalidrawUrl")
         if url and url not in page:
             raise SystemExit(f"{slug} is missing its Excalidraw link")
         if not url and "excalidraw.com/#json" in page:
             raise SystemExit(f"{slug} should not link a public Excalidraw share")
         note = (ROOT / "drills" / f"{slug}.md").read_text(encoding="utf-8")
-        if f"../media/{slug}/{slug}.png" not in note or f"../media/{slug}/{slug}.mp4" not in note:
-            raise SystemExit(f"{slug} markdown is missing media links")
+        if f"../media/{slug}/{slug}.png" not in note:
+            raise SystemExit(f"{slug} markdown is missing the PNG")
+        if has_mp4(drill):
+            video = f"../../media/{slug}/{slug}.mp4"
+            if f'poster="{poster}"' not in page or f'src="{video}"' not in page:
+                raise SystemExit(f"{slug} page is missing the MP4 or PNG poster")
+            if "playsinline" not in page or "controls" not in page:
+                raise SystemExit(f"{slug} video is missing controls or playsinline")
+            if f"../media/{slug}/{slug}.mp4" not in note:
+                raise SystemExit(f"{slug} markdown is missing the MP4 link")
+        else:
+            if "<video" in page or f"{slug}.mp4" in page or f"{slug}.mp4" in note:
+                raise SystemExit(f"{slug} should not render an MP4 or video player")
+            if f'src="{gif}"' not in page or 'class="drill-gif"' not in page:
+                raise SystemExit(f"{slug} page is missing the inline GIF")
+            if f'data-still="{poster}"' not in page:
+                raise SystemExit(f"{slug} page is missing the PNG fallback")
+            if f"![Animation of {drill['title']}](../{media_rel(slug, 'gif')})" not in note:
+                raise SystemExit(f"{slug} markdown is missing the inline GIF")
 
 
 def main() -> None:
