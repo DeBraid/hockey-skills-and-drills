@@ -10,8 +10,9 @@
       return;
     }
     if (!doc || !doc.documentElement) return;
-    var needed = doc.documentElement.scrollHeight;
-    if (doc.body) needed = Math.max(needed, doc.body.scrollHeight);
+    var target = doc.querySelector("main") || doc.body || doc.documentElement;
+    var box = target.getBoundingClientRect();
+    var needed = Math.ceil(box.bottom);
     if (needed > 0 && Math.abs(needed - frame.clientHeight) > 1) {
       frame.style.height = needed + "px";
     }
