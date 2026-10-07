@@ -131,17 +131,17 @@ def page_shell(title: str, prefix: str, body: str) -> str:
       <a class="brand" href="{prefix}index.html">
         <span class="mark" aria-hidden="true"><span></span></span>
         <span class="brand-text">
-          <span class="brand-kicker">Private library</span>
+          <span class="brand-kicker">Coaching library</span>
           <span class="brand-name">Hockey Skills &amp; Drills</span>
         </span>
       </a>
-      <p class="header-note">Invite collaborators to share</p>
+      <p class="header-note">Fork or star the repo</p>
     </div>
   </header>
 {body}
   <footer class="site-footer">
     <div class="wrap">
-      <p>Private coaching library. Share it by inviting collaborators to the repository.</p>
+      <p>Coaching library. Fork or star the repository.</p>
       <p><a href="{prefix}ADDING-A-DRILL.md">Add a drill</a></p>
     </div>
   </footer>

@@ -319,6 +319,7 @@ main {
 }
 
 .card-media {
+  display: block;
   position: relative;
   aspect-ratio: 4 / 3;
   background: var(--ice);

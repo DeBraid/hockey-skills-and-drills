@@ -1,8 +1,8 @@
 # Hockey Skills & Drills
 
-A private coaching library of on-ice drills: one full-ice passing circuit and three half-ice low-to-high entries. Each drill has a rink diagram, a short silent MP4, a GIF, the Excalidraw source, and the steps in plain language.
+A coaching library of on-ice drills: one full-ice passing circuit and three half-ice low-to-high entries. Each drill has a rink diagram, a short silent MP4, a GIF, the Excalidraw source, and the steps in plain language.
 
-This repository is private. Share it by inviting collaborators.
+Fork or star the repository to keep a copy or follow updates.
 
 ## How to read it
 
@@ -10,9 +10,9 @@ On GitHub, open a drill note below. The diagram, the steps, and the file links r
 
 The phone-friendly pages live in [`index.html`](index.html). Each one embeds the MP4, uses the PNG as the poster, and keeps the GIF as a download. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser. Send the MP4 when you share a drill on WhatsApp.
 
-## If the repo becomes public
+## GitHub Pages
 
-GitHub Pages can serve this site from the **main** branch, **root** folder. [`index.html`](index.html) is the home page. [`.nojekyll`](.nojekyll) is already in the root so Pages serves the HTML, CSS, and media as files.
+Once GitHub Pages is enabled from the **main** branch, **root** folder, the public site will be [https://debraid.github.io/hockey-skills-and-drills/](https://debraid.github.io/hockey-skills-and-drills/). [`index.html`](index.html) is the home page. [`.nojekyll`](.nojekyll) is already in the root so Pages serves the HTML, CSS, and media as files.
 
 ## Drills
 
