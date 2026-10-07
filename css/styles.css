@@ -420,7 +420,8 @@ main {
 }
 
 .anim-frame {
-  --chrome: 4.75rem;
+  --chrome: 12rem;
+  --legend: 8rem;
   container-type: inline-size;
   width: min(100%, calc((min(82vh, 880px) - var(--chrome)) * var(--anim-w) / var(--anim-h)));
   margin: 0 auto;
@@ -434,7 +435,7 @@ main {
 .drill-anim {
   display: block;
   width: 100%;
-  height: calc((100cqi - 12px) * var(--anim-h) / var(--anim-w) + var(--chrome));
+  height: calc((100cqi - 12px) * var(--anim-h) / var(--anim-w) + var(--chrome) + var(--legend));
   border: 0;
   background: #ffffff;
   overflow: hidden;
