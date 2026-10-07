@@ -42,6 +42,9 @@ That rewrites:
 - `README.md` (from [`scripts/readme_template.md`](scripts/readme_template.md) plus the registry)
 - `drills/<slug>.md` for the GitHub note
 - `drills/<slug>/index.html` for the drill page
+- `plan/index.html` for the practice plan
+
+The practice plan is built from the same registry, so a new drill can be added from the site. Plans live in the browser and in share links, not in the repo.
 
 Change the library introduction in `scripts/readme_template.md`, then run the same command. A direct edit to `README.md` or a generated page is replaced on the next build.
 

@@ -8,6 +8,8 @@ On GitHub, open a drill note below. The diagram, the steps, and the file links r
 
 The phone-friendly pages live in [`index.html`](index.html). Each drill page embeds the HTML animation and keeps the PNG as the still diagram and the home-page thumbnail. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser.
 
+[`plan/index.html`](plan/index.html) is the practice plan. Add drills from the home page or a drill page. The plan stays in the browser. Copy share link builds a URL with the drill list, optional minutes, and an optional title. Opening that link does not replace a plan already saved in the browser until you choose Load into my plan.
+
 ## GitHub Pages
 
 Once GitHub Pages is enabled from the **main** branch, **root** folder, the public site will be [https://debraid.github.io/hockey-skills-and-drills/](https://debraid.github.io/hockey-skills-and-drills/). [`index.html`](index.html) is the home page. [`.nojekyll`](.nojekyll) is already in the root so Pages serves the HTML, CSS, and media as files.
@@ -89,4 +91,4 @@ Full-ice warm-up. Cones split the ice into four lanes and one line starts in the
 
 ## Add a drill
 
-See [ADDING-A-DRILL.md](ADDING-A-DRILL.md). Media lives in `media/<slug>/`. The registry is [`drills.json`](drills.json). Running `python3 scripts/build_site.py` rewrites the home page, the drill pages, and this README from [`scripts/readme_template.md`](scripts/readme_template.md).
+See [ADDING-A-DRILL.md](ADDING-A-DRILL.md). Media lives in `media/<slug>/`. The registry is [`drills.json`](drills.json). Running `python3 scripts/build_site.py` rewrites the home page, the drill pages, the practice plan, and this README from [`scripts/readme_template.md`](scripts/readme_template.md).
