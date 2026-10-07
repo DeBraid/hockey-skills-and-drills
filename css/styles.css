@@ -136,7 +136,8 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
   min-height: 4.25rem;
   padding: 0.75rem 0;
 }
@@ -145,6 +146,8 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
+  flex: 1 1 auto;
   color: inherit;
   text-decoration: none;
 }
@@ -153,6 +156,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 0.05rem;
+  min-width: 0;
 }
 
 .brand-kicker {
@@ -208,6 +212,33 @@ a:hover {
   margin: 0;
   color: var(--header-muted);
   font-size: 0.92rem;
+}
+
+.plan-nav {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  color: var(--header-ink);
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.plan-nav:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.plan-nav[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 main {
@@ -296,7 +327,8 @@ main {
 }
 
 .card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -305,6 +337,20 @@ main {
   text-decoration: none;
   overflow: hidden;
   height: 100%;
+  min-width: 0;
+}
+
+.card-link {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-actions {
+  padding: 0 1rem 1rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -337,7 +383,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  padding: 0.9rem 1rem 1rem;
+  padding: 0.9rem 1rem 0.75rem;
 }
 
 .card h2 {
@@ -579,6 +625,262 @@ main {
   font-weight: 600;
 }
 
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn.primary,
+.plan-toggle[aria-pressed="true"] {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #f7fafc;
+}
+
+.btn.danger {
+  color: var(--red);
+}
+
+.card-actions .plan-toggle,
+.plan-row .plan-toggle {
+  width: 100%;
+}
+
+.plan-row {
+  margin: 0.85rem 0 0;
+}
+
+.plan-lede {
+  max-width: 40rem;
+}
+
+.plan-banner {
+  margin: 0 0 1rem;
+  padding: 0.9rem 1rem;
+  background: var(--chip);
+  color: var(--chip-ink);
+  border-radius: 12px;
+}
+
+.plan-banner p {
+  margin: 0 0 0.75rem;
+}
+
+.plan-banner .btn {
+  width: 100%;
+}
+
+.plan-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.plan-title-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.plan-title-label input,
+.plan-fields input,
+.plan-share-fallback {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.45rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 500;
+}
+
+.plan-title-label input:read-only {
+  border-color: transparent;
+  background: transparent;
+  padding-left: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.plan-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.plan-status {
+  margin: 0;
+  min-height: 1.4em;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.plan-total {
+  margin: 0 0 0.8rem;
+  font-weight: 700;
+}
+
+.plan-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.plan-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.plan-item-body {
+  min-width: 0;
+}
+
+.plan-thumb {
+  display: block;
+  min-width: 0;
+  padding: 0.35rem;
+  background: var(--ice);
+  border-radius: 12px;
+}
+
+.plan-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+.plan-item h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.15rem 0 0.35rem;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.plan-item h2 a {
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.plan-item h2 a:hover {
+  text-decoration: underline;
+}
+
+.plan-index {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+.plan-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 8.5rem;
+  min-width: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.plan-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.plan-item-actions .btn {
+  flex: 1 1 5.5rem;
+}
+
+@media screen {
+  .plan-print-title,
+  .plan-print-meta,
+  .plan-print-note,
+  .plan-points,
+  .plan-points-heading {
+    display: none;
+  }
+}
+
+.plan-page.is-shared .plan-print-meta:not(:empty) {
+  display: block;
+  margin: 0.35rem 0 0;
+  font-weight: 700;
+}
+
+@media (min-width: 720px) {
+  .plan-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .plan-actions .btn,
+  .plan-banner .btn {
+    width: auto;
+  }
+
+  .plan-item {
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .plan-row .plan-toggle {
+    width: auto;
+  }
+}
+
 @media (max-width: 640px) {
   .header-note {
     display: none;
@@ -613,19 +915,93 @@ main {
   .anim-frame,
   .anim-open,
   .filters,
-  .toolbar {
+  .toolbar,
+  .card-actions,
+  .plan-row,
+  .plan-lede,
+  .plan-banner,
+  .plan-tools,
+  .plan-fields,
+  .plan-item-actions,
+  .plan-status,
+  .skip {
     display: none !important;
   }
 
   body {
-    background: white;
-    color: black;
+    background: white !important;
+    color: black !important;
   }
 
   .card,
   .diagram,
-  .series-note {
+  .series-note,
+  .plan-item {
     box-shadow: none;
+  }
+
+  .plan-item,
+  .plan-thumb,
+  .plan-page .tag {
+    background: white !important;
+    color: black !important;
+    border-color: #ccc !important;
+  }
+
+  .plan-page .tag {
+    border: 1px solid #999;
+  }
+
+  .plan-print-title:not(:empty) {
+    display: block;
+    margin: 0 0 0.8rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .plan-print-meta:not(:empty),
+  .plan-print-note:not(:empty) {
+    display: block;
+    margin: 0.25rem 0;
+  }
+
+  .plan-print-meta:not(:empty) {
+    font-weight: 700;
+  }
+
+  .plan-points-heading {
+    display: block;
+    margin: 0.55rem 0 0.2rem;
+    font-size: 1rem;
+  }
+
+  .plan-points {
+    display: block;
+  }
+
+  .plan-item {
+    display: block;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 0.9rem;
+  }
+
+  .plan-thumb {
+    width: auto;
+    max-width: 100%;
+    margin: 0 0 0.35rem;
+    padding: 0;
+  }
+
+  .plan-thumb img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 3.3in;
+  }
+
+  .plan-total {
+    margin-bottom: 0.6rem;
   }
 
   a {

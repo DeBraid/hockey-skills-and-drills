@@ -158,6 +158,14 @@ def tag_labels(data: dict) -> dict[str, str]:
     return {tag["id"]: tag["label"] for tag in data["tags"]}
 
 
+def plan_button(slug: str, title: str) -> str:
+    return (
+        '<button class="btn plan-toggle" type="button" '
+        f'data-plan-slug="{esc(slug)}" data-plan-title="{esc(title)}" aria-pressed="false">'
+        "Add to plan</button>"
+    )
+
+
 def page_shell(title: str, prefix: str, body: str) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -182,6 +190,7 @@ def page_shell(title: str, prefix: str, body: str) -> str:
           <span class="brand-name">Hockey Skills &amp; Drills</span>
         </span>
       </a>
+      <a class="plan-nav" href="{prefix}plan/">Practice plan <span data-plan-count>(0)</span></a>
     </div>
   </header>
 {body}
@@ -217,16 +226,21 @@ def write_index(data: dict, labels: dict[str, str]) -> None:
         if drill.get("series"):
             series = f'\n          <p class="series">{esc(drill["series"])}</p>'
         cards.append(
-            f"""      <a class="card" href="drills/{slug}/index.html" data-tags="{' '.join(drill['tags'])}">
-        <span class="card-media">
-          <img src="{media_rel(slug, 'png')}" alt="">
-        </span>
-        <div class="card-body">{series}
-          <h2>{esc(drill['title'])}</h2>
-          <p class="blurb">{esc(drill['blurb'])}</p>
-          {tag_list(drill, labels)}
+            f"""      <article class="card" data-tags="{' '.join(drill['tags'])}">
+        <a class="card-link" href="drills/{slug}/index.html">
+          <span class="card-media">
+            <img src="{media_rel(slug, 'png')}" alt="">
+          </span>
+          <div class="card-body">{series}
+            <h2>{esc(drill['title'])}</h2>
+            <p class="blurb">{esc(drill['blurb'])}</p>
+            {tag_list(drill, labels)}
+          </div>
+        </a>
+        <div class="card-actions">
+          {plan_button(slug, drill['title'])}
         </div>
-      </a>"""
+      </article>"""
         )
     count = len(data["drills"])
     body = f"""  <main id="content" class="wrap">
@@ -320,6 +334,7 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
       <h1>{esc(drill['title'])}</h1>
       <p class="lede">{esc(drill['subtitle'])}</p>
       {tag_list(drill, labels)}{series}
+      <div class="plan-row">{plan_button(slug, drill['title'])}</div>
     </header>
 
 {watch}
@@ -438,6 +453,59 @@ def write_readme(drills: list[dict], labels: dict[str, str]) -> None:
     (ROOT / "README.md").write_text(readme, encoding="utf-8")
 
 
+def write_plan(data: dict, labels: dict[str, str]) -> None:
+    catalog = []
+    for drill in data["drills"]:
+        slug = drill["slug"]
+        catalog.append(
+            {
+                "slug": slug,
+                "title": drill["title"],
+                "series": drill.get("series") or "",
+                "tags": [labels[tag] for tag in drill["tags"]],
+                "png": f"../{media_rel(slug, 'png')}",
+                "page": f"../drills/{slug}/index.html",
+                "alt": drill["diagramAlt"],
+                "points": drill["coachingPoints"],
+            }
+        )
+    blob = json.dumps(catalog, ensure_ascii=False).replace("<", "\\u003c")
+    body = f"""  <main id="content" class="wrap plan-page">
+    <header class="drill-head">
+      <p class="kicker">On-ice coaching</p>
+      <h1>Practice plan</h1>
+      <p class="lede plan-lede">Add drills from the library, set a time for each, and print the sheet for the bench. A share link sends the drills, times, and title. Notes stay in this browser.</p>
+    </header>
+    <div class="plan-banner" id="plan-shared" hidden>
+      <p id="plan-shared-text"></p>
+      <button class="btn primary" type="button" id="plan-load">Load into my plan</button>
+    </div>
+    <p class="plan-print-title" id="plan-print-title"></p>
+    <div class="plan-tools" id="plan-tools">
+      <label class="plan-title-label" for="plan-title">Plan title
+        <input id="plan-title" type="text" maxlength="80" placeholder="Tuesday practice" autocomplete="off">
+      </label>
+      <div class="plan-actions">
+        <button class="btn primary" type="button" id="plan-share">Copy share link</button>
+        <button class="btn" type="button" id="plan-print">Print</button>
+        <button class="btn danger" type="button" id="plan-clear">Clear plan</button>
+      </div>
+      <p class="plan-status" id="plan-status" role="status"></p>
+      <input class="plan-share-fallback" id="plan-share-fallback" type="text" readonly hidden>
+    </div>
+    <p class="plan-total" id="plan-total" hidden>0 drills · 0 min</p>
+    <p class="empty" id="plan-empty" hidden>No drills in this plan yet. <a href="../index.html">Browse drills</a> and use Add to plan.</p>
+    <p class="empty" id="plan-shared-empty" hidden>Nothing in this link matched a drill in the library.</p>
+    <ol class="plan-list" id="plan-list" aria-label="Drills in this plan"></ol>
+  </main>
+  <script type="application/json" id="drill-catalog">{blob}</script>
+"""
+    out = ROOT / "plan"
+    out.mkdir(parents=True, exist_ok=True)
+    title = "Practice plan · Hockey Skills & Drills"
+    (out / "index.html").write_text(page_shell(title, "../", body), encoding="utf-8")
+
+
 def local_targets(text: str) -> list[str]:
     targets = []
     for href, md in LINK_RE.findall(text):
@@ -449,7 +517,7 @@ def local_targets(text: str) -> list[str]:
 
 
 def check_output(drills: list[dict]) -> None:
-    files = [ROOT / "index.html", ROOT / "README.md"]
+    files = [ROOT / "index.html", ROOT / "README.md", ROOT / "plan" / "index.html"]
     for drill in drills:
         files.append(ROOT / "drills" / f"{drill['slug']}.md")
         files.append(ROOT / "drills" / drill["slug"] / "index.html")
@@ -458,6 +526,8 @@ def check_output(drills: list[dict]) -> None:
         text = path.read_text(encoding="utf-8")
         for url in local_targets(text):
             target = (path.parent / url).resolve()
+            if target.is_dir():
+                target = target / "index.html"
             if not target.is_file():
                 missing.append(f"{path.relative_to(ROOT)} -> {url}")
     if missing:
@@ -477,6 +547,8 @@ def check_output(drills: list[dict]) -> None:
             raise SystemExit(f"{slug} page is missing the animation aspect ratio")
         if f'href="{anim}">Open full screen</a>' not in page:
             raise SystemExit(f"{slug} page is missing the full-screen animation link")
+        if f'data-plan-slug="{slug}"' not in page or 'href="../../plan/"' not in page:
+            raise SystemExit(f"{slug} page is missing the practice plan controls")
         if "<video" in page or ".gif" in page or ".mp4" in page:
             raise SystemExit(f"{slug} page still links a GIF or MP4")
         url = drill.get("excalidrawUrl")
@@ -498,6 +570,30 @@ def check_output(drills: list[dict]) -> None:
             raise SystemExit(f"{label} still links a GIF or MP4")
     if "Fork or star" in home or "Add a drill" in home:
         raise SystemExit("home page should stay read-only")
+    if 'href="plan/"' not in home or "data-plan-count" not in home:
+        raise SystemExit("home page is missing the plan link")
+    for drill in drills:
+        if f'data-plan-slug="{drill["slug"]}"' not in home:
+            raise SystemExit(f"home page is missing Add to plan for {drill['slug']}")
+    plan_text = (ROOT / "plan" / "index.html").read_text(encoding="utf-8")
+    match = re.search(
+        r'<script type="application/json" id="drill-catalog">(.*?)</script>',
+        plan_text,
+    )
+    if not match:
+        raise SystemExit("plan page is missing the drill catalog")
+    catalog = json.loads(match.group(1))
+    if [item["slug"] for item in catalog] != [drill["slug"] for drill in drills]:
+        raise SystemExit("plan catalog slugs do not match drills.json")
+    for item in catalog:
+        if not item.get("points"):
+            raise SystemExit(f"plan catalog is missing coaching points for {item['slug']}")
+        png = (ROOT / "plan" / item["png"]).resolve()
+        page = (ROOT / "plan" / item["page"]).resolve()
+        if not png.is_file() or not page.is_file():
+            raise SystemExit(f"plan catalog has a missing file for {item['slug']}")
+    if "Fork or star" in plan_text or "Add a drill" in plan_text:
+        raise SystemExit("plan page should stay read-only")
 
 
 def main() -> None:
@@ -509,6 +605,7 @@ def main() -> None:
         write_drill_html(drill, by_slug, labels)
         write_drill_md(drill, by_slug, labels)
     write_readme(data["drills"], labels)
+    write_plan(data, labels)
     check_output(data["drills"])
     print(f"Built {len(data['drills'])} drills")
 
