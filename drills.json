@@ -6,7 +6,10 @@
     { "id": "zone-entry", "label": "Zone entry" },
     { "id": "passing", "label": "Passing" },
     { "id": "shooting", "label": "Shooting" },
-    { "id": "defence", "label": "Defence" }
+    { "id": "defence", "label": "Defence" },
+    { "id": "skating", "label": "Skating" },
+    { "id": "breakout", "label": "Breakout" },
+    { "id": "small-area-game", "label": "Small-area game" }
   ],
   "drills": [
     {
@@ -107,6 +110,127 @@
         "Clear the front of the net and return to the back of the line."
       ],
       "related": ["low-to-high-shot", "low-to-high-give-and-go"]
+    },
+    {
+      "slug": "one-up-one-down",
+      "title": "1 Up / 1 Down",
+      "subtitle": "Gap and angling 1v1. D touches the goal line, F touches the blue line, then play it out.",
+      "blurb": "Corner 1v1. On 'Go' the D touches the goal line and the F touches the blue line. The coach puts the puck in, the F attacks for a shot and a rebound, and the D gaps up and angles.",
+      "diagramAlt": "Zone diagram of 1 Up / 1 Down. The defence skates to the goal line, the forward skates to the blue line, the coach passes to the forward, the forward attacks and shoots while the defence closes the gap and angles.",
+      "tags": ["defence", "small-area-game"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Use all four corners. Corners that share a net take turns.",
+        "D: head up before you turn up ice, close the gap, and lead with your stick to steer the forward to the outside.",
+        "F: look before you turn to attack, use speed and fakes, and protect the puck on the way to the net.",
+        "F gets one shot and one rebound. If the D steals it, clear it or skate it past the top of the circles."
+      ],
+      "steps": [
+        "Set a forward line and a defence line in the corner. The coach stands near the top of the circle with pucks.",
+        "On the coach's 'Go', the D skates down and touches the goal line while the F skates up and touches the blue line.",
+        "The coach puts the puck in to the forward.",
+        "The forward attacks the net. The D steps up, closes the gap, and angles the forward to the outside.",
+        "The forward gets one shot and one rebound. If the D wins the puck, they clear it or skate it past the top of the circles.",
+        "Flip roles: the forward joins the D line and the D joins the F line. Halfway through, swap corners for new matchups."
+      ],
+      "related": []
+    },
+    {
+      "slug": "olympic-breakout-pass",
+      "title": "Olympic Breakout Pass",
+      "subtitle": "F to X, pivot on the wall, give-and-go across to O, curl to the slot for a one-timer.",
+      "blurb": "Continuous groups of three in one zone. F passes low to X, pivots on the wall, takes it back, one-touches across to O, and curls into the slot for a one-timer from X.",
+      "diagramAlt": "Zone diagram of the Olympic Breakout Pass. The forward passes to X low, skates down the wall, gets the puck back, passes across to O at the top of the circle, curls over the top into the slot, and one-times a feed from X.",
+      "tags": ["passing", "shooting", "breakout"],
+      "excalidrawUrl": "https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw",
+      "coachingPoints": [
+        "Groups of three: F with the puck near the blue line, X low support, O high support at the top of the circle.",
+        "Pivot tight to the boards below the hash marks and show a target for the return pass.",
+        "Make the pass across to O on one touch, then curl over the top of the circle into the slot.",
+        "Keep it moving with no whistles. Rotate F to O, O to X, and X to the line."
+      ],
+      "steps": [
+        "F starts near the blue line with the puck. X stands low at the bottom of the faceoff circle and O stands high at the top of the circle.",
+        "F passes to X and skates tight down the boards.",
+        "F pivots below the hash marks and X passes the puck back.",
+        "F one-touches the puck across to O, then curls over the top of the circle.",
+        "O passes down to X while F cuts into the slot.",
+        "X feeds F in the slot for a one-timer on goal.",
+        "Rotate: F takes O's spot, O takes X's spot, and X goes to the back of the line. The next F goes right away."
+      ],
+      "related": ["zone-exit-bounce-pass"]
+    },
+    {
+      "slug": "zone-exit-bounce-pass",
+      "title": "Zone Exits: Bounce Pass",
+      "subtitle": "Bounce a self-pass off the boards around a cone, then a soft D, then a stretch pass past the D.",
+      "blurb": "Defensive-zone exits from a line in each corner. Start with a self-pass off the boards around a cone, swap the cone for a coach as a soft D, then finish with a bounce stretch pass to a teammate past the D holding the line.",
+      "diagramAlt": "Zone diagram of the zone-exit bounce pass progression. In the bottom corner a player carries up the wall, banks the puck past a cone, and exits. In the top corner a player carries up the wall and banks a stretch pass past the coach at the point to a teammate at the blue line.",
+      "tags": ["passing", "breakout"],
+      "excalidrawUrl": "https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ",
+      "coachingPoints": [
+        "Progression 1: bank the puck off the boards past a cone, skate around it, and pick it up.",
+        "Progression 2: replace the cone with a coach as a soft D. Same self-pass, now with pressure.",
+        "Progression 3: bounce a stretch pass off the boards to a teammate for the exit.",
+        "Pick the angle and weight so the D holding the blue line can't pick the pass off."
+      ],
+      "steps": [
+        "Set a line in each corner on the goal line with pucks. Place a cone low on one wall. A coach stands at the point on the other side.",
+        "The first player carries up the wall toward the cone.",
+        "Bank the puck off the boards past the cone, skate around the inside of the cone, pick it up, and exit over the blue line.",
+        "Progression 2: the coach replaces the cone as a soft defender. Bounce it past them the same way.",
+        "Progression 3: the player in the other corner carries up the wall while a teammate swings to the boards at the blue line.",
+        "Bank a stretch pass off the boards past the D to the teammate, who carries it out.",
+        "Players switch lines and the next pair goes."
+      ],
+      "related": ["olympic-breakout-pass"]
+    },
+    {
+      "slug": "tip-and-dig-shooting",
+      "title": "Tip-and-Dig Shooting",
+      "subtitle": "Tip the point shot into the empty net, dig it out, and shoot on the goalie.",
+      "blurb": "Zone shooting with two nets: an empty net at the hash marks and the regular net with a goalie. Tip the point shot into the empty net, dig it out, and shoot on the goalie.",
+      "diagramAlt": "Zone diagram of Tip-and-Dig Shooting. A shooter at the blue line shoots through a tipper standing in front of an empty net at the hash marks. The tipper digs the puck out and carries into the slot to shoot on the goalie.",
+      "tags": ["shooting"],
+      "excalidrawUrl": "https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA",
+      "coachingPoints": [
+        "Put an empty net at the hash marks. The goalie stays in the regular net on the goal line.",
+        "Tipper: stick on the ice and redirect the point shot into the empty net.",
+        "Dig the puck out of the net quickly, then attack the slot and shoot on the goalie.",
+        "Run it in both corners at the same time if you have the ice."
+      ],
+      "steps": [
+        "Place an empty net at the hash marks. One player stands in front of it as the tipper. The shooters line up at the blue line with pucks.",
+        "The first shooter shoots from the blue line and the tipper deflects it into the empty net.",
+        "The tipper digs the puck out of the empty net while the shooter moves in to become the next tipper.",
+        "The tipper carries into the slot and shoots on the goalie.",
+        "After the shot, go to the back of the shooting line. The next shooter goes."
+      ],
+      "related": []
+    },
+    {
+      "slug": "four-lane-warmup",
+      "title": "4-Lane Warm-up",
+      "subtitle": "One line in the corner. Lane 1 inside edges, lane 2 crossovers, lanes 3 and 4 carry the puck and shoot.",
+      "blurb": "Full-ice warm-up. Cones split the ice into four lanes and one line starts in the corner. Skate lane 1 on inside edges, lane 2 with crossovers, then carry a puck two-handed in lane 3 and one-handed in lane 4, with a shot at the end of each.",
+      "diagramAlt": "Full-ice diagram of the 4-Lane Warm-up. Three rows of cones split the ice into four lanes. A skater goes down lane 1, back up lane 2, carries a puck down lane 3 to shoot on the far net, and carries back up lane 4 to shoot on the near net.",
+      "tags": ["full-ice", "skating", "shooting"],
+      "excalidrawUrl": "https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg",
+      "coachingPoints": [
+        "Three rows of cones split the ice into four lanes. One line starts in the corner.",
+        "Lane 1: inside edges, no crossovers. Lane 2: outside edges with crossovers.",
+        "Lane 3: two hands on the stick, carry and shoot. Lane 4: one-handed carry, then shoot.",
+        "Send the next player when the one ahead reaches the first cones."
+      ],
+      "steps": [
+        "Set three rows of cones the length of the ice to make four lanes. The line starts in the corner. Put pucks at each end.",
+        "Lane 1: skate down the ice on inside edges with no crossovers.",
+        "Lane 2: come back up the next lane using outside edges and crossovers.",
+        "Lane 3: pick up a puck, carry it two-handed down the lane, and shoot on the far net.",
+        "Lane 4: pick up a puck, carry it one-handed back up the last lane, and shoot on the near net.",
+        "Return to the line in the corner and repeat."
+      ],
+      "related": []
     }
   ]
 }

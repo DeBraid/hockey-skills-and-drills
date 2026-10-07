@@ -427,13 +427,18 @@ main {
   overflow: hidden;
 }
 
-.drill-video {
+.drill-video,
+.drill-gif {
   display: block;
   width: 100%;
   height: auto;
   max-height: min(72vh, 740px);
   object-fit: contain;
   background: #000;
+}
+
+.drill-gif {
+  background: #ffffff;
 }
 
 .video-frame figcaption,
