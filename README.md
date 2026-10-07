@@ -2,8 +2,6 @@
 
 A coaching library of on-ice drills: one full-ice passing circuit and three half-ice low-to-high entries. Each drill has a rink diagram, a short silent MP4, a GIF, the Excalidraw source, and the steps in plain language.
 
-Fork or star the repository to keep a copy or follow updates.
-
 ## How to read it
 
 On GitHub, open a drill note below. The diagram, the steps, and the file links render on github.com. The MP4 link opens GitHub's video player.
