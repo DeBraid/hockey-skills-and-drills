@@ -231,6 +231,235 @@
         "Return to the line in the corner and repeat."
       ],
       "related": []
+    },
+    {
+      "slug": "crossover-circles",
+      "title": "Crossover Circles",
+      "subtitle": "Crossovers around the faceoff circles: 5 forwards, 5 backwards, then the same with pucks.",
+      "blurb": "A skating warm-up on the faceoff circles. Skaters do crossovers around the circle forwards, then backwards the other way, then repeat the set with a puck.",
+      "diagramAlt": "Zone diagram of Crossover Circles. A line of skaters at each end-zone faceoff circle skates around the circle forwards, then backwards the other way, then with a puck, and returns to the line.",
+      "tags": ["skating"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Knees bent and chest up. Push with the outside leg and cross the inside leg over.",
+        "Lean into the circle and keep your stick on the ice.",
+        "Backwards: stay low, keep your shoulders square, and push with the crossunder.",
+        "With pucks: keep your head up and the puck out in front."
+      ],
+      "steps": [
+        "Split into one group per faceoff circle, lined up at the edge of the circle. Pucks sit behind the line.",
+        "Skate 5 circles forwards with crossovers.",
+        "Skate 5 circles backwards, going the other way.",
+        "Grab a puck and do the same again: 5 forwards, then 5 backwards.",
+        "Back to the line. The front of the line goes next."
+      ],
+      "related": []
+    },
+    {
+      "slug": "stops-and-starts",
+      "title": "Stops and Starts",
+      "subtitle": "Goal line to far blue, stop, back to near blue, stop, then to the far dots. No pucks first, then with pucks.",
+      "blurb": "Waves of skaters start on the goal line, sprint to the far blue line, stop hard, sprint back to the near blue line, stop, then finish at the far end-zone dots. The far net stays free for the goalies.",
+      "diagramAlt": "Full-ice diagram of Stops and Starts. Three skaters on the left goal line sprint to the far blue line, skate back to the near blue line, then sprint to the far faceoff dots, with a goalie in the right net.",
+      "tags": ["skating", "full-ice"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Hard two-foot stops: knees bent, weight on the edges, shoulders level.",
+        "Explode out of each stop with short, quick first strides.",
+        "Stop facing the same way each time, then switch sides on the next rep.",
+        "With pucks: keep the puck close through the stop and the restart."
+      ],
+      "steps": [
+        "Skaters start in waves on the goal line.",
+        "Sprint to the far blue line and stop hard.",
+        "Sprint back to the near blue line and stop hard.",
+        "Sprint to the far faceoff dots and stop. Leave the net end free for the goalies.",
+        "Run it without pucks first, then the same with pucks."
+      ],
+      "related": []
+    },
+    {
+      "slug": "cone-weave",
+      "title": "Edges: Cone Weave",
+      "subtitle": "Weave through a lane of cones from the blue line to the goal line on your edges. Theme: balance and edge work.",
+      "blurb": "Three or four lanes of cones run from the blue line to the goal line. Skaters weave through their lane on deep edges, then return up the outside to their line.",
+      "diagramAlt": "Zone diagram of Edges: Cone Weave. Four lines start at the blue line and weave through lanes of five cones toward the goal line, then skate back up the outside.",
+      "tags": ["skating"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Long strides on one foot: glide and hold the edge round each cone.",
+        "Knees bent and weight over the skate you are on.",
+        "Inside and outside edges both: carve, don't step round the cone.",
+        "Head up, eyes on the next cone."
+      ],
+      "steps": [
+        "Set up 3 or 4 lanes of cones from the blue line to the goal line.",
+        "The front of each line weaves through the cones on deep edges.",
+        "At the goal line, skate back up the outside to your line.",
+        "The next skater goes as soon as the one ahead passes the second cone."
+      ],
+      "related": []
+    },
+    {
+      "slug": "lateral-step-overs",
+      "title": "Lateral Step-overs with Pivots",
+      "subtitle": "Sideways crossover step-overs down a lane of cones, pivoting 180 degrees at each cone.",
+      "blurb": "Skaters move sideways down a lane with crossover step-overs, pivoting at each cone so they face the benches, then away from the benches, then the benches again.",
+      "diagramAlt": "Zone diagram of Lateral Step-overs with Pivots. Three lines move sideways from the blue line toward the goal line, stepping over to each of three cones and pivoting at each one.",
+      "tags": ["skating"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Stay low and step the trailing leg over the lead leg.",
+        "Shoulders and hips stay square to the way you are facing.",
+        "Quick, tight pivots at each cone: don't drift past it.",
+        "Keep your stick on the ice in front of you."
+      ],
+      "steps": [
+        "Set up lanes of cones from the blue line to the goal line.",
+        "Step over sideways to the first cone, facing the benches.",
+        "Pivot and step over to the second cone, facing away from the benches.",
+        "Pivot and step over to the third cone, facing the benches again.",
+        "Skate back up the outside to your line."
+      ],
+      "related": []
+    },
+    {
+      "slug": "cone-relay-with-pucks",
+      "title": "Cone Relay with Pucks",
+      "subtitle": "Relay race: at each cone, one pass and catch with your line. Alternate forwards (tight turn) and backwards (pivot).",
+      "blurb": "Three or four lines race at once, each with 3 or 4 cones. At each cone the skater makes one pass to the next player in line and gets it back, alternating forwards with tight turns and backwards with pivots.",
+      "diagramAlt": "Zone diagram of Cone Relay with Pucks. The middle lane is drawn: the skater carries forwards to cone 1 with a tight turn, passes to the line and gets it back, skates backwards to cone 2, then forwards to cone 3, and races back to hand off.",
+      "tags": ["skating", "passing"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Tight turns: get low, lean in, and keep the puck on the inside.",
+        "Pivot without stopping your feet.",
+        "Firm, flat passes. Show a target with your stick for the return.",
+        "Race, but stay in control: a missed pass costs more time than a slower turn."
+      ],
+      "steps": [
+        "Set up 3 or 4 lines with 3 or 4 cones in each lane.",
+        "Carry the puck forwards to cone 1 and make a tight turn.",
+        "Pass to the next player in your line and get it back, pivot, and skate backwards to cone 2.",
+        "Pass and catch again, then go forwards to cone 3 with a tight turn.",
+        "Pass and catch, race back, and hand the puck to the next player. First line done wins."
+      ],
+      "related": []
+    },
+    {
+      "slug": "two-v-two-point-shot",
+      "title": "2v2 Point Shot Small Area Game",
+      "subtitle": "2 on 2 in a corner with a point player. Dump in, battle, use the point for shots, regroup on a turnover.",
+      "blurb": "Groups of five at each corner net: 2 O, 2 D and a point player. The point dumps the puck in and the 2v2 starts. The team with the puck can use the point for shots. On a change of possession, regroup up to the point.",
+      "diagramAlt": "Zone diagram of 2v2 Point Shot. The point player dumps the puck into the corner, an O player wins it and carries up the wall, passes to the point, and the point shoots on the corner net while the other O goes to the net.",
+      "tags": ["small-area-game", "shooting", "defence"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Win the race to the puck and protect it along the wall.",
+        "Use the point: move it up, then get to the net for tips and rebounds.",
+        "On a turnover, regroup to the point before you attack.",
+        "D: stick on puck, body on body, and clear the front of the net."
+      ],
+      "steps": [
+        "Put a net in each corner. Groups of 5 per net: 2 O, 2 D and 1 point player (or a coach at the point with groups of 4).",
+        "The point dumps the puck into the corner and the 2v2 starts.",
+        "The team with the puck can pass up to the point for a shot.",
+        "On a change of possession, move the puck up to the point before attacking.",
+        "Goal or 60 seconds: O and D swap. Each group gets 1 turn on O, 1 on D and 1 rest."
+      ],
+      "related": []
+    },
+    {
+      "slug": "two-v-two-hard-rim",
+      "title": "2v2 Hard Rim",
+      "subtitle": "Rim it hard around the boards to your partner, then 2 on 2. D must touch the top of the circle first.",
+      "blurb": "Two lines of forwards with pucks at the hash marks and two D at the dots. The first forward rims the puck hard behind the net to the partner on the far wall, and it's 2 on 2. The D must touch the top of the circle before they can defend.",
+      "diagramAlt": "Zone diagram of 2v2 Hard Rim. The top forward rims the puck around the boards behind the net to the bottom forward while the two D skate to the top of the circles. The bottom forward collects, passes to the partner, and the partner shoots.",
+      "tags": ["small-area-game", "passing", "defence"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Rim it hard and high on the glass side so it gets all the way around.",
+        "Receiver: get to the wall early, stop the puck with your skate or stick, and look up.",
+        "D: touch the top of the circle, then attack fast and take away the middle.",
+        "Play it out: second chances and rebounds count."
+      ],
+      "steps": [
+        "Two lines of forwards with pucks at the hash marks on each wall. Two D start at the dots.",
+        "The first forward rims the puck hard behind the net to the forward at the front of the other line.",
+        "The D must skate up and touch the top of the circle before they can play.",
+        "The forwards play 2 on 2 to the net.",
+        "If the D win the puck, they pass or rim it to the next pair in line. Then the D go out and the O become D.",
+        "Start from the blue line for longer rims. Run the same drill on the other side of the ice."
+      ],
+      "related": []
+    },
+    {
+      "slug": "three-v-three-circle-game",
+      "title": "3v3 Circle Game",
+      "subtitle": "3 on 3 at a faceoff circle with two nets. Only one player per team inside the circle.",
+      "blurb": "Two nets face each other inside a faceoff circle. It's 3 on 3, but only one player per team can be inside the circle. Outside players try to work a pass into their inside player, and they can shoot too.",
+      "diagramAlt": "Zone diagram of 3v3 Circle Game. Two nets with goalies face each other across a faceoff circle. The coach passes to an outside X player, the X players move it around the outside, pass to the inside X, and the inside X shoots.",
+      "tags": ["small-area-game", "passing", "shooting"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Inside player: get open, stick on the ice, and be ready for a quick shot or a tip.",
+        "Outside players: move the puck quickly and look for the inside pass first.",
+        "Drive the post and fight for net-front position.",
+        "Only one player per team in the circle at a time."
+      ],
+      "steps": [
+        "Put two nets facing each other inside a faceoff circle, with a goalie in each.",
+        "Three per team: one inside the circle, two outside. Only one player per team may be inside.",
+        "The coach puts a puck in.",
+        "Outside players pass it around and try to get it to their inside player. They can shoot too.",
+        "Play short shifts and change on the coach's whistle. Optional, if time allows."
+      ],
+      "related": []
+    },
+    {
+      "slug": "half-ice-3v3",
+      "title": "Half-ice 3v3",
+      "subtitle": "O tries to score. D must win the puck AND pass it to the coach at the blue line. Then O flips to D, fresh 3 on O.",
+      "blurb": "3 on 3 in half the ice. The O try to score. The D try to win the puck and pass it to the coach at the blue line. Then the D come off, the O flip to D, and three fresh skaters come on as O.",
+      "diagramAlt": "Half-ice diagram of Half-ice 3v3. The O carry in and pass to a teammate in the slot, who shoots. A D player wins the rebound, passes to a teammate, who passes to the coach at the blue line. The D then go to the waiting line.",
+      "tags": ["small-area-game", "half-ice", "defence"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "O: support the puck carrier and get someone to the net.",
+        "D: win the puck, then move it quickly and with control to the coach.",
+        "Talk: who has the puck carrier, who has the net front.",
+        "Change fast so the next group can start right away."
+      ],
+      "steps": [
+        "Use each half of the ice with a net in its normal spot. The coach stands at the blue line.",
+        "3 O try to score on 3 D.",
+        "The D must win the puck and pass it to the coach.",
+        "When the coach has the puck, the D come off, the O flip to D, and 3 fresh skaters come on as O.",
+        "Progression: all 3 D must touch the puck before passing to the coach."
+      ],
+      "related": []
+    },
+    {
+      "slug": "defend-the-cone",
+      "title": "Defend the Cone",
+      "subtitle": "1 on 1 at a faceoff circle: the attacker tries to touch the cone at the dot, the defender keeps body position.",
+      "blurb": "A backup when you run out of nets: defend a cone instead. 1 on 1 around a faceoff circle with a cone on the dot. The attacker tries to touch the cone with the puck; the defender stays between the attacker and the cone.",
+      "diagramAlt": "Zone diagram of Defend the Cone. An attacker carries the puck around the faceoff circle while the defender mirrors from inside, then the attacker cuts in for the cone at the dot and the defender angles them away.",
+      "tags": ["small-area-game", "defence"],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Defender: stay between the attacker and the cone, stick on the puck.",
+        "Use your angle, not a reach. Keep your feet moving.",
+        "Attacker: protect the puck with your body and change speed to get inside.",
+        "Variations: with or without a puck, with or without sticks."
+      ],
+      "steps": [
+        "Put a cone on the faceoff dot. One line of attackers and one line of defenders.",
+        "The attacker carries the puck around the circle. The defender mirrors from inside.",
+        "The attacker cuts in and tries to touch the cone with the puck. The defender angles them away.",
+        "Swap: the attacker joins the defender line and the defender joins the attack line."
+      ],
+      "related": []
     }
   ]
 }

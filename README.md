@@ -88,6 +88,86 @@ Full-ice warm-up. Cones split the ice into four lanes and one line starts in the
 
 [Note](drills/four-lane-warmup.md) · [Drill page](drills/four-lane-warmup/index.html) · [Animation](media/four-lane-warmup/four-lane-warmup-anim.html) · [PNG](media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
 
+### [Crossover Circles](drills/crossover-circles.md)
+
+A skating warm-up on the faceoff circles. Skaters do crossovers around the circle forwards, then backwards the other way, then repeat the set with a puck.
+
+**Tags:** `skating`
+
+[Note](drills/crossover-circles.md) · [Drill page](drills/crossover-circles/index.html) · [Animation](media/crossover-circles/crossover-circles-anim.html) · [PNG](media/crossover-circles/crossover-circles.png) · [Excalidraw](media/crossover-circles/crossover-circles.excalidraw)
+
+### [Stops and Starts](drills/stops-and-starts.md)
+
+Waves of skaters start on the goal line, sprint to the far blue line, stop hard, sprint back to the near blue line, stop, then finish at the far end-zone dots. The far net stays free for the goalies.
+
+**Tags:** `skating`, `full-ice`
+
+[Note](drills/stops-and-starts.md) · [Drill page](drills/stops-and-starts/index.html) · [Animation](media/stops-and-starts/stops-and-starts-anim.html) · [PNG](media/stops-and-starts/stops-and-starts.png) · [Excalidraw](media/stops-and-starts/stops-and-starts.excalidraw)
+
+### [Edges: Cone Weave](drills/cone-weave.md)
+
+Three or four lanes of cones run from the blue line to the goal line. Skaters weave through their lane on deep edges, then return up the outside to their line.
+
+**Tags:** `skating`
+
+[Note](drills/cone-weave.md) · [Drill page](drills/cone-weave/index.html) · [Animation](media/cone-weave/cone-weave-anim.html) · [PNG](media/cone-weave/cone-weave.png) · [Excalidraw](media/cone-weave/cone-weave.excalidraw)
+
+### [Lateral Step-overs with Pivots](drills/lateral-step-overs.md)
+
+Skaters move sideways down a lane with crossover step-overs, pivoting at each cone so they face the benches, then away from the benches, then the benches again.
+
+**Tags:** `skating`
+
+[Note](drills/lateral-step-overs.md) · [Drill page](drills/lateral-step-overs/index.html) · [Animation](media/lateral-step-overs/lateral-step-overs-anim.html) · [PNG](media/lateral-step-overs/lateral-step-overs.png) · [Excalidraw](media/lateral-step-overs/lateral-step-overs.excalidraw)
+
+### [Cone Relay with Pucks](drills/cone-relay-with-pucks.md)
+
+Three or four lines race at once, each with 3 or 4 cones. At each cone the skater makes one pass to the next player in line and gets it back, alternating forwards with tight turns and backwards with pivots.
+
+**Tags:** `skating`, `passing`
+
+[Note](drills/cone-relay-with-pucks.md) · [Drill page](drills/cone-relay-with-pucks/index.html) · [Animation](media/cone-relay-with-pucks/cone-relay-with-pucks-anim.html) · [PNG](media/cone-relay-with-pucks/cone-relay-with-pucks.png) · [Excalidraw](media/cone-relay-with-pucks/cone-relay-with-pucks.excalidraw)
+
+### [2v2 Point Shot Small Area Game](drills/two-v-two-point-shot.md)
+
+Groups of five at each corner net: 2 O, 2 D and a point player. The point dumps the puck in and the 2v2 starts. The team with the puck can use the point for shots. On a change of possession, regroup up to the point.
+
+**Tags:** `small-area-game`, `shooting`, `defence`
+
+[Note](drills/two-v-two-point-shot.md) · [Drill page](drills/two-v-two-point-shot/index.html) · [Animation](media/two-v-two-point-shot/two-v-two-point-shot-anim.html) · [PNG](media/two-v-two-point-shot/two-v-two-point-shot.png) · [Excalidraw](media/two-v-two-point-shot/two-v-two-point-shot.excalidraw)
+
+### [2v2 Hard Rim](drills/two-v-two-hard-rim.md)
+
+Two lines of forwards with pucks at the hash marks and two D at the dots. The first forward rims the puck hard behind the net to the partner on the far wall, and it's 2 on 2. The D must touch the top of the circle before they can defend.
+
+**Tags:** `small-area-game`, `passing`, `defence`
+
+[Note](drills/two-v-two-hard-rim.md) · [Drill page](drills/two-v-two-hard-rim/index.html) · [Animation](media/two-v-two-hard-rim/two-v-two-hard-rim-anim.html) · [PNG](media/two-v-two-hard-rim/two-v-two-hard-rim.png) · [Excalidraw](media/two-v-two-hard-rim/two-v-two-hard-rim.excalidraw)
+
+### [3v3 Circle Game](drills/three-v-three-circle-game.md)
+
+Two nets face each other inside a faceoff circle. It's 3 on 3, but only one player per team can be inside the circle. Outside players try to work a pass into their inside player, and they can shoot too.
+
+**Tags:** `small-area-game`, `passing`, `shooting`
+
+[Note](drills/three-v-three-circle-game.md) · [Drill page](drills/three-v-three-circle-game/index.html) · [Animation](media/three-v-three-circle-game/three-v-three-circle-game-anim.html) · [PNG](media/three-v-three-circle-game/three-v-three-circle-game.png) · [Excalidraw](media/three-v-three-circle-game/three-v-three-circle-game.excalidraw)
+
+### [Half-ice 3v3](drills/half-ice-3v3.md)
+
+3 on 3 in half the ice. The O try to score. The D try to win the puck and pass it to the coach at the blue line. Then the D come off, the O flip to D, and three fresh skaters come on as O.
+
+**Tags:** `small-area-game`, `half-ice`, `defence`
+
+[Note](drills/half-ice-3v3.md) · [Drill page](drills/half-ice-3v3/index.html) · [Animation](media/half-ice-3v3/half-ice-3v3-anim.html) · [PNG](media/half-ice-3v3/half-ice-3v3.png) · [Excalidraw](media/half-ice-3v3/half-ice-3v3.excalidraw)
+
+### [Defend the Cone](drills/defend-the-cone.md)
+
+A backup when you run out of nets: defend a cone instead. 1 on 1 around a faceoff circle with a cone on the dot. The attacker tries to touch the cone with the puck; the defender stays between the attacker and the cone.
+
+**Tags:** `small-area-game`, `defence`
+
+[Note](drills/defend-the-cone.md) · [Drill page](drills/defend-the-cone/index.html) · [Animation](media/defend-the-cone/defend-the-cone-anim.html) · [PNG](media/defend-the-cone/defend-the-cone.png) · [Excalidraw](media/defend-the-cone/defend-the-cone.excalidraw)
+
 
 ## Add a drill
 
