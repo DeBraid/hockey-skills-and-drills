@@ -4,11 +4,11 @@ Pass, follow your pass to that spot. Catch it at cone 3, drive and shoot.
 
 **Tags:** `full-ice`, `passing`, `shooting`
 
-[All drills](../README.md) · [Video page](follow-the-pass/index.html) · [MP4](../media/follow-the-pass/follow-the-pass.mp4) · [GIF](../media/follow-the-pass/follow-the-pass.gif) · [PNG](../media/follow-the-pass/follow-the-pass.png) · [Excalidraw](../media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
+[All drills](../README.md) · [Drill page](follow-the-pass/index.html) · [Animation](../media/follow-the-pass/follow-the-pass-anim.html) · [PNG](../media/follow-the-pass/follow-the-pass.png) · [Excalidraw](../media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
 
 ![Full-ice diagram of Follow the Pass. Lines sit on both goal lines, three cones mark each side, and the flow ends with a shot before joining the far line.](../media/follow-the-pass/follow-the-pass.png)
 
-The video page embeds the MP4 and uses this PNG as the poster. On GitHub, the MP4 link above opens the video. The GIF is the downloadable animation.
+The drill page embeds the HTML animation. The PNG is the still diagram and the home-page thumbnail.
 
 ## Coaching points
 

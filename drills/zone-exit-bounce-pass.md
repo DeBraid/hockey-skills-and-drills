@@ -4,13 +4,11 @@ Bounce a self-pass off the boards around a cone, then a soft D, then a stretch p
 
 **Tags:** `passing`, `breakout`
 
-[All drills](../README.md) · [Drill page](zone-exit-bounce-pass/index.html) · [GIF](../media/zone-exit-bounce-pass/zone-exit-bounce-pass.gif) · [PNG](../media/zone-exit-bounce-pass/zone-exit-bounce-pass.png) · [Excalidraw](../media/zone-exit-bounce-pass/zone-exit-bounce-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ)
+[All drills](../README.md) · [Drill page](zone-exit-bounce-pass/index.html) · [Animation](../media/zone-exit-bounce-pass/zone-exit-bounce-pass-anim.html) · [PNG](../media/zone-exit-bounce-pass/zone-exit-bounce-pass.png) · [Excalidraw](../media/zone-exit-bounce-pass/zone-exit-bounce-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ)
 
 ![Zone diagram of the zone-exit bounce pass progression. In the bottom corner a player carries up the wall, banks the puck past a cone, and exits. In the top corner a player carries up the wall and banks a stretch pass past the coach at the point to a teammate at the blue line.](../media/zone-exit-bounce-pass/zone-exit-bounce-pass.png)
 
-![Animation of Zone Exits: Bounce Pass](../media/zone-exit-bounce-pass/zone-exit-bounce-pass.gif)
-
-The drill page shows this GIF. The PNG is the still diagram and the home-page thumbnail.
+The drill page embeds the HTML animation. The PNG is the still diagram and the home-page thumbnail.
 
 ## Coaching points
 

@@ -4,13 +4,11 @@ One line in the corner. Lane 1 inside edges, lane 2 crossovers, lanes 3 and 4 ca
 
 **Tags:** `full-ice`, `skating`, `shooting`
 
-[All drills](../README.md) · [Drill page](four-lane-warmup/index.html) · [GIF](../media/four-lane-warmup/four-lane-warmup.gif) · [PNG](../media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](../media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
+[All drills](../README.md) · [Drill page](four-lane-warmup/index.html) · [Animation](../media/four-lane-warmup/four-lane-warmup-anim.html) · [PNG](../media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](../media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
 
 ![Full-ice diagram of the 4-Lane Warm-up. Three rows of cones split the ice into four lanes. A skater goes down lane 1, back up lane 2, carries a puck down lane 3 to shoot on the far net, and carries back up lane 4 to shoot on the near net.](../media/four-lane-warmup/four-lane-warmup.png)
 
-![Animation of 4-Lane Warm-up](../media/four-lane-warmup/four-lane-warmup.gif)
-
-The drill page shows this GIF. The PNG is the still diagram and the home-page thumbnail.
+The drill page embeds the HTML animation. The PNG is the still diagram and the home-page thumbnail.
 
 ## Coaching points
 

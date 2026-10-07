@@ -4,13 +4,11 @@ Tip the point shot into the empty net, dig it out, and shoot on the goalie.
 
 **Tags:** `shooting`
 
-[All drills](../README.md) · [Drill page](tip-and-dig-shooting/index.html) · [GIF](../media/tip-and-dig-shooting/tip-and-dig-shooting.gif) · [PNG](../media/tip-and-dig-shooting/tip-and-dig-shooting.png) · [Excalidraw](../media/tip-and-dig-shooting/tip-and-dig-shooting.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA)
+[All drills](../README.md) · [Drill page](tip-and-dig-shooting/index.html) · [Animation](../media/tip-and-dig-shooting/tip-and-dig-shooting-anim.html) · [PNG](../media/tip-and-dig-shooting/tip-and-dig-shooting.png) · [Excalidraw](../media/tip-and-dig-shooting/tip-and-dig-shooting.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA)
 
 ![Zone diagram of Tip-and-Dig Shooting. A shooter at the blue line shoots through a tipper standing in front of an empty net at the hash marks. The tipper digs the puck out and carries into the slot to shoot on the goalie.](../media/tip-and-dig-shooting/tip-and-dig-shooting.png)
 
-![Animation of Tip-and-Dig Shooting](../media/tip-and-dig-shooting/tip-and-dig-shooting.gif)
-
-The drill page shows this GIF. The PNG is the still diagram and the home-page thumbnail.
+The drill page embeds the HTML animation. The PNG is the still diagram and the home-page thumbnail.
 
 ## Coaching points
 
