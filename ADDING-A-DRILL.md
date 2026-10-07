@@ -8,12 +8,13 @@ Create `media/<slug>/` and put these files in it, using the slug as the file nam
 
 | File | Role |
 | --- | --- |
-| `<slug>.png` | Still diagram. It is the home-page thumbnail. On an MP4 page it is the video poster. On a GIF page it is the fallback still. |
-| `<slug>.gif` | Animation. Downloadable on every drill. When there is no MP4, the drill page plays this GIF inline. |
+| `<slug>.png` | Still diagram. It is the home-page thumbnail and the still image on the drill page. |
+| `<slug>-anim.html` | Looping HTML animation. The drill page embeds this file. It is a standalone page (inline SVG and CSS, with Pause and Replay) and it loads the shared font from `../fonts/Virgil.woff2`. |
 | `<slug>.excalidraw` | Source drawing, so someone can edit the diagram later. |
-| `<slug>.mp4` | Optional. When this file is present, the drill page plays it and keeps the GIF as a download. H.264, silent is fine. This is the file to send on WhatsApp. Leave it out when the drill only has a GIF. |
 
-Keep the exported sizes. The slug is lowercase words separated by hyphens, for example `net-front-walkout`.
+The shared font files stay in `media/fonts/`: `Virgil.woff2` and `Virgil-OFL.txt` (SIL Open Font License 1.1). Do not copy the font into each drill folder.
+
+Keep the exported sizes. The slug is lowercase words separated by hyphens, for example `net-front-walkout`. The build reads the animation SVG `viewBox` and sizes the embedded frame to that aspect ratio, so a wide full-ice diagram stays landscape and a tall zone diagram stays portrait.
 
 ## 2. Register it in `drills.json`
 
@@ -52,6 +53,6 @@ Open `index.html` in a browser, or from the repo root run:
 python3 -m http.server
 ```
 
-Confirm the new card, the tag filters, the still diagram, and the download links. A drill with an MP4 plays that video, uses the PNG as the poster, and does not play the GIF inline. A drill without an MP4 shows the GIF in the Watch section, uses the PNG if the GIF cannot play, and does not show a video player or an MP4 download. Leave `excalidrawUrl` as `null` when there is no public Excalidraw share; the page then omits that link.
+Confirm the new card, the tag filters, the still diagram, and the download links. The Watch section embeds `<slug>-anim.html`, Pause and Replay work, and the full-screen link opens that animation page. The PNG stays the thumbnail and the still image. Leave `excalidrawUrl` as `null` when there is no public Excalidraw share; the page then omits that link.
 
 Commit `media/<slug>/`, `drills.json`, and the generated pages together.

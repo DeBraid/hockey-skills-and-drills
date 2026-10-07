@@ -1,12 +1,12 @@
 # Hockey Skills & Drills
 
-A coaching library of on-ice drills. Each drill has a rink diagram, an animation (a silent MP4 or a GIF), the Excalidraw source, and the steps in plain language.
+A coaching library of on-ice drills. Each drill has a rink diagram, an HTML animation, the Excalidraw source, and the steps in plain language.
 
 ## How to read it
 
-On GitHub, open a drill note below. The diagram, the steps, and the file links render on github.com. When a drill has an MP4, that link opens GitHub's video player. When it does not, the note shows the GIF.
+On GitHub, open a drill note below. The diagram, the steps, and the file links render on github.com.
 
-The phone-friendly pages live in [`index.html`](index.html). A page with an MP4 plays that video and uses the PNG as the poster. A page without an MP4 shows the GIF inline, with the PNG as the fallback still and the home-page thumbnail. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser. Send the MP4 when a drill has one.
+The phone-friendly pages live in [`index.html`](index.html). Each drill page embeds the HTML animation and keeps the PNG as the still diagram and the home-page thumbnail. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser.
 
 ## GitHub Pages
 
@@ -20,7 +20,7 @@ Full ice, two-sided. Lines along each goal line; the front player at the boards 
 
 **Tags:** `full-ice`, `passing`, `shooting`
 
-[Note](drills/follow-the-pass.md) · [Video page](drills/follow-the-pass/index.html) · [MP4](media/follow-the-pass/follow-the-pass.mp4) · [GIF](media/follow-the-pass/follow-the-pass.gif) · [PNG](media/follow-the-pass/follow-the-pass.png) · [Excalidraw](media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
+[Note](drills/follow-the-pass.md) · [Drill page](drills/follow-the-pass/index.html) · [Animation](media/follow-the-pass/follow-the-pass-anim.html) · [PNG](media/follow-the-pass/follow-the-pass.png) · [Excalidraw](media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
 
 ### [Low-to-High: D Shot](drills/low-to-high-shot.md)
 
@@ -28,7 +28,7 @@ Half-ice zone entry. Carry in, drive to the dot, curl toward the boards, and pas
 
 **Tags:** `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`
 
-[Note](drills/low-to-high-shot.md) · [Video page](drills/low-to-high-shot/index.html) · [MP4](media/low-to-high-shot/low-to-high-shot.mp4) · [GIF](media/low-to-high-shot/low-to-high-shot.gif) · [PNG](media/low-to-high-shot/low-to-high-shot.png) · [Excalidraw](media/low-to-high-shot/low-to-high-shot.excalidraw)
+[Note](drills/low-to-high-shot.md) · [Drill page](drills/low-to-high-shot/index.html) · [Animation](media/low-to-high-shot/low-to-high-shot-anim.html) · [PNG](media/low-to-high-shot/low-to-high-shot.png) · [Excalidraw](media/low-to-high-shot/low-to-high-shot.excalidraw)
 
 ### [Low-to-High: Give-and-Go](drills/low-to-high-give-and-go.md)
 
@@ -36,7 +36,7 @@ Same zone entry. After the low-to-high pass, the D gives it back to the forward 
 
 **Tags:** `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`
 
-[Note](drills/low-to-high-give-and-go.md) · [Video page](drills/low-to-high-give-and-go/index.html) · [MP4](media/low-to-high-give-and-go/low-to-high-give-and-go.mp4) · [GIF](media/low-to-high-give-and-go/low-to-high-give-and-go.gif) · [PNG](media/low-to-high-give-and-go/low-to-high-give-and-go.png) · [Excalidraw](media/low-to-high-give-and-go/low-to-high-give-and-go.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PKA09mlyorcRyYW7XvmM5,sz7tsIEBbCT4iNpaD84QZA)
+[Note](drills/low-to-high-give-and-go.md) · [Drill page](drills/low-to-high-give-and-go/index.html) · [Animation](media/low-to-high-give-and-go/low-to-high-give-and-go-anim.html) · [PNG](media/low-to-high-give-and-go/low-to-high-give-and-go.png) · [Excalidraw](media/low-to-high-give-and-go/low-to-high-give-and-go.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PKA09mlyorcRyYW7XvmM5,sz7tsIEBbCT4iNpaD84QZA)
 
 ### [Low-to-High: D-to-D](drills/low-to-high-d-to-d.md)
 
@@ -44,7 +44,7 @@ Same zone entry. The bottom D passes across to the top D, the top D shoots, and 
 
 **Tags:** `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`
 
-[Note](drills/low-to-high-d-to-d.md) · [Video page](drills/low-to-high-d-to-d/index.html) · [MP4](media/low-to-high-d-to-d/low-to-high-d-to-d.mp4) · [GIF](media/low-to-high-d-to-d/low-to-high-d-to-d.gif) · [PNG](media/low-to-high-d-to-d/low-to-high-d-to-d.png) · [Excalidraw](media/low-to-high-d-to-d/low-to-high-d-to-d.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA)
+[Note](drills/low-to-high-d-to-d.md) · [Drill page](drills/low-to-high-d-to-d/index.html) · [Animation](media/low-to-high-d-to-d/low-to-high-d-to-d-anim.html) · [PNG](media/low-to-high-d-to-d/low-to-high-d-to-d.png) · [Excalidraw](media/low-to-high-d-to-d/low-to-high-d-to-d.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA)
 
 ### [1 Up / 1 Down](drills/one-up-one-down.md)
 
@@ -52,7 +52,7 @@ Corner 1v1. On 'Go' the D touches the goal line and the F touches the blue line.
 
 **Tags:** `defence`, `small-area-game`
 
-[Note](drills/one-up-one-down.md) · [Drill page](drills/one-up-one-down/index.html) · [GIF](media/one-up-one-down/one-up-one-down.gif) · [PNG](media/one-up-one-down/one-up-one-down.png) · [Excalidraw](media/one-up-one-down/one-up-one-down.excalidraw)
+[Note](drills/one-up-one-down.md) · [Drill page](drills/one-up-one-down/index.html) · [Animation](media/one-up-one-down/one-up-one-down-anim.html) · [PNG](media/one-up-one-down/one-up-one-down.png) · [Excalidraw](media/one-up-one-down/one-up-one-down.excalidraw)
 
 ### [Olympic Breakout Pass](drills/olympic-breakout-pass.md)
 
@@ -60,7 +60,7 @@ Continuous groups of three in one zone. F passes low to X, pivots on the wall, t
 
 **Tags:** `passing`, `shooting`, `breakout`
 
-[Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/index.html) · [GIF](media/olympic-breakout-pass/olympic-breakout-pass.gif) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
+[Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/index.html) · [Animation](media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
 
 ### [Zone Exits: Bounce Pass](drills/zone-exit-bounce-pass.md)
 
@@ -68,7 +68,7 @@ Defensive-zone exits from a line in each corner. Start with a self-pass off the 
 
 **Tags:** `passing`, `breakout`
 
-[Note](drills/zone-exit-bounce-pass.md) · [Drill page](drills/zone-exit-bounce-pass/index.html) · [GIF](media/zone-exit-bounce-pass/zone-exit-bounce-pass.gif) · [PNG](media/zone-exit-bounce-pass/zone-exit-bounce-pass.png) · [Excalidraw](media/zone-exit-bounce-pass/zone-exit-bounce-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ)
+[Note](drills/zone-exit-bounce-pass.md) · [Drill page](drills/zone-exit-bounce-pass/index.html) · [Animation](media/zone-exit-bounce-pass/zone-exit-bounce-pass-anim.html) · [PNG](media/zone-exit-bounce-pass/zone-exit-bounce-pass.png) · [Excalidraw](media/zone-exit-bounce-pass/zone-exit-bounce-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ)
 
 ### [Tip-and-Dig Shooting](drills/tip-and-dig-shooting.md)
 
@@ -76,7 +76,7 @@ Zone shooting with two nets: an empty net at the hash marks and the regular net 
 
 **Tags:** `shooting`
 
-[Note](drills/tip-and-dig-shooting.md) · [Drill page](drills/tip-and-dig-shooting/index.html) · [GIF](media/tip-and-dig-shooting/tip-and-dig-shooting.gif) · [PNG](media/tip-and-dig-shooting/tip-and-dig-shooting.png) · [Excalidraw](media/tip-and-dig-shooting/tip-and-dig-shooting.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA)
+[Note](drills/tip-and-dig-shooting.md) · [Drill page](drills/tip-and-dig-shooting/index.html) · [Animation](media/tip-and-dig-shooting/tip-and-dig-shooting-anim.html) · [PNG](media/tip-and-dig-shooting/tip-and-dig-shooting.png) · [Excalidraw](media/tip-and-dig-shooting/tip-and-dig-shooting.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA)
 
 ### [4-Lane Warm-up](drills/four-lane-warmup.md)
 
@@ -84,7 +84,7 @@ Full-ice warm-up. Cones split the ice into four lanes and one line starts in the
 
 **Tags:** `full-ice`, `skating`, `shooting`
 
-[Note](drills/four-lane-warmup.md) · [Drill page](drills/four-lane-warmup/index.html) · [GIF](media/four-lane-warmup/four-lane-warmup.gif) · [PNG](media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
+[Note](drills/four-lane-warmup.md) · [Drill page](drills/four-lane-warmup/index.html) · [Animation](media/four-lane-warmup/four-lane-warmup-anim.html) · [PNG](media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
 
 
 ## Add a drill
