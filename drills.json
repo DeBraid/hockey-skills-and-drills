@@ -245,26 +245,68 @@
     },
     {
       "slug": "crossover-circles",
-      "title": "Crossover Circles",
-      "subtitle": "Crossovers around the faceoff circles: 5 forwards, 5 backwards, then the same with pucks.",
-      "blurb": "A skating warm-up on the faceoff circles. Skaters do crossovers around the circle forwards, then backwards the other way, then repeat the set with a puck.",
-      "diagramAlt": "Zone diagram of Crossover Circles. A line of skaters at each end-zone faceoff circle skates around the circle forwards, then backwards the other way, then with a puck, and returns to the line.",
-      "tags": ["skating"],
+      "title": "Crossover Circles Race",
+      "subtitle": "Lines on the dots near the blue line. Race into the zone, around the circle, take a long pass from your line, shoot. First goal wins.",
+      "blurb": "A skating race on the two end-zone faceoff circles. Each line stands on a neutral-zone faceoff dot near the blue line. One skater from each line races into the zone, around the circle with crossovers, takes a long pass from the next player on the blue-line dot, then curls in and shoots. First goal wins. For the pivot version, see Crossover Circles: Pivot Race.",
+      "diagramAlt": "Half-ice diagram of the Crossover Circles Race. A line stands on each neutral-zone faceoff dot near the blue line with pucks. One skater from each line skates into the zone, around the outside of the end-zone faceoff circle with crossovers, swings toward the middle, takes a long pass from the next player on the blue-line dot, curls in and shoots on the goalie. Both circles race at the same time.",
+      "tags": [
+        "skating",
+        "passing",
+        "shooting"
+      ],
       "excalidrawUrl": null,
       "coachingPoints": [
         "Knees bent and chest up. Push with the outside leg and cross the inside leg over.",
         "Lean into the circle and keep your stick on the ice.",
-        "Backwards: stay low, keep your shoulders square, and push with the crossunder.",
-        "With pucks: keep your head up and the puck out in front."
+        "Passer on the blue-line dot: a hard, flat pass ahead of the skater's stick.",
+        "Race, but catch the pass cleanly before you shoot.",
+        "Switch directions every round so both crossovers get work."
       ],
       "steps": [
-        "Split into one group per faceoff circle, lined up at the edge of the circle. Pucks sit behind the line.",
-        "Skate 5 circles forwards with crossovers.",
-        "Skate 5 circles backwards, going the other way.",
-        "Grab a puck and do the same again: 5 forwards, then 5 backwards.",
-        "Back to the line. The front of the line goes next."
+        "Split into two lines, one standing on each neutral-zone faceoff dot near the blue line with pucks.",
+        "Race! The front skater on each line skates into the zone and around their faceoff circle with crossovers.",
+        "Swing toward the middle and take a long pass from the next player on the blue-line dot.",
+        "Curl in and shoot. First goal wins.",
+        "The passer goes next and the shooter goes to the back of the line. Next round, go the other way.",
+        "Variation (step 2): see Crossover Circles: Pivot Race. One lap around the circle with a pivot at every cone."
       ],
-      "related": []
+      "related": [
+        "crossover-circles-pivots",
+        "figure-8-pivots"
+      ]
+    },
+    {
+      "slug": "crossover-circles-pivots",
+      "title": "Crossover Circles: Pivot Race",
+      "subtitle": "Race: one lap around the circle, pivot at every cone. Long pass from your line, shoot. First goal wins.",
+      "blurb": "The step-2 version of the Crossover Circles Race. Lines stand on the neutral-zone faceoff dots near the blue line. Each racer skates into the zone and does ONE lap around the circle with a pivot at each of the 3 cones: forwards, backwards, forwards, backwards. Then turn forwards, take a long pass from your line and shoot. First goal wins.",
+      "diagramAlt": "Half-ice diagram of Crossover Circles: Pivot Race. A line stands on each neutral-zone faceoff dot near the blue line with pucks, and three numbered pivot cones sit on each end-zone circle. The racer skates into the zone and does one clockwise lap: forwards to cone 1 and pivot to backwards, backwards to cone 2 and pivot to forwards, forwards to cone 3 and pivot to backwards, backwards to finish the lap. Then the racer turns forwards, takes a long pass from the blue-line dot and shoots. Forwards skating is a solid arrow, backwards skating is a dotted arrow. Both circles race at the same time.",
+      "tags": [
+        "skating",
+        "passing",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "One lap, pivot at every cone.",
+        "Pivot: open your hips toward the middle of the circle, keep your feet moving, eyes up.",
+        "Backwards: stay low with your shoulders square, push with crossunders.",
+        "Turn forwards after the lap and show your stick for the pass.",
+        "Catch the long pass cleanly, then shoot to score. First goal wins."
+      ],
+      "steps": [
+        "Same setup as the Crossover Circles Race: a line on each neutral-zone faceoff dot near the blue line with pucks. Put 3 cones on each circle, spread evenly.",
+        "Race! Skate into the zone and go forwards to cone 1. Pivot to backwards.",
+        "Backwards to cone 2. Pivot to forwards.",
+        "Forwards to cone 3. Pivot to backwards.",
+        "Backwards to finish the lap, turn forwards and take a long pass from the next player on the blue-line dot.",
+        "Shoot! First goal wins. The passer goes next and the shooter goes to the back of the line."
+      ],
+      "related": [
+        "crossover-circles",
+        "figure-8-pivots",
+        "lateral-step-overs"
+      ]
     },
     {
       "slug": "stops-and-starts",

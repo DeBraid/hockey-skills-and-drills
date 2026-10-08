@@ -30,6 +30,6 @@ Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change
 
 ## Related drills
 
-- [Crossover Circles](crossover-circles.md)
+- [Crossover Circles Race](crossover-circles.md)
 - [Stops and Starts](stops-and-starts.md)
 

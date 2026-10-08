@@ -1,12 +1,12 @@
-# Crossover Circles
+# Crossover Circles Race
 
-Crossovers around the faceoff circles: 5 forwards, 5 backwards, then the same with pucks.
+Lines on the dots near the blue line. Race into the zone, around the circle, take a long pass from your line, shoot. First goal wins.
 
-**Tags:** `skating`
+**Tags:** `skating`, `passing`, `shooting`
 
 [All drills](../README.md) · [Drill page](crossover-circles/) · [Animation](../media/crossover-circles/crossover-circles-anim.html) · [PNG](../media/crossover-circles/crossover-circles.png) · [Excalidraw](../media/crossover-circles/crossover-circles.excalidraw)
 
-![Zone diagram of Crossover Circles. A line of skaters at each end-zone faceoff circle skates around the circle forwards, then backwards the other way, then with a puck, and returns to the line.](../media/crossover-circles/crossover-circles.png)
+![Half-ice diagram of the Crossover Circles Race. A line stands on each neutral-zone faceoff dot near the blue line with pucks. One skater from each line skates into the zone, around the outside of the end-zone faceoff circle with crossovers, swings toward the middle, takes a long pass from the next player on the blue-line dot, curls in and shoots on the goalie. Both circles race at the same time.](../media/crossover-circles/crossover-circles.png)
 
 The drill page embeds the HTML animation. The PNG is the still diagram and the home-page thumbnail.
 
@@ -14,16 +14,23 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 - Knees bent and chest up. Push with the outside leg and cross the inside leg over.
 - Lean into the circle and keep your stick on the ice.
-- Backwards: stay low, keep your shoulders square, and push with the crossunder.
-- With pucks: keep your head up and the puck out in front.
+- Passer on the blue-line dot: a hard, flat pass ahead of the skater's stick.
+- Race, but catch the pass cleanly before you shoot.
+- Switch directions every round so both crossovers get work.
 
 ## How it runs
 
-1. Split into one group per faceoff circle, lined up at the edge of the circle. Pucks sit behind the line.
-2. Skate 5 circles forwards with crossovers.
-3. Skate 5 circles backwards, going the other way.
-4. Grab a puck and do the same again: 5 forwards, then 5 backwards.
-5. Back to the line. The front of the line goes next.
+1. Split into two lines, one standing on each neutral-zone faceoff dot near the blue line with pucks.
+2. Race! The front skater on each line skates into the zone and around their faceoff circle with crossovers.
+3. Swing toward the middle and take a long pass from the next player on the blue-line dot.
+4. Curl in and shoot. First goal wins.
+5. The passer goes next and the shooter goes to the back of the line. Next round, go the other way.
+6. Variation (step 2): see Crossover Circles: Pivot Race. One lap around the circle with a pivot at every cone.
 
 Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.
+
+## Related drills
+
+- [Crossover Circles: Pivot Race](crossover-circles-pivots.md)
+- [Figure-8s with Pivots](figure-8-pivots.md)
 

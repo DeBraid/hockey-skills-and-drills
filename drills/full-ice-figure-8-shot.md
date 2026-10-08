@@ -33,5 +33,5 @@ Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change
 
 - [Figure-8s with Pivots](figure-8-pivots.md)
 - [4-Lane Warm-up](four-lane-warmup.md)
-- [Crossover Circles](crossover-circles.md)
+- [Crossover Circles Race](crossover-circles.md)
 

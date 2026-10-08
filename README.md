@@ -94,13 +94,21 @@ Full-ice warm-up. Cones split the ice into four lanes and one line starts in the
 
 [Note](drills/four-lane-warmup.md) · [Drill page](drills/four-lane-warmup/) · [Animation](media/four-lane-warmup/four-lane-warmup-anim.html) · [PNG](media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
 
-### [Crossover Circles](drills/crossover-circles.md)
+### [Crossover Circles Race](drills/crossover-circles.md)
 
-A skating warm-up on the faceoff circles. Skaters do crossovers around the circle forwards, then backwards the other way, then repeat the set with a puck.
+A skating race on the two end-zone faceoff circles. Each line stands on a neutral-zone faceoff dot near the blue line. One skater from each line races into the zone, around the circle with crossovers, takes a long pass from the next player on the blue-line dot, then curls in and shoots. First goal wins. For the pivot version, see Crossover Circles: Pivot Race.
 
-**Tags:** `skating`
+**Tags:** `skating`, `passing`, `shooting`
 
 [Note](drills/crossover-circles.md) · [Drill page](drills/crossover-circles/) · [Animation](media/crossover-circles/crossover-circles-anim.html) · [PNG](media/crossover-circles/crossover-circles.png) · [Excalidraw](media/crossover-circles/crossover-circles.excalidraw)
+
+### [Crossover Circles: Pivot Race](drills/crossover-circles-pivots.md)
+
+The step-2 version of the Crossover Circles Race. Lines stand on the neutral-zone faceoff dots near the blue line. Each racer skates into the zone and does ONE lap around the circle with a pivot at each of the 3 cones: forwards, backwards, forwards, backwards. Then turn forwards, take a long pass from your line and shoot. First goal wins.
+
+**Tags:** `skating`, `passing`, `shooting`
+
+[Note](drills/crossover-circles-pivots.md) · [Drill page](drills/crossover-circles-pivots/) · [Animation](media/crossover-circles-pivots/crossover-circles-pivots-anim.html) · [PNG](media/crossover-circles-pivots/crossover-circles-pivots.png) · [Excalidraw](media/crossover-circles-pivots/crossover-circles-pivots.excalidraw)
 
 ### [Stops and Starts](drills/stops-and-starts.md)
 
