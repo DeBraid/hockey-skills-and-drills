@@ -64,11 +64,11 @@ Corner 1v1. On 'Go' the D touches the goal line and the F touches the blue line.
 
 ### [Olympic Breakout Pass](drills/olympic-breakout-pass.md)
 
-Continuous groups of three in one zone. F passes low to X, pivots on the wall, takes it back, one-touches across to O, and curls into the slot for a one-timer from X.
+A simple three-player breakout. The coach rims the puck around the boards, the D turns from the front of the net to get it, and passes to the winger on the half-wall. The winger passes to the centre curling low through the middle, and the centre carries the puck out over the blue line with the winger skating up the wall.
 
-**Tags:** `passing`, `shooting`, `breakout`
+**Tags:** `half-ice`, `passing`, `breakout`
 
-[Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/) · [Animation](media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
+[Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/) · [Animation](media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw)
 
 ### [Zone Exits: Bounce Pass](drills/zone-exit-bounce-pass.md)
 

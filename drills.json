@@ -138,27 +138,34 @@
     {
       "slug": "olympic-breakout-pass",
       "title": "Olympic Breakout Pass",
-      "subtitle": "F to X, pivot on the wall, give-and-go across to O, curl to the slot for a one-timer.",
-      "blurb": "Continuous groups of three in one zone. F passes low to X, pivots on the wall, takes it back, one-touches across to O, and curls into the slot for a one-timer from X.",
-      "diagramAlt": "Zone diagram of the Olympic Breakout Pass. The forward passes to X low, skates down the wall, gets the puck back, passes across to O at the top of the circle, curls over the top into the slot, and one-times a feed from X.",
-      "tags": ["passing", "shooting", "breakout"],
-      "excalidrawUrl": "https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw",
+      "subtitle": "Coach rims it in. D gets it and passes to the winger on the wall, who hits the centre curling low. Carry it out.",
+      "blurb": "A simple three-player breakout. The coach rims the puck around the boards, the D turns from the front of the net to get it, and passes to the winger on the half-wall. The winger passes to the centre curling low through the middle, and the centre carries the puck out over the blue line with the winger skating up the wall.",
+      "diagramAlt": "Half-ice diagram of the Olympic Breakout Pass. A coach at the top of the zone rims the puck behind the net into the bottom corner. A D starts in front of the net and goes to get it while a winger skates from the blue line down the bottom boards to the half-wall. The D passes to the winger, the centre swings low through the slot and curls up the middle, takes a pass from the winger, and carries it over the blue line. The winger skates up the wall.",
+      "tags": [
+        "half-ice",
+        "passing",
+        "breakout"
+      ],
+      "excalidrawUrl": null,
       "coachingPoints": [
-        "Groups of three: F with the puck near the blue line, X low support, O high support at the top of the circle.",
-        "Pivot tight to the boards below the hash marks and show a target for the return pass.",
-        "Make the pass across to O on one touch, then curl over the top of the circle into the slot.",
-        "Keep it moving with no whistles. Rotate F to O, O to X, and X to the line."
+        "D: shoulder-check on the way to the puck so you know where the winger is before you get there.",
+        "D: hard, flat pass to the winger's forehand.",
+        "Winger: back to the boards at the hash marks, stick on the ice, give a target.",
+        "Centre: swing low through the middle and curl with speed, stick on the ice ready for the pass.",
+        "The drill isn't done until the puck crosses the blue line."
       ],
       "steps": [
-        "F starts near the blue line with the puck. X stands low at the bottom of the faceoff circle and O stands high at the top of the circle.",
-        "F passes to X and skates tight down the boards.",
-        "F pivots below the hash marks and X passes the puck back.",
-        "F one-touches the puck across to O, then curls over the top of the circle.",
-        "O passes down to X while F cuts into the slot.",
-        "X feeds F in the slot for a one-timer on goal.",
-        "Rotate: F takes O's spot, O takes X's spot, and X goes to the back of the line. The next F goes right away."
+        "Setup: one D in front of the net, the D line high in the zone, the winger line along the bottom boards near the blue line, and the centre line in the high middle. The coach has the pucks at the top of the zone.",
+        "The coach rims the puck around the boards behind the net. The D turns and goes to get it, and the winger skates down the wall to the half-wall at the hash marks.",
+        "The D shoulder-checks, picks up the puck beside the net and passes hard to the winger on the wall. At the same time the centre swings low through the slot.",
+        "The winger passes to the centre, who is curling up the middle.",
+        "The centre carries the puck out over the blue line while the winger skates up the wall.",
+        "Everyone goes back to their line and the next D steps in front of the net. Progression: carry it all the way and shoot on the far net, or add a pass back to the winger in the neutral zone."
       ],
-      "related": ["zone-exit-bounce-pass"]
+      "related": [
+        "d-to-wall-breakout",
+        "zone-exit-bounce-pass"
+      ]
     },
     {
       "slug": "zone-exit-bounce-pass",
