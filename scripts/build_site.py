@@ -183,7 +183,7 @@ def page_shell(title: str, prefix: str, body: str) -> str:
   <a class="skip" href="#content">Skip to content</a>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="{prefix}index.html">
+      <a class="brand" href="{prefix or "./"}">
         <span class="mark" aria-hidden="true"><span></span></span>
         <span class="brand-text">
           <span class="brand-kicker">Coaching library</span>
@@ -230,7 +230,7 @@ def write_index(data: dict, labels: dict[str, str]) -> None:
             series = f'\n          <p class="series">{esc(drill["series"])}</p>'
         cards.append(
             f"""      <article class="card" data-tags="{' '.join(drill['tags'])}">
-        <a class="card-link" href="drills/{slug}/index.html">
+        <a class="card-link" href="drills/{slug}/">
           <span class="card-media">
             <img src="{media_rel(slug, 'png')}" alt="">
           </span>
@@ -305,7 +305,7 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     related_html = ""
     if drill.get("related"):
         links = "\n".join(
-            f'        <li><a href="../{other}/index.html">{esc(by_slug[other]["title"])}</a></li>'
+            f'        <li><a href="../{other}/">{esc(by_slug[other]["title"])}</a></li>'
             for other in drill["related"]
         )
         related_heading = "Same series" if drill.get("series") else "Related drills"
@@ -332,7 +332,7 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
       <p class="anim-open"><a href="{anim_src}">Open full screen</a></p>
     </section>"""
     body = f"""  <main id="content" class="wrap-read">
-    <p class="back"><a href="{prefix}index.html">All drills</a></p>
+    <p class="back"><a href="{prefix}">All drills</a></p>
     <header class="drill-head">{kicker}
       <h1>{esc(drill['title'])}</h1>
       <p class="lede">{esc(drill['subtitle'])}</p>
@@ -380,7 +380,7 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
 def md_links(drill: dict, root_prefix: str, page_prefix: str) -> str:
     slug = drill["slug"]
     parts = [
-        f"[Drill page]({page_prefix}{slug}/index.html)",
+        f"[Drill page]({page_prefix}{slug}/)",
         f"[Animation]({root_prefix}{anim_rel(slug)})",
         f"[PNG]({root_prefix}{media_rel(slug, 'png')})",
         f"[Excalidraw]({root_prefix}{media_rel(slug, 'excalidraw')})",
@@ -467,7 +467,7 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
                 "series": drill.get("series") or "",
                 "tags": [labels[tag] for tag in drill["tags"]],
                 "png": f"../{media_rel(slug, 'png')}",
-                "page": f"../drills/{slug}/index.html",
+                "page": f"../drills/{slug}/",
                 "alt": drill["diagramAlt"],
                 "points": drill["coachingPoints"],
             }
@@ -517,7 +517,7 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
       <input class="plan-share-fallback" id="plan-share-fallback" type="text" readonly hidden>
     </div>
     <p class="plan-total" id="plan-total" hidden>0 drills · 0 min</p>
-    <p class="empty" id="plan-empty" hidden>No drills in this plan yet. <a href="../index.html">Browse drills</a> and use Add to plan.</p>
+    <p class="empty" id="plan-empty" hidden>No drills in this plan yet. <a href="../">Browse drills</a> and use Add to plan.</p>
     <p class="empty" id="plan-shared-empty" hidden>Nothing in this link matched a drill in the library.</p>
     <ol class="plan-list" id="plan-list" aria-label="Drills in this plan"></ol>
   </main>
@@ -665,6 +665,8 @@ def check_output(drills: list[dict]) -> None:
             raise SystemExit(f"plan catalog is missing coaching points for {item['slug']}")
         png = (ROOT / "plan" / item["png"]).resolve()
         page = (ROOT / "plan" / item["page"]).resolve()
+        if page.is_dir():
+            page = page / "index.html"
         if not png.is_file() or not page.is_file():
             raise SystemExit(f"plan catalog has a missing file for {item['slug']}")
     if "Fork or star" in plan_text or "Add a drill" in plan_text:
@@ -680,6 +682,15 @@ def check_output(drills: list[dict]) -> None:
         raise SystemExit("account page should stay read-only")
     if 'id="account-out" hidden' not in account or "data-account-slot hidden" not in account:
         raise SystemExit("account page should hide sign-in until the API is available")
+    html_pages = [
+        ROOT / "index.html",
+        ROOT / "plan" / "index.html",
+        ROOT / "account" / "index.html",
+    ]
+    html_pages.extend(ROOT / "drills" / drill["slug"] / "index.html" for drill in drills)
+    for html_path in html_pages:
+        if "index.html" in html_path.read_text(encoding="utf-8"):
+            raise SystemExit(f"{html_path.relative_to(ROOT)} still links index.html")
 
 
 def main() -> None:

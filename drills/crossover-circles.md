@@ -4,7 +4,7 @@ Crossovers around the faceoff circles: 5 forwards, 5 backwards, then the same wi
 
 **Tags:** `skating`
 
-[All drills](../README.md) · [Drill page](crossover-circles/index.html) · [Animation](../media/crossover-circles/crossover-circles-anim.html) · [PNG](../media/crossover-circles/crossover-circles.png) · [Excalidraw](../media/crossover-circles/crossover-circles.excalidraw)
+[All drills](../README.md) · [Drill page](crossover-circles/) · [Animation](../media/crossover-circles/crossover-circles-anim.html) · [PNG](../media/crossover-circles/crossover-circles.png) · [Excalidraw](../media/crossover-circles/crossover-circles.excalidraw)
 
 ![Zone diagram of Crossover Circles. A line of skaters at each end-zone faceoff circle skates around the circle forwards, then backwards the other way, then with a puck, and returns to the line.](../media/crossover-circles/crossover-circles.png)
 

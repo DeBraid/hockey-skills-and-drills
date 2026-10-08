@@ -4,7 +4,7 @@ Rim it hard around the boards to your partner, then 2 on 2. D must touch the top
 
 **Tags:** `small-area-game`, `passing`, `defence`
 
-[All drills](../README.md) · [Drill page](two-v-two-hard-rim/index.html) · [Animation](../media/two-v-two-hard-rim/two-v-two-hard-rim-anim.html) · [PNG](../media/two-v-two-hard-rim/two-v-two-hard-rim.png) · [Excalidraw](../media/two-v-two-hard-rim/two-v-two-hard-rim.excalidraw)
+[All drills](../README.md) · [Drill page](two-v-two-hard-rim/) · [Animation](../media/two-v-two-hard-rim/two-v-two-hard-rim-anim.html) · [PNG](../media/two-v-two-hard-rim/two-v-two-hard-rim.png) · [Excalidraw](../media/two-v-two-hard-rim/two-v-two-hard-rim.excalidraw)
 
 ![Zone diagram of 2v2 Hard Rim. The top forward rims the puck around the boards behind the net to the bottom forward while the two D skate to the top of the circles. The bottom forward collects, passes to the partner, and the partner shoots.](../media/two-v-two-hard-rim/two-v-two-hard-rim.png)
 

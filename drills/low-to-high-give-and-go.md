@@ -6,7 +6,7 @@ Carry in, drive to the dot, curl, pass up to the D. Give-and-go.
 
 Same entry for every low-to-high drill: carry in, drive to the dot, curl toward the boards, and pass up the wall. Only the finish changes.
 
-[All drills](../README.md) · [Drill page](low-to-high-give-and-go/index.html) · [Animation](../media/low-to-high-give-and-go/low-to-high-give-and-go-anim.html) · [PNG](../media/low-to-high-give-and-go/low-to-high-give-and-go.png) · [Excalidraw](../media/low-to-high-give-and-go/low-to-high-give-and-go.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PKA09mlyorcRyYW7XvmM5,sz7tsIEBbCT4iNpaD84QZA)
+[All drills](../README.md) · [Drill page](low-to-high-give-and-go/) · [Animation](../media/low-to-high-give-and-go/low-to-high-give-and-go-anim.html) · [PNG](../media/low-to-high-give-and-go/low-to-high-give-and-go.png) · [Excalidraw](../media/low-to-high-give-and-go/low-to-high-give-and-go.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PKA09mlyorcRyYW7XvmM5,sz7tsIEBbCT4iNpaD84QZA)
 
 ![Half-ice diagram of the low-to-high give-and-go. The forward passes up to the defence, cuts to the slot, takes the return pass, and shoots.](../media/low-to-high-give-and-go/low-to-high-give-and-go.png)
 

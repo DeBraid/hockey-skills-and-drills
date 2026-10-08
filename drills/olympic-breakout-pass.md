@@ -4,7 +4,7 @@ F to X, pivot on the wall, give-and-go across to O, curl to the slot for a one-t
 
 **Tags:** `passing`, `shooting`, `breakout`
 
-[All drills](../README.md) · [Drill page](olympic-breakout-pass/index.html) · [Animation](../media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](../media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](../media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
+[All drills](../README.md) · [Drill page](olympic-breakout-pass/) · [Animation](../media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](../media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](../media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
 
 ![Zone diagram of the Olympic Breakout Pass. The forward passes to X low, skates down the wall, gets the puck back, passes across to O at the top of the circle, curls over the top into the slot, and one-times a feed from X.](../media/olympic-breakout-pass/olympic-breakout-pass.png)
 

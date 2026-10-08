@@ -4,7 +4,7 @@ Weave through a lane of cones from the blue line to the goal line on your edges.
 
 **Tags:** `skating`
 
-[All drills](../README.md) · [Drill page](cone-weave/index.html) · [Animation](../media/cone-weave/cone-weave-anim.html) · [PNG](../media/cone-weave/cone-weave.png) · [Excalidraw](../media/cone-weave/cone-weave.excalidraw)
+[All drills](../README.md) · [Drill page](cone-weave/) · [Animation](../media/cone-weave/cone-weave-anim.html) · [PNG](../media/cone-weave/cone-weave.png) · [Excalidraw](../media/cone-weave/cone-weave.excalidraw)
 
 ![Zone diagram of Edges: Cone Weave. Four lines start at the blue line and weave through lanes of five cones toward the goal line, then skate back up the outside.](../media/cone-weave/cone-weave.png)
 

@@ -4,7 +4,7 @@
 
 **Tags:** `small-area-game`, `passing`, `shooting`
 
-[All drills](../README.md) · [Drill page](three-v-three-circle-game/index.html) · [Animation](../media/three-v-three-circle-game/three-v-three-circle-game-anim.html) · [PNG](../media/three-v-three-circle-game/three-v-three-circle-game.png) · [Excalidraw](../media/three-v-three-circle-game/three-v-three-circle-game.excalidraw)
+[All drills](../README.md) · [Drill page](three-v-three-circle-game/) · [Animation](../media/three-v-three-circle-game/three-v-three-circle-game-anim.html) · [PNG](../media/three-v-three-circle-game/three-v-three-circle-game.png) · [Excalidraw](../media/three-v-three-circle-game/three-v-three-circle-game.excalidraw)
 
 ![Zone diagram of 3v3 Circle Game. Two nets with goalies face each other across a faceoff circle. The coach passes to an outside X player, the X players move it around the outside, pass to the inside X, and the inside X shoots.](../media/three-v-three-circle-game/three-v-three-circle-game.png)
 

@@ -4,7 +4,7 @@ Carry in wide, delay on the wall, then attack (top) or hit a catcher streaking t
 
 **Tags:** `zone-entry`, `half-ice`, `passing`, `shooting`
 
-[All drills](../README.md) · [Drill page](zone-entry-delay/index.html) · [Animation](../media/zone-entry-delay/zone-entry-delay-anim.html) · [PNG](../media/zone-entry-delay/zone-entry-delay.png) · [Excalidraw](../media/zone-entry-delay/zone-entry-delay.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ)
+[All drills](../README.md) · [Drill page](zone-entry-delay/) · [Animation](../media/zone-entry-delay/zone-entry-delay-anim.html) · [PNG](../media/zone-entry-delay/zone-entry-delay.png) · [Excalidraw](../media/zone-entry-delay/zone-entry-delay.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ)
 
 ![Half-ice diagram of Zone Entries: Delay. Top: a forward carries wide over the blue line, curls back up the wall to delay, then cuts to the slot and shoots. Bottom: a forward carries wide and curls to delay while a catcher skates in from the neutral zone and streaks to the net; the carrier passes to the catcher, who shoots from the slot.](../media/zone-entry-delay/zone-entry-delay.png)
 

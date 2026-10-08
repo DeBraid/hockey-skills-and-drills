@@ -4,7 +4,7 @@
 
 **Tags:** `small-area-game`, `defence`
 
-[All drills](../README.md) · [Drill page](defend-the-cone/index.html) · [Animation](../media/defend-the-cone/defend-the-cone-anim.html) · [PNG](../media/defend-the-cone/defend-the-cone.png) · [Excalidraw](../media/defend-the-cone/defend-the-cone.excalidraw)
+[All drills](../README.md) · [Drill page](defend-the-cone/) · [Animation](../media/defend-the-cone/defend-the-cone-anim.html) · [PNG](../media/defend-the-cone/defend-the-cone.png) · [Excalidraw](../media/defend-the-cone/defend-the-cone.excalidraw)
 
 ![Zone diagram of Defend the Cone. An attacker carries the puck around the faceoff circle while the defender mirrors from inside, then the attacker cuts in for the cone at the dot and the defender angles them away.](../media/defend-the-cone/defend-the-cone.png)
 

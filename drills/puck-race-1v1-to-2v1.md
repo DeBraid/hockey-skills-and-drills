@@ -4,7 +4,7 @@ Two players race for the puck. The winner attacks with a low-to-high pass; the l
 
 **Tags:** `small-area-game`, `defence`, `passing`
 
-[All drills](../README.md) · [Drill page](puck-race-1v1-to-2v1/index.html) · [Animation](../media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1-anim.html) · [PNG](../media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.png) · [Excalidraw](../media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=KL4tW9041BEB-XQh7Xgmf,-zxqXq6WmGDGtFSI1gIOYw)
+[All drills](../README.md) · [Drill page](puck-race-1v1-to-2v1/) · [Animation](../media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1-anim.html) · [PNG](../media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.png) · [Excalidraw](../media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=KL4tW9041BEB-XQh7Xgmf,-zxqXq6WmGDGtFSI1gIOYw)
 
 ![Zone diagram of 1v1 Puck Race to 2v1. A coach behind the net rims a puck into the corner. Two players start side by side near the net and race for it. The winner carries up the wall and passes low-to-high to a player at the top of the circle by a cone, who carries to the slot and shoots while the winner drives the net. The loser defends.](../media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.png)
 

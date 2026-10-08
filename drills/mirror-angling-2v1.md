@@ -4,7 +4,7 @@ F loops the cones while the D mirrors around the dot, then a quick 2v1 rush. Bot
 
 **Tags:** `small-area-game`, `defence`
 
-[All drills](../README.md) · [Drill page](mirror-angling-2v1/index.html) · [Animation](../media/mirror-angling-2v1/mirror-angling-2v1-anim.html) · [PNG](../media/mirror-angling-2v1/mirror-angling-2v1.png) · [Excalidraw](../media/mirror-angling-2v1/mirror-angling-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PNj_Sj_tq-88-kGwGPLcF,9-JRM9DgIdxbd56pxisUjw)
+[All drills](../README.md) · [Drill page](mirror-angling-2v1/) · [Animation](../media/mirror-angling-2v1/mirror-angling-2v1-anim.html) · [PNG](../media/mirror-angling-2v1/mirror-angling-2v1.png) · [Excalidraw](../media/mirror-angling-2v1/mirror-angling-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PNj_Sj_tq-88-kGwGPLcF,9-JRM9DgIdxbd56pxisUjw)
 
 ![Zone diagram of Mirror Angling 2v1. An F line at the top of the circle and an X line at the dot. The F loops cone 1 and rounds cone 2 toward the boards while the X mirrors around the cone below the dot and angles the carrier toward the wall. A second F drives the net, the carrier passes to them, and they shoot on the goalie.](../media/mirror-angling-2v1/mirror-angling-2v1.png)
 

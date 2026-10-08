@@ -4,7 +4,7 @@ The coach shoots on one goalie. That goalie tries to steer the rebound into the 
 
 **Tags:** `small-area-game`, `shooting`
 
-[All drills](../README.md) · [Drill page](goalie-rebound-game/index.html) · [Animation](../media/goalie-rebound-game/goalie-rebound-game-anim.html) · [PNG](../media/goalie-rebound-game/goalie-rebound-game.png) · [Excalidraw](../media/goalie-rebound-game/goalie-rebound-game.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=kNeWmKZpnBiY3kItD8jnG,jPaA7y939n9TMuOjUR1B2A)
+[All drills](../README.md) · [Drill page](goalie-rebound-game/) · [Animation](../media/goalie-rebound-game/goalie-rebound-game-anim.html) · [PNG](../media/goalie-rebound-game/goalie-rebound-game.png) · [Excalidraw](../media/goalie-rebound-game/goalie-rebound-game.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=kNeWmKZpnBiY3kItD8jnG,jPaA7y939n9TMuOjUR1B2A)
 
 ![Zone diagram of Goalie Rebound Game. Two nets sit side by side along the top of the zone, each with a goalie. The coach shoots from the circle at the right net, and that goalie steers the rebound toward the left net.](../media/goalie-rebound-game/goalie-rebound-game.png)
 

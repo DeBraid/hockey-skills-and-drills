@@ -6,7 +6,7 @@ Carry in, drive to the dot, curl, pass up to the D. D-to-D, shot.
 
 Same entry for every low-to-high drill: carry in, drive to the dot, curl toward the boards, and pass up the wall. Only the finish changes.
 
-[All drills](../README.md) · [Drill page](low-to-high-d-to-d/index.html) · [Animation](../media/low-to-high-d-to-d/low-to-high-d-to-d-anim.html) · [PNG](../media/low-to-high-d-to-d/low-to-high-d-to-d.png) · [Excalidraw](../media/low-to-high-d-to-d/low-to-high-d-to-d.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA)
+[All drills](../README.md) · [Drill page](low-to-high-d-to-d/) · [Animation](../media/low-to-high-d-to-d/low-to-high-d-to-d-anim.html) · [PNG](../media/low-to-high-d-to-d/low-to-high-d-to-d.png) · [Excalidraw](../media/low-to-high-d-to-d/low-to-high-d-to-d.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA)
 
 ![Half-ice diagram of low-to-high D-to-D. The forward passes to the bottom defence, the puck goes across to the top defence for a shot, and the forward screens.](../media/low-to-high-d-to-d/low-to-high-d-to-d.png)
 

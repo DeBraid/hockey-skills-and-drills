@@ -4,7 +4,7 @@ Relay race: at each cone, one pass and catch with your line. Alternate forwards 
 
 **Tags:** `skating`, `passing`
 
-[All drills](../README.md) · [Drill page](cone-relay-with-pucks/index.html) · [Animation](../media/cone-relay-with-pucks/cone-relay-with-pucks-anim.html) · [PNG](../media/cone-relay-with-pucks/cone-relay-with-pucks.png) · [Excalidraw](../media/cone-relay-with-pucks/cone-relay-with-pucks.excalidraw)
+[All drills](../README.md) · [Drill page](cone-relay-with-pucks/) · [Animation](../media/cone-relay-with-pucks/cone-relay-with-pucks-anim.html) · [PNG](../media/cone-relay-with-pucks/cone-relay-with-pucks.png) · [Excalidraw](../media/cone-relay-with-pucks/cone-relay-with-pucks.excalidraw)
 
 ![Zone diagram of Cone Relay with Pucks. The middle lane is drawn: the skater carries forwards to cone 1 with a tight turn, passes to the line and gets it back, skates backwards to cone 2, then forwards to cone 3, and races back to hand off.](../media/cone-relay-with-pucks/cone-relay-with-pucks.png)
 
