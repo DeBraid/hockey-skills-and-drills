@@ -563,6 +563,17 @@ main {
   font-weight: 600;
 }
 
+/* Short landscape (iPhone Safari): don't subtract the caption/legend
+   budget from the viewport when choosing the frame width. A full-ice
+   rink then uses the full column; a taller rink stays as wide as the
+   short viewport allows. site.js sizes the iframe to the animation. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .anim-frame {
+    width: min(100%, calc(100vh * var(--anim-w) / var(--anim-h)));
+    width: min(100%, calc(100svh * var(--anim-w) / var(--anim-h)));
+  }
+}
+
 .diagram figcaption {
   margin: 0;
   padding: 0.55rem 0.85rem 0.7rem;
