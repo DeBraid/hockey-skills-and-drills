@@ -1,0 +1,26 @@
+{
+  "name": "hockey-skills-and-drills",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "python3 scripts/build_site.py",
+    "migrate": "node scripts/migrate.mjs",
+    "test": "tsx scripts/test_accounts.ts"
+  },
+  "dependencies": {
+    "@auth/core": "0.41.3",
+    "@auth/neon-adapter": "1.11.3",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^22.13.10",
+    "@types/pg": "^8.11.11",
+    "jsdom": "^26.1.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

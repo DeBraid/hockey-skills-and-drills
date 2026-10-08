@@ -2,9 +2,12 @@
   var script = document.currentScript;
   var rootUrl = new URL("../", script.src);
   var STORAGE_KEY = "hsd-practice-plan";
+  var IMPORT_KEY = "hsd-import-offered";
+  var accountState = { ready: false, enabled: false, google: false, email: false, user: null };
+  var accountReady = [];
 
   function emptyPlan() {
-    return { title: "", items: [] };
+    return { title: "", notes: "", savedId: "", items: [] };
   }
 
   function normalizeMinutes(value) {
@@ -32,7 +35,12 @@
       });
     });
     var title = data && typeof data.title === "string" ? data.title.slice(0, 80) : "";
-    return { title: title, items: items };
+    var notes = data && typeof data.notes === "string" ? data.notes.slice(0, 2000) : "";
+    var savedId = "";
+    if (data && typeof data.savedId === "string" && /^[0-9a-f-]{36}$/i.test(data.savedId)) {
+      savedId = data.savedId;
+    }
+    return { title: title, notes: notes, savedId: savedId, items: items };
   }
 
   function readPlan() {
@@ -48,8 +56,10 @@
   function savePlan(plan) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        title: plan.title,
-        items: plan.items
+        title: plan.title || "",
+        notes: plan.notes || "",
+        savedId: plan.savedId || "",
+        items: plan.items || []
       }));
       return true;
     } catch (error) {
@@ -195,6 +205,8 @@
   }
 
   initPlanPage();
+  initAccountPage();
+  initAccounts();
 
   function initPlanPage() {
     var catalogNode = document.getElementById("drill-catalog");
@@ -226,6 +238,18 @@
     var total = document.getElementById("plan-total");
     var emptyEdit = document.getElementById("plan-empty");
     var emptyShared = document.getElementById("plan-shared-empty");
+    var notesInput = document.getElementById("plan-notes");
+    var printNotes = document.getElementById("plan-print-notes");
+    var saveBox = document.getElementById("plan-save");
+    var saveBtn = document.getElementById("plan-save-btn");
+    var saveNewBtn = document.getElementById("plan-save-new");
+    var signinBanner = document.getElementById("plan-signin");
+    var signinText = document.getElementById("plan-signin-text");
+    var signinLink = document.getElementById("plan-signin-link");
+    var importBanner = document.getElementById("plan-import");
+    var importYes = document.getElementById("plan-import-yes");
+    var importNo = document.getElementById("plan-import-no");
+    var accountStateLine = document.getElementById("plan-account-state");
 
     var shared = false;
     var skipped = 0;
@@ -266,6 +290,7 @@
       var drills = n === 1 ? "1 drill" : n + " drills";
       total.textContent = drills + " \u00b7 " + minutes + " min";
       printTitle.textContent = plan.title.trim();
+      if (printNotes) printNotes.textContent = (plan.notes || "").trim();
     }
 
     function applyChrome() {
@@ -275,6 +300,11 @@
       titleInput.readOnly = shared;
       if (document.activeElement !== titleInput) titleInput.value = plan.title;
       titleInput.placeholder = shared ? "" : "Tuesday practice";
+      if (notesInput) {
+        notesInput.readOnly = shared;
+        if (document.activeElement !== notesInput) notesInput.value = plan.notes || "";
+      }
+      updateAccountChrome();
       if (shared) {
         var message;
         if (!plan.items.length) {
@@ -527,7 +557,7 @@
 
     clearBtn.addEventListener("click", function () {
       if (shared) return;
-      if (!plan.items.length && !plan.title.trim()) {
+      if (!plan.items.length && !plan.title.trim() && !(plan.notes || "").trim()) {
         status.textContent = "The plan is already empty.";
         return;
       }
@@ -535,6 +565,7 @@
       plan = emptyPlan();
       savePlan(plan);
       titleInput.value = "";
+      if (notesInput) notesInput.value = "";
       status.textContent = "Plan cleared.";
       fallback.hidden = true;
       render();
@@ -552,10 +583,12 @@
     loadBtn.addEventListener("click", function () {
       if (!shared || !plan.items.length) return;
       var existing = readPlan();
-      var hasExisting = existing.items.length > 0 || existing.title.trim();
+      var hasExisting = existing.items.length > 0 || existing.title.trim() || (existing.notes || "").trim();
       if (hasExisting && !window.confirm("Replace your saved practice plan with this one?")) return;
       var loaded = {
         title: plan.title,
+        notes: "",
+        savedId: "",
         items: plan.items.map(function (item) {
           return { slug: item.slug, minutes: item.minutes, note: item.note };
         })
@@ -572,7 +605,150 @@
       status.textContent = "Saved in this browser. You can edit this copy.";
       fallback.hidden = true;
       render();
+      maybeOfferImport();
     });
+
+    if (notesInput) {
+      notesInput.addEventListener("input", function () {
+        if (shared) return;
+        plan.notes = notesInput.value.slice(0, 2000);
+        savePlan(plan);
+        if (printNotes) printNotes.textContent = plan.notes.trim();
+        updateAccountChrome();
+      });
+    }
+
+    titleInput.addEventListener("input", function () {
+      updateAccountChrome();
+    });
+
+    if (saveBtn) saveBtn.addEventListener("click", function () { saveCurrent(false); });
+    if (saveNewBtn) saveNewBtn.addEventListener("click", function () { saveCurrent(true); });
+    if (importYes) importYes.addEventListener("click", function () { importLocalPlan(importBanner); });
+    if (importNo) importNo.addEventListener("click", function () { dismissImport(importBanner); });
+
+    whenAccountReady(function () {
+      if (signinLink) signinLink.href = signInHref();
+      updateAccountChrome();
+      var saved = params.get("saved");
+      if (!shared && saved) {
+        if (accountState.user) loadSavedPlan(saved);
+        else promptSignIn("Sign in to open this saved plan.");
+        return;
+      }
+      maybeOfferImport();
+    });
+
+    function updateAccountChrome() {
+      var enabled = accountState.ready && accountState.enabled;
+      if (saveBox) saveBox.hidden = !enabled || shared;
+      if (accountStateLine) {
+        accountStateLine.hidden = !enabled || shared || !accountState.user;
+        if (!accountStateLine.hidden) {
+          accountStateLine.textContent = plan.savedId
+            ? "Saved to your account."
+            : "Not saved to your account yet.";
+        }
+      }
+      if (!enabled || shared || !accountState.user) {
+        if (importBanner && importBanner.dataset.done !== "show") importBanner.hidden = true;
+      }
+    }
+
+    function promptSignIn(message) {
+      if (!signinBanner) return;
+      if (signinText) signinText.textContent = message;
+      if (signinLink) signinLink.href = signInHref();
+      signinBanner.hidden = false;
+    }
+
+    function maybeOfferImport() {
+      if (!importBanner || shared || !accountState.user) return;
+      if (importBanner.dataset.done) return;
+      var existing = readPlan();
+      if (existing.savedId) return;
+      if (!planWorthSaving(existing)) return;
+      if (importSeen(accountState.user.id)) return;
+      importBanner.hidden = false;
+      importBanner.dataset.done = "show";
+    }
+
+    function saveCurrent(asNew) {
+      if (!accountState.enabled) return;
+      if (!accountState.user) {
+        promptSignIn("Sign in to save this plan to your account. The copy in this browser stays either way.");
+        return;
+      }
+      if (!planWorthSaving(plan)) {
+        status.textContent = "Add a drill, a title, or a note before saving.";
+        return;
+      }
+      var creating = asNew || !plan.savedId;
+      status.textContent = "Saving\u2026";
+      var request = creating
+        ? fetchJson(apiUrl("api/plans"), { method: "POST", body: JSON.stringify(planPayload(plan)) })
+        : fetchJson(apiUrl("api/plans/" + plan.savedId), { method: "PATCH", body: JSON.stringify(planPayload(plan)) });
+      request.then(function (result) {
+        if (!creating && result.status === 404) {
+          return fetchJson(apiUrl("api/plans"), {
+            method: "POST",
+            body: JSON.stringify(planPayload(plan))
+          }).then(function (created) {
+            finishSave(created, "That saved plan was missing, so this was saved as a new plan.");
+          });
+        }
+        finishSave(result, asNew ? "Saved as a new plan." : "Saved to your account.");
+      }, function () {
+        status.textContent = "Could not reach your account. The copy in this browser is still here.";
+      });
+    }
+
+    function finishSave(result, message) {
+      if (!result.ok || !result.data.plan) {
+        status.textContent = (result.data && result.data.error) || "Could not save the plan.";
+        return;
+      }
+      plan.savedId = result.data.plan.id;
+      savePlan(plan);
+      status.textContent = message;
+      updateAccountChrome();
+    }
+
+    function loadSavedPlan(id) {
+      status.textContent = "Opening saved plan\u2026";
+      fetchJson(apiUrl("api/plans/" + id)).then(function (result) {
+        if (result.status === 401) {
+          promptSignIn("Sign in to open this saved plan.");
+          status.textContent = "";
+          return;
+        }
+        if (!result.ok || !result.data.plan) {
+          status.textContent = "That saved plan could not be opened.";
+          history.replaceState(null, "", window.location.pathname);
+          return;
+        }
+        var loaded = planFromApi(result.data.plan, bySlug);
+        var existing = readPlan();
+        var hasExisting = planWorthSaving(existing);
+        if (hasExisting && plansDiffer(existing, loaded) && !window.confirm("Replace the plan in this browser with the saved one?")) {
+          history.replaceState(null, "", window.location.pathname);
+          status.textContent = "";
+          return;
+        }
+        if (!savePlan(loaded)) {
+          status.textContent = "Could not open that plan in this browser.";
+          return;
+        }
+        plan = loaded;
+        shared = false;
+        history.replaceState(null, "", window.location.pathname);
+        status.textContent = "Opened your saved plan.";
+        fallback.hidden = true;
+        render();
+      }, function () {
+        status.textContent = "Could not reach your account.";
+      });
+    }
 
     render();
   }
@@ -601,7 +777,7 @@
     });
     return {
       skipped: unknown,
-      plan: { title: title, items: items }
+      plan: { title: title, notes: "", savedId: "", items: items }
     };
   }
 
@@ -650,6 +826,526 @@
       document.body.removeChild(area);
       if (ok) resolve();
       else reject(new Error("copy failed"));
+    });
+  }
+
+  function apiUrl(path) {
+    return new URL(String(path).replace(/^\//, ""), rootUrl).href;
+  }
+
+  function fetchJson(url, options) {
+    var opts = options || {};
+    opts.credentials = "same-origin";
+    var headers = opts.headers || {};
+    if (!headers.accept) headers.accept = "application/json";
+    if (opts.body && !headers["content-type"]) headers["content-type"] = "application/json";
+    opts.headers = headers;
+    return fetch(url, opts).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        return { ok: res.ok, status: res.status, data: data || {} };
+      });
+    });
+  }
+
+  function whenAccountReady(fn) {
+    if (accountState.ready) fn(accountState);
+    else accountReady.push(fn);
+  }
+
+  function signInHref() {
+    var url = new URL("account/", rootUrl);
+    url.searchParams.set("next", window.location.href);
+    return url.href;
+  }
+
+  function safeNext() {
+    var next = new URLSearchParams(window.location.search).get("next");
+    var fallback = new URL("account/", rootUrl).href;
+    if (!next) return fallback;
+    try {
+      var url = new URL(next, rootUrl);
+      if (url.origin !== rootUrl.origin) return fallback;
+      var rootPath = rootUrl.pathname;
+      if (rootPath !== "/" && url.pathname.indexOf(rootPath) !== 0) return fallback;
+      return url.href;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function planWorthSaving(plan) {
+    return !!(plan && (plan.items.length || (plan.title || "").trim() || (plan.notes || "").trim()));
+  }
+
+  function plansDiffer(a, b) {
+    return JSON.stringify({ title: a.title, notes: a.notes || "", items: a.items }) !==
+      JSON.stringify({ title: b.title, notes: b.notes || "", items: b.items });
+  }
+
+  function planPayload(plan) {
+    return {
+      title: plan.title || "",
+      notes: plan.notes || "",
+      items: (plan.items || []).map(function (item) {
+        return {
+          slug: item.slug,
+          minutes: item.minutes === "" ? null : item.minutes,
+          note: item.note || ""
+        };
+      })
+    };
+  }
+
+  function planFromApi(record, bySlug) {
+    return sanitize({
+      title: record.title || "",
+      notes: record.notes || "",
+      savedId: record.id || "",
+      items: (record.items || []).map(function (item) {
+        return {
+          slug: item.slug,
+          minutes: item.minutes === null || item.minutes === undefined ? "" : item.minutes,
+          note: item.note || ""
+        };
+      })
+    }, bySlug);
+  }
+
+  function importSeen(userId) {
+    try {
+      return localStorage.getItem(IMPORT_KEY) === userId;
+    } catch (error) {
+      return true;
+    }
+  }
+
+  function rememberImport(userId) {
+    try {
+      localStorage.setItem(IMPORT_KEY, userId);
+    } catch (error) {
+      return;
+    }
+  }
+
+  function dismissImport(banner) {
+    if (accountState.user) rememberImport(accountState.user.id);
+    if (banner) {
+      banner.hidden = true;
+      banner.dataset.done = "1";
+    }
+  }
+
+  function importLocalPlan(banner) {
+    var existing = readPlan();
+    if (!accountState.user || !planWorthSaving(existing)) {
+      dismissImport(banner);
+      return;
+    }
+    fetchJson(apiUrl("api/plans"), {
+      method: "POST",
+      body: JSON.stringify(planPayload(existing))
+    }).then(function (result) {
+      if (!result.ok || !result.data.plan) {
+        var status = document.getElementById("plan-status") || document.getElementById("account-status");
+        if (status) status.textContent = (result.data && result.data.error) || "Could not save the plan.";
+        return;
+      }
+      existing.savedId = result.data.plan.id;
+      savePlan(existing);
+      rememberImport(accountState.user.id);
+      if (banner) {
+        banner.hidden = true;
+        banner.dataset.done = "1";
+      }
+      var statusNode = document.getElementById("plan-status") || document.getElementById("account-status");
+      if (statusNode) statusNode.textContent = "Saved the browser plan to your account.";
+      if (document.getElementById("account-list")) loadAccountPlans();
+      if (typeof refreshPlan === "function" && document.getElementById("plan-list")) refreshPlan();
+    }, function () {
+      var statusNode = document.getElementById("plan-status") || document.getElementById("account-status");
+      if (statusNode) statusNode.textContent = "Could not reach your account.";
+    });
+  }
+
+  function initAccounts() {
+    fetch(apiUrl("api/health"), {
+      credentials: "same-origin",
+      headers: { accept: "application/json" }
+    }).then(function (res) {
+      if (!res.ok) throw new Error("no api");
+      return res.json();
+    }).then(function (health) {
+      if (!health || !health.ok || !health.accounts) throw new Error("no accounts");
+      accountState.enabled = true;
+      accountState.google = !!health.google;
+      accountState.email = !!health.email;
+      return fetchJson(apiUrl("api/auth/session")).catch(function () {
+        return { data: {} };
+      });
+    }).then(function (result) {
+      var user = result && result.data && result.data.user;
+      if (user && user.id) accountState.user = user;
+    }).catch(function () {
+      accountState.enabled = false;
+      accountState.user = null;
+    }).then(function () {
+      accountState.ready = true;
+      renderAccountSlot();
+      accountReady.forEach(function (fn) { fn(accountState); });
+      accountReady = [];
+    });
+  }
+
+  function renderAccountSlot() {
+    var slot = document.querySelector("[data-account-slot]");
+    if (!slot) return;
+    slot.textContent = "";
+    if (!accountState.enabled) {
+      slot.hidden = true;
+      return;
+    }
+    slot.hidden = false;
+    if (!accountState.user) {
+      var link = document.createElement("a");
+      link.className = "plan-nav";
+      link.href = new URL("account/", rootUrl).href;
+      link.textContent = "Sign in";
+      slot.appendChild(link);
+      return;
+    }
+    var user = accountState.user;
+    var label = user.name || user.email || "Account";
+    var chip = document.createElement("a");
+    chip.className = "account-chip";
+    chip.href = new URL("account/", rootUrl).href;
+    chip.setAttribute("aria-label", label);
+    if (user.image) {
+      var img = document.createElement("img");
+      img.className = "avatar";
+      img.src = user.image;
+      img.alt = "";
+      img.referrerPolicy = "no-referrer";
+      chip.appendChild(img);
+    } else {
+      var fallback = document.createElement("span");
+      fallback.className = "avatar-fallback";
+      fallback.setAttribute("aria-hidden", "true");
+      fallback.textContent = initials(label);
+      chip.appendChild(fallback);
+    }
+    var name = document.createElement("span");
+    name.className = "account-name";
+    name.textContent = label;
+    chip.appendChild(name);
+    slot.appendChild(chip);
+    var plans = document.createElement("a");
+    plans.className = "plan-nav";
+    plans.href = new URL("account/", rootUrl).href;
+    plans.textContent = "My plans";
+    plans.setAttribute("data-account-nav", "");
+    if (onAccountPage()) plans.setAttribute("aria-current", "page");
+    slot.appendChild(plans);
+  }
+
+  function initials(label) {
+    var parts = String(label || "").trim().split(/\s+/).filter(Boolean).slice(0, 2);
+    var text = parts.map(function (part) { return part.charAt(0); }).join("");
+    if (!text && label) text = String(label).charAt(0);
+    return (text || "?").toUpperCase();
+  }
+
+  function onAccountPage() {
+    var path = window.location.pathname;
+    return /\/account\/(index\.html)?$/.test(path) || /\/account$/.test(path);
+  }
+
+  function initAccountPage() {
+    var incoming = document.getElementById("account-in");
+    var outgoing = document.getElementById("account-out");
+    if (!incoming || !outgoing) return;
+    var unavailable = document.getElementById("account-unavailable");
+    var status = document.getElementById("account-status");
+    var googleBtn = document.getElementById("account-google");
+    var emailForm = document.getElementById("account-email");
+    var emailInput = document.getElementById("account-email-input");
+    var importBanner = document.getElementById("account-import");
+    var importYes = document.getElementById("account-import-yes");
+    var importNo = document.getElementById("account-import-no");
+    var signOutBtn = document.getElementById("account-signout");
+
+    if (googleBtn) {
+      googleBtn.addEventListener("click", function () {
+        googleBtn.disabled = true;
+        authPost("signin/google", { callbackUrl: safeNext() }).then(function (data) {
+          if (data.url) window.location.href = data.url;
+          else {
+            googleBtn.disabled = false;
+            if (status) status.textContent = "Google sign-in did not start. Try again.";
+          }
+        }, function () {
+          googleBtn.disabled = false;
+          if (status) status.textContent = "Could not reach sign-in. Try again.";
+        });
+      });
+    }
+
+    if (emailForm) {
+      emailForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var email = emailInput ? emailInput.value.trim() : "";
+        if (!email) return;
+        var submit = emailForm.querySelector("button");
+        if (submit) submit.disabled = true;
+        authPost("signin/resend", { email: email, callbackUrl: safeNext() }).then(function (data) {
+          if (submit) submit.disabled = false;
+          if (data.url && data.url.indexOf("verify-request") === -1 && data.url.indexOf("error=") !== -1) {
+            if (status) status.textContent = "Could not send the sign-in email.";
+            return;
+          }
+          if (status) status.textContent = "Check your email for a sign-in link.";
+        }, function () {
+          if (submit) submit.disabled = false;
+          if (status) status.textContent = "Could not reach sign-in. Try again.";
+        });
+      });
+    }
+
+    if (importYes) importYes.addEventListener("click", function () { importLocalPlan(importBanner); });
+    if (importNo) importNo.addEventListener("click", function () { dismissImport(importBanner); });
+    if (signOutBtn) {
+      signOutBtn.addEventListener("click", function () {
+        signOutBtn.disabled = true;
+        authPost("signout", { callbackUrl: new URL("account/", rootUrl).href }).then(function (data) {
+          window.location.href = data.url || new URL("account/", rootUrl).href;
+        }, function () {
+          signOutBtn.disabled = false;
+          if (status) status.textContent = "Could not sign out. Try again.";
+        });
+      });
+    }
+
+    whenAccountReady(function () {
+      var error = new URLSearchParams(window.location.search).get("error");
+      if (error && status) status.textContent = signInError(error);
+      if (!accountState.enabled) {
+        if (unavailable) unavailable.hidden = false;
+        outgoing.hidden = true;
+        incoming.hidden = true;
+        return;
+      }
+      if (unavailable) unavailable.hidden = true;
+      if (!accountState.user) {
+        outgoing.hidden = false;
+        incoming.hidden = true;
+        if (googleBtn) googleBtn.hidden = !accountState.google;
+        if (emailForm) emailForm.hidden = !accountState.email;
+        return;
+      }
+      var next = new URLSearchParams(window.location.search).get("next");
+      var dest = safeNext();
+      if (next && dest.indexOf("/account") === -1) {
+        window.location.replace(dest);
+        return;
+      }
+      outgoing.hidden = true;
+      incoming.hidden = false;
+      var userLine = document.getElementById("account-user");
+      if (userLine) {
+        userLine.textContent = "Signed in as " + (accountState.user.name || accountState.user.email || "your account");
+      }
+      maybeOfferAccountImport();
+      loadAccountPlans();
+    });
+
+    function maybeOfferAccountImport() {
+      if (!importBanner || !accountState.user) return;
+      var existing = readPlan();
+      if (existing.savedId || !planWorthSaving(existing) || importSeen(accountState.user.id)) {
+        importBanner.hidden = true;
+        return;
+      }
+      importBanner.hidden = false;
+    }
+  }
+
+  function loadAccountPlans() {
+    var list = document.getElementById("account-list");
+    var empty = document.getElementById("account-empty");
+    var status = document.getElementById("account-status");
+    if (!list) return;
+    fetchJson(apiUrl("api/plans")).then(function (result) {
+      if (!result.ok) {
+        if (status) status.textContent = (result.data && result.data.error) || "Could not load your plans.";
+        return;
+      }
+      var plans = result.data.plans || [];
+      list.textContent = "";
+      if (empty) empty.hidden = plans.length !== 0;
+      plans.forEach(function (plan) {
+        list.appendChild(accountCard(plan));
+      });
+    }, function () {
+      if (status) status.textContent = "Could not reach your account.";
+    });
+  }
+
+  function accountCard(plan) {
+    var li = document.createElement("li");
+    li.className = "account-card";
+    var title = document.createElement("h2");
+    title.textContent = plan.title.trim() || "Untitled plan";
+    var meta = document.createElement("p");
+    meta.className = "account-meta";
+    var drills = plan.drillCount === 1 ? "1 drill" : plan.drillCount + " drills";
+    meta.textContent = drills + " \u00b7 " + plan.totalMinutes + " min \u00b7 Updated " + formatUpdated(plan.updatedAt);
+    var actions = document.createElement("div");
+    actions.className = "account-actions";
+    var open = document.createElement("a");
+    open.className = "btn primary";
+    open.href = new URL("plan/?saved=" + encodeURIComponent(plan.id), rootUrl).href;
+    open.textContent = "Open";
+    var rename = document.createElement("button");
+    rename.type = "button";
+    rename.className = "btn";
+    rename.textContent = "Rename";
+    var duplicate = document.createElement("button");
+    duplicate.type = "button";
+    duplicate.className = "btn";
+    duplicate.textContent = "Duplicate";
+    var remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "btn danger";
+    remove.textContent = "Delete";
+    actions.appendChild(open);
+    actions.appendChild(rename);
+    actions.appendChild(duplicate);
+    actions.appendChild(remove);
+    li.appendChild(title);
+    li.appendChild(meta);
+    li.appendChild(actions);
+
+    rename.addEventListener("click", function () {
+      if (li.querySelector(".rename-row")) return;
+      var form = document.createElement("form");
+      form.className = "rename-row";
+      var input = document.createElement("input");
+      input.type = "text";
+      input.maxLength = 80;
+      input.value = plan.title;
+      input.setAttribute("aria-label", "Plan name");
+      var saveName = document.createElement("button");
+      saveName.className = "btn primary";
+      saveName.type = "submit";
+      saveName.textContent = "Save name";
+      var cancel = document.createElement("button");
+      cancel.className = "btn";
+      cancel.type = "button";
+      cancel.textContent = "Cancel";
+      form.appendChild(input);
+      form.appendChild(saveName);
+      form.appendChild(cancel);
+      li.insertBefore(form, actions);
+      input.focus();
+      cancel.addEventListener("click", function () { form.remove(); });
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        saveName.disabled = true;
+        fetchJson(apiUrl("api/plans/" + plan.id), {
+          method: "PATCH",
+          body: JSON.stringify({ title: input.value })
+        }).then(function (result) {
+          if (!result.ok) {
+            saveName.disabled = false;
+            var status = document.getElementById("account-status");
+            if (status) status.textContent = (result.data && result.data.error) || "Could not rename the plan.";
+            return;
+          }
+          loadAccountPlans();
+        });
+      });
+    });
+
+    duplicate.addEventListener("click", function () {
+      duplicate.disabled = true;
+      fetchJson(apiUrl("api/plans/" + plan.id)).then(function (result) {
+        if (!result.ok || !result.data.plan) {
+          duplicate.disabled = false;
+          return;
+        }
+        var source = result.data.plan;
+        var copyTitle = ("Copy of " + (source.title.trim() || "Untitled plan")).slice(0, 80);
+        return fetchJson(apiUrl("api/plans"), {
+          method: "POST",
+          body: JSON.stringify({ title: copyTitle, notes: source.notes || "", items: source.items || [] })
+        });
+      }).then(function (result) {
+        duplicate.disabled = false;
+        if (!result || !result.ok) return;
+        var status = document.getElementById("account-status");
+        if (status) status.textContent = "Duplicated.";
+        loadAccountPlans();
+      }, function () {
+        duplicate.disabled = false;
+      });
+    });
+
+    remove.addEventListener("click", function () {
+      var name = plan.title.trim() || "this plan";
+      if (!window.confirm("Delete " + name + "? This cannot be undone.")) return;
+      remove.disabled = true;
+      fetchJson(apiUrl("api/plans/" + plan.id), { method: "DELETE" }).then(function (result) {
+        if (!result.ok) {
+          remove.disabled = false;
+          return;
+        }
+        var current = readPlan();
+        if (current.savedId === plan.id) {
+          current.savedId = "";
+          savePlan(current);
+        }
+        loadAccountPlans();
+      });
+    });
+
+    return li;
+  }
+
+  function formatUpdated(iso) {
+    var date = new Date(iso);
+    if (isNaN(date.getTime())) return "";
+    try {
+      return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    } catch (error) {
+      return date.toDateString();
+    }
+  }
+
+  function signInError(code) {
+    if (code === "Verification") return "That sign-in link expired or was already used. Request a new one.";
+    if (code === "AccessDenied") return "That sign-in was cancelled.";
+    if (code === "Configuration") return "Sign-in is not set up yet.";
+    return "Sign-in did not work. Try again.";
+  }
+
+  function authPost(action, fields) {
+    return fetchJson(apiUrl("api/auth/csrf")).then(function (csrf) {
+      var body = new URLSearchParams();
+      body.set("csrfToken", (csrf.data && csrf.data.csrfToken) || "");
+      Object.keys(fields).forEach(function (key) {
+        body.set(key, fields[key]);
+      });
+      return fetch(apiUrl("api/auth/" + action), {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          accept: "application/json",
+          "X-Auth-Return-Redirect": "1"
+        },
+        body: body
+      }).then(function (res) {
+        return res.json().catch(function () { return {}; });
+      });
     });
   }
 })();

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "python3 scripts/build_site.py",
+  "rewrites": [
+    {
+      "source": "/hockey-skills-and-drills/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/hockey-skills-and-drills",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/hockey-skills-and-drills/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/hockey-skills-and-drills/:path*",
+      "destination": "/:path*"
+    }
+  ]
+}

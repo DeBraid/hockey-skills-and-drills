@@ -241,6 +241,72 @@ a:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+.account-slot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.account-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0.2rem 0.75rem 0.2rem 0.2rem;
+  border-radius: 999px;
+  color: var(--header-ink);
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.account-chip:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.avatar,
+.avatar-fallback {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.avatar {
+  object-fit: cover;
+  background: #ffffff;
+}
+
+.avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--red);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.account-name {
+  max-width: 8.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 main {
   padding: 1.5rem 0 3rem;
 }
@@ -705,8 +771,10 @@ main {
 }
 
 .plan-title-label input,
+.plan-title-label textarea,
 .plan-fields input,
-.plan-share-fallback {
+.plan-share-fallback,
+.rename-row input {
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -720,6 +788,11 @@ main {
   font-weight: 500;
 }
 
+.plan-title-label textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
 .plan-title-label input:read-only {
   border-color: transparent;
   background: transparent;
@@ -728,10 +801,68 @@ main {
   font-weight: 700;
 }
 
-.plan-actions {
+.plan-title-label textarea:read-only {
+  background: var(--ice);
+}
+
+.plan-actions,
+.account-actions {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+}
+
+.plan-account-state {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.account-methods,
+.account-footer-actions {
+  margin-top: 1rem;
+}
+
+.account-user {
+  margin: 0 0 1rem;
+  font-weight: 700;
+}
+
+.account-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.account-card {
+  padding: 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.account-card h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.account-meta {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+}
+
+.rename-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
 }
 
 .plan-status {
@@ -846,6 +977,7 @@ main {
 
 @media screen {
   .plan-print-title,
+  .plan-print-notes,
   .plan-print-meta,
   .plan-print-note,
   .plan-points,
@@ -861,14 +993,22 @@ main {
 }
 
 @media (min-width: 720px) {
-  .plan-actions {
+  .plan-actions,
+  .account-actions,
+  .rename-row {
     flex-direction: row;
     flex-wrap: wrap;
   }
 
   .plan-actions .btn,
-  .plan-banner .btn {
+  .account-actions .btn,
+  .plan-banner .btn,
+  .rename-row .btn {
     width: auto;
+  }
+
+  .rename-row input {
+    flex: 1 1 12rem;
   }
 
   .plan-item {
@@ -882,6 +1022,16 @@ main {
 }
 
 @media (max-width: 640px) {
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions .plan-nav,
+  .account-chip {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
   .header-note {
     display: none;
   }
@@ -954,9 +1104,15 @@ main {
 
   .plan-print-title:not(:empty) {
     display: block;
-    margin: 0 0 0.8rem;
+    margin: 0 0 0.4rem;
     font-size: 1.5rem;
     font-weight: 700;
+  }
+
+  .plan-print-notes:not(:empty) {
+    display: block;
+    margin: 0 0 0.8rem;
+    white-space: pre-wrap;
   }
 
   .plan-print-meta:not(:empty),
