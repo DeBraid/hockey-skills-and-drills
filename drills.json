@@ -743,26 +743,75 @@
       "slug": "d-to-wall-breakout",
       "title": "Breakout: D to the Wall",
       "skillGroup": "Breakout",
-      "subtitle": "F passes to the D, loops low and opens up on the wall. D skates it behind the net and hits the F, who attacks and shoots.",
-      "blurb": "The core breakout pattern stripped to two players (Weiss Tech phase 1). The forward passes to the D on the dot, then loops low and opens up on the half-wall. The D skates the puck behind the net and passes to the forward on the wall, who carries up the boards. This half-ice version has the forward curl at a cone near the red line and attack the same net for a shot.",
-      "diagramAlt": "Half-ice diagram of Breakout: D to the Wall. Forwards line up at the top of the blue line; defence line up at the bottom faceoff dot. The forward passes to the D, then skates down through the slot and loops up to the top half-wall. The D carries behind the net to the top corner and passes to the forward on the wall. The forward carries up the wall, curls at a cone near the red line, and attacks the net to shoot.",
-      "tags": ["half-ice", "breakout", "passing"],
+      "subtitle": "F passes to the D and gets open on the wall. D skates it behind the net, hits the F, then steps up and defends 1-on-1.",
+      "blurb": "The core breakout pattern with two players (Weiss Tech phase 1). The forward passes to the D on the dot, then loops low and opens up on the half-wall. The D skates the puck behind the net and passes to the forward on the wall, who carries up the boards and curls at a cone near the red line. The D doesn't stand still: after the pass the D steps up, then skates backwards and defends the forward 1-on-1 back into the zone.",
+      "diagramAlt": "Half-ice diagram of Breakout: D to the Wall. Forwards line up at the top of the blue line; defence line up at the bottom faceoff dot. The forward passes to the D, then skates down through the slot and loops up to the top half-wall. The D carries behind the net to the top corner and passes to the forward on the wall. The forward carries up the wall and curls at a cone near the red line while the D steps up toward the blue line. Then the forward attacks wide and shoots, and the D skates backwards (dotted arrow) between the forward and the net.",
+      "tags": [
+        "half-ice",
+        "breakout",
+        "passing",
+        "defence"
+      ],
       "coachingPoints": [
         "F: pivot to face the puck and keep your eyes on the D while you get open.",
         "F: stop on the wall with your stick on the ice. Give a target.",
         "D: look over your shoulder before you go behind the net, and move the puck quickly.",
-        "Pass hard and flat to the forehand on the wall.",
-        "Catch it and go: feet moving up the wall right away."
+        "D: after the pass, step up fast, then pivot and skate backwards. Stay between the F and the net.",
+        "Catch it and go: feet moving up the wall right away, then attack with speed."
       ],
       "steps": [
         "Forwards line up on the blue line with pucks. The D going steps out to the faceoff dot; the other D wait behind.",
         "The F passes to the D on the dot.",
         "The D skates the puck behind the net. At the same time the F loops low and opens up on the half-wall.",
         "The D passes to the F on the wall.",
-        "The F carries up the wall, curls at the cone near the red line, then attacks and shoots. Both go to the back of their lines.",
-        "Progression (phase 2): add a second forward swinging through the middle for a touch pass and a 2-on-0."
+        "The F carries up the wall and curls at the cone near the red line. The D steps up toward the blue line.",
+        "1-on-1: the F attacks the net and shoots. The D skates backwards and stays between the F and the net. Both go to the back of their lines.",
+        "Variation: see D-to-Wall Breakout to 2-on-1. A centre swings with the winger and they attack 2-on-1 against the D."
       ],
-      "related": ["controlled-skating-breakout", "olympic-breakout-pass", "zone-exit-bounce-pass"],
+      "related": [
+        "d-to-wall-breakout-2-on-1",
+        "controlled-skating-breakout",
+        "olympic-breakout-pass",
+        "zone-exit-bounce-pass"
+      ],
+      "excalidrawUrl": null
+    },
+    {
+      "slug": "d-to-wall-breakout-2-on-1",
+      "title": "D-to-Wall Breakout to 2-on-1",
+      "skillGroup": "Breakout",
+      "subtitle": "Same breakout: D skates it behind the net and hits the winger on the wall. The centre swings with him. 2-on-1 back in against the D.",
+      "blurb": "The 2-on-1 version of Breakout: D to the Wall. Same start: the winger passes to the D on the dot and gets open on the half-wall, and the D skates it behind the net and hits the winger. Then the winger carries up the wall while a centre from the second line swings out with him. Both curl at a cone near the red line and attack 2-on-1 against the D who made the pass. The D steps up, then skates backwards and takes away the pass.",
+      "diagramAlt": "Half-ice diagram of D-to-Wall Breakout to 2-on-1. Wingers line up at the top of the blue line with pucks, centres at the bottom of the blue line, and defence at the bottom faceoff dot. The winger passes to the D, loops low and opens up on the top half-wall. The D carries behind the net and passes to the winger on the wall. The winger carries up the wall and curls at a cone near the red line; the centre skates out and curls at a second cone; the D steps up. On the 2-on-1 the winger carries in and passes across to the centre while the D skates backwards (dotted arrow) through the middle, and the centre shoots.",
+      "tags": [
+        "half-ice",
+        "breakout",
+        "passing",
+        "defence",
+        "shooting"
+      ],
+      "coachingPoints": [
+        "Same start: winger opens up on the wall with the stick on the ice; D moves the puck quickly.",
+        "Centre: time your swing so you curl at the cone with the winger and come in with speed.",
+        "Attackers: stay wide apart. The puck carrier drives the net; pass only if the D takes you.",
+        "D: step up, then skate backwards through the middle. Take away the pass and let the shooter come wide.",
+        "Shooter: stick on the ice, ready for the pass, shoot quickly."
+      ],
+      "steps": [
+        "Wingers line up at the top of the blue line with pucks, centres at the bottom of the blue line. The D going steps out to the faceoff dot; the other D wait behind.",
+        "The winger passes to the D on the dot.",
+        "The D skates the puck behind the net. At the same time the winger loops low and opens up on the half-wall.",
+        "The D passes to the winger on the wall.",
+        "The winger carries up the wall while the centre swings out. Both curl at their cone near the red line. The D steps up.",
+        "2-on-1: the winger carries in and passes across to the centre. The D skates backwards through the middle and tries to stop the pass.",
+        "The centre shoots. Everyone goes to the back of their own line.",
+        "Variation: see Breakout: D to the Wall for the 1-on-1 version."
+      ],
+      "related": [
+        "d-to-wall-breakout",
+        "olympic-breakout-pass",
+        "puck-race-1v1-to-2v1"
+      ],
       "excalidrawUrl": null
     },
     {
