@@ -190,7 +190,10 @@ def page_shell(title: str, prefix: str, body: str) -> str:
           <span class="brand-name">Hockey Skills &amp; Drills</span>
         </span>
       </a>
-      <a class="plan-nav" href="{prefix}plan/">Practice plan <span data-plan-count>(0)</span></a>
+      <nav class="header-actions" aria-label="Site">
+        <a class="plan-nav" href="{prefix}plan/">Practice plan <span data-plan-count>(0)</span></a>
+        <div class="account-slot" data-account-slot hidden></div>
+      </nav>
     </div>
   </header>
 {body}
@@ -474,17 +477,37 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
     <header class="drill-head">
       <p class="kicker">On-ice coaching</p>
       <h1>Practice plan</h1>
-      <p class="lede plan-lede">Add drills from the library, set a time for each, and print the sheet for the bench. A share link sends the drills, times, and title. Notes stay in this browser.</p>
+      <p class="lede plan-lede">Add drills from the library, set a time for each, and print the sheet for the bench. A share link sends the drills, times, and title. Notes stay with the plan in this browser, and in your account when you save.</p>
     </header>
     <div class="plan-banner" id="plan-shared" hidden>
       <p id="plan-shared-text"></p>
       <button class="btn primary" type="button" id="plan-load">Load into my plan</button>
     </div>
+    <div class="plan-banner" id="plan-import" hidden>
+      <p id="plan-import-text">Save the practice plan in this browser to your account?</p>
+      <div class="plan-actions">
+        <button class="btn primary" type="button" id="plan-import-yes">Save it</button>
+        <button class="btn" type="button" id="plan-import-no">Not now</button>
+      </div>
+    </div>
+    <div class="plan-banner" id="plan-signin" hidden>
+      <p id="plan-signin-text">Sign in to save this plan to your account. The copy in this browser stays either way.</p>
+      <a class="btn primary" id="plan-signin-link" href="../account/">Sign in</a>
+    </div>
     <p class="plan-print-title" id="plan-print-title"></p>
+    <p class="plan-print-notes" id="plan-print-notes"></p>
     <div class="plan-tools" id="plan-tools">
       <label class="plan-title-label" for="plan-title">Plan title
         <input id="plan-title" type="text" maxlength="80" placeholder="Tuesday practice" autocomplete="off">
       </label>
+      <label class="plan-title-label" for="plan-notes">Practice notes
+        <textarea id="plan-notes" maxlength="2000" rows="3" placeholder="Optional, for the bench"></textarea>
+      </label>
+      <div class="plan-actions" id="plan-save" hidden>
+        <button class="btn primary" type="button" id="plan-save-btn">Save</button>
+        <button class="btn" type="button" id="plan-save-new">Save as new</button>
+      </div>
+      <p class="plan-account-state" id="plan-account-state" hidden></p>
       <div class="plan-actions">
         <button class="btn primary" type="button" id="plan-share">Copy share link</button>
         <button class="btn" type="button" id="plan-print">Print</button>
@@ -506,6 +529,53 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
     (out / "index.html").write_text(page_shell(title, "../", body), encoding="utf-8")
 
 
+def write_account() -> None:
+    body = """  <main id="content" class="wrap-read account-page">
+    <header class="drill-head">
+      <p class="kicker">On-ice coaching</p>
+      <h1>My plans</h1>
+      <p class="lede" id="account-intro">Sign in to save practice plans across phones and browsers. With no account, a plan stays in this browser, and share links still work.</p>
+    </header>
+    <div id="account-unavailable" hidden>
+      <p>Saving plans to an account is not available on this copy of the site. You can still build a practice plan in this browser.</p>
+      <p><a class="btn" href="../plan/">Open the practice plan</a></p>
+    </div>
+    <div id="account-out" hidden>
+      <div class="account-methods">
+        <button class="btn primary" type="button" id="account-google" hidden>Continue with Google</button>
+        <form id="account-email" hidden>
+          <label class="plan-title-label" for="account-email-input">Email
+            <input id="account-email-input" type="email" autocomplete="email" inputmode="email" required placeholder="you@example.com">
+          </label>
+          <button class="btn primary" type="submit">Email me a sign-in link</button>
+        </form>
+      </div>
+    </div>
+    <div id="account-in" hidden>
+      <p class="account-user" id="account-user"></p>
+      <div class="plan-banner" id="account-import" hidden>
+        <p>Save the practice plan in this browser to your account?</p>
+        <div class="plan-actions">
+          <button class="btn primary" type="button" id="account-import-yes">Save it</button>
+          <button class="btn" type="button" id="account-import-no">Not now</button>
+        </div>
+      </div>
+      <p class="empty" id="account-empty" hidden>No saved plans yet. <a href="../plan/">Build one</a>, then tap Save.</p>
+      <ul class="account-list" id="account-list"></ul>
+      <div class="account-actions account-footer-actions">
+        <a class="btn" href="../plan/">Practice plan</a>
+        <button class="btn" type="button" id="account-signout">Sign out</button>
+      </div>
+    </div>
+    <p class="plan-status" id="account-status" role="status"></p>
+  </main>
+"""
+    out = ROOT / "account"
+    out.mkdir(parents=True, exist_ok=True)
+    title = "My plans · Hockey Skills & Drills"
+    (out / "index.html").write_text(page_shell(title, "../", body), encoding="utf-8")
+
+
 def local_targets(text: str) -> list[str]:
     targets = []
     for href, md in LINK_RE.findall(text):
@@ -517,7 +587,12 @@ def local_targets(text: str) -> list[str]:
 
 
 def check_output(drills: list[dict]) -> None:
-    files = [ROOT / "index.html", ROOT / "README.md", ROOT / "plan" / "index.html"]
+    files = [
+        ROOT / "index.html",
+        ROOT / "README.md",
+        ROOT / "plan" / "index.html",
+        ROOT / "account" / "index.html",
+    ]
     for drill in drills:
         files.append(ROOT / "drills" / f"{drill['slug']}.md")
         files.append(ROOT / "drills" / drill["slug"] / "index.html")
@@ -594,6 +669,17 @@ def check_output(drills: list[dict]) -> None:
             raise SystemExit(f"plan catalog has a missing file for {item['slug']}")
     if "Fork or star" in plan_text or "Add a drill" in plan_text:
         raise SystemExit("plan page should stay read-only")
+    if 'id="plan-save" hidden' not in plan_text or 'id="plan-notes"' not in plan_text:
+        raise SystemExit("plan page is missing the hidden save controls")
+    if "data-account-slot hidden" not in home:
+        raise SystemExit("home page should hide account controls until the API is available")
+    if "Sign in" in home or "My plans" in home:
+        raise SystemExit("home page should not show account controls until the API is available")
+    account = (ROOT / "account" / "index.html").read_text(encoding="utf-8")
+    if "Fork or star" in account or "Add a drill" in account:
+        raise SystemExit("account page should stay read-only")
+    if 'id="account-out" hidden' not in account or "data-account-slot hidden" not in account:
+        raise SystemExit("account page should hide sign-in until the API is available")
 
 
 def main() -> None:
@@ -606,6 +692,7 @@ def main() -> None:
         write_drill_md(drill, by_slug, labels)
     write_readme(data["drills"], labels)
     write_plan(data, labels)
+    write_account()
     check_output(data["drills"])
     print(f"Built {len(data['drills'])} drills")
 

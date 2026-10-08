@@ -21,24 +21,47 @@
           <span class="brand-name">Hockey Skills &amp; Drills</span>
         </span>
       </a>
-      <a class="plan-nav" href="../plan/">Practice plan <span data-plan-count>(0)</span></a>
+      <nav class="header-actions" aria-label="Site">
+        <a class="plan-nav" href="../plan/">Practice plan <span data-plan-count>(0)</span></a>
+        <div class="account-slot" data-account-slot hidden></div>
+      </nav>
     </div>
   </header>
   <main id="content" class="wrap plan-page">
     <header class="drill-head">
       <p class="kicker">On-ice coaching</p>
       <h1>Practice plan</h1>
-      <p class="lede plan-lede">Add drills from the library, set a time for each, and print the sheet for the bench. A share link sends the drills, times, and title. Notes stay in this browser.</p>
+      <p class="lede plan-lede">Add drills from the library, set a time for each, and print the sheet for the bench. A share link sends the drills, times, and title. Notes stay with the plan in this browser, and in your account when you save.</p>
     </header>
     <div class="plan-banner" id="plan-shared" hidden>
       <p id="plan-shared-text"></p>
       <button class="btn primary" type="button" id="plan-load">Load into my plan</button>
     </div>
+    <div class="plan-banner" id="plan-import" hidden>
+      <p id="plan-import-text">Save the practice plan in this browser to your account?</p>
+      <div class="plan-actions">
+        <button class="btn primary" type="button" id="plan-import-yes">Save it</button>
+        <button class="btn" type="button" id="plan-import-no">Not now</button>
+      </div>
+    </div>
+    <div class="plan-banner" id="plan-signin" hidden>
+      <p id="plan-signin-text">Sign in to save this plan to your account. The copy in this browser stays either way.</p>
+      <a class="btn primary" id="plan-signin-link" href="../account/">Sign in</a>
+    </div>
     <p class="plan-print-title" id="plan-print-title"></p>
+    <p class="plan-print-notes" id="plan-print-notes"></p>
     <div class="plan-tools" id="plan-tools">
       <label class="plan-title-label" for="plan-title">Plan title
         <input id="plan-title" type="text" maxlength="80" placeholder="Tuesday practice" autocomplete="off">
       </label>
+      <label class="plan-title-label" for="plan-notes">Practice notes
+        <textarea id="plan-notes" maxlength="2000" rows="3" placeholder="Optional, for the bench"></textarea>
+      </label>
+      <div class="plan-actions" id="plan-save" hidden>
+        <button class="btn primary" type="button" id="plan-save-btn">Save</button>
+        <button class="btn" type="button" id="plan-save-new">Save as new</button>
+      </div>
+      <p class="plan-account-state" id="plan-account-state" hidden></p>
       <div class="plan-actions">
         <button class="btn primary" type="button" id="plan-share">Copy share link</button>
         <button class="btn" type="button" id="plan-print">Print</button>
