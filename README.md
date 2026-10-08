@@ -230,6 +230,70 @@ Two delay variations of the zone entry. Delay: carry in wide, stop and curl back
 
 [Note](drills/zone-entry-delay.md) · [Drill page](drills/zone-entry-delay/) · [Animation](media/zone-entry-delay/zone-entry-delay-anim.html) · [PNG](media/zone-entry-delay/zone-entry-delay.png) · [Excalidraw](media/zone-entry-delay/zone-entry-delay.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ)
 
+### [Give-and-Go to Shot](drills/give-and-go-shot.md)
+
+A half-ice skate, pass and shoot combo built around the give-and-go, the first passing play U11s use in games. The player skates up the wall from the corner, takes a pass from the coach and gives it right back, rounds a pylon near the red line, takes a second pass from the coach and drives in for a shot. Adapted from Hockey Canada's U11 (Atom) skate/shoot combo.
+
+**Tags:** `half-ice`, `passing`, `shooting`
+
+[Note](drills/give-and-go-shot.md) · [Drill page](drills/give-and-go-shot/) · [Animation](media/give-and-go-shot/give-and-go-shot-anim.html) · [PNG](media/give-and-go-shot/give-and-go-shot.png) · [Excalidraw](media/give-and-go-shot/give-and-go-shot.excalidraw)
+
+### [Stationary Partner Passing](drills/stationary-partner-passing.md)
+
+The U11 starting point for passing. Everyone pairs up with one puck, standing 10-13 ft (3-4 m) apart. Pass forehand back and forth, then backhand, then switch sides so the other player works the backhand. Step further apart as the passes get crisp. Good as a quick station or warm-up; works anywhere on the ice.
+
+**Tags:** `passing`
+
+[Note](drills/stationary-partner-passing.md) · [Drill page](drills/stationary-partner-passing/) · [Animation](media/stationary-partner-passing/stationary-partner-passing-anim.html) · [PNG](media/stationary-partner-passing/stationary-partner-passing.png) · [Excalidraw](media/stationary-partner-passing/stationary-partner-passing.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=xMvVjvCJChlDuDz-PcGzO,udng8Sg37DOB2i0mem5KFw)
+
+### [Breakout: D to the Wall](drills/d-to-wall-breakout.md)
+
+The core breakout pattern stripped to two players (Weiss Tech phase 1). The forward passes to the D on the dot, then loops low and opens up on the half-wall. The D skates the puck behind the net and passes to the forward on the wall, who carries up the boards. This half-ice version has the forward curl at a cone near the red line and attack the same net for a shot.
+
+**Tags:** `half-ice`, `breakout`, `passing`
+
+[Note](drills/d-to-wall-breakout.md) · [Drill page](drills/d-to-wall-breakout/) · [Animation](media/d-to-wall-breakout/d-to-wall-breakout-anim.html) · [PNG](media/d-to-wall-breakout/d-to-wall-breakout.png) · [Excalidraw](media/d-to-wall-breakout/d-to-wall-breakout.excalidraw)
+
+### [Controlled-Skating Breakout](drills/controlled-skating-breakout.md)
+
+A timing and support drill for young players (Weiss Tech). The forward passes to the D, then skates slowly through four receiving spots marked with cones (high slot, low corner, half-wall, high on the wall), showing a target at each one. The D skates the puck behind the net and passes when the forward arrives at a spot, then the forward attacks 1-on-0. This half-ice version curls at a cone near the red line and attacks the same net.
+
+**Tags:** `half-ice`, `breakout`, `passing`
+
+[Note](drills/controlled-skating-breakout.md) · [Drill page](drills/controlled-skating-breakout/) · [Animation](media/controlled-skating-breakout/controlled-skating-breakout-anim.html) · [PNG](media/controlled-skating-breakout/controlled-skating-breakout.png) · [Excalidraw](media/controlled-skating-breakout/controlled-skating-breakout.excalidraw)
+
+### [Wide Entry, Drive the Net](drills/wide-entry-drive-net.md)
+
+The simplest U11 zone entry: wide with speed, then drive the net. The player carries the puck wide over the blue line, keeps their feet moving around a cone inside the zone, cuts to the net and shoots, then follows the shot for the rebound. Progression: add a D at the blue line for a 1-on-1. From a Hockey Canada U11 zone-entry station.
+
+**Tags:** `half-ice`, `zone-entry`, `shooting`
+
+[Note](drills/wide-entry-drive-net.md) · [Drill page](drills/wide-entry-drive-net/) · [Animation](media/wide-entry-drive-net/wide-entry-drive-net-anim.html) · [PNG](media/wide-entry-drive-net/wide-entry-drive-net.png) · [Excalidraw](media/wide-entry-drive-net/wide-entry-drive-net.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=QggkHSIQB9fxeKdPa58M0,oq0VSZv6oSIBDI1Ts_ZAvg)
+
+### [Three-Lane Wave Shooting](drills/three-lane-wave-shooting.md)
+
+Lots of shots and simple to run. Three lines wait at the red line (left, middle, right lanes), each with pucks. One player from each lane carries in and shoots, one after another, and clears out to the side so the next shooter has a clear lane. The goalie gets a short reset between waves. From a Hockey Canada U9 practice plan.
+
+**Tags:** `half-ice`, `shooting`
+
+[Note](drills/three-lane-wave-shooting.md) · [Drill page](drills/three-lane-wave-shooting/) · [Animation](media/three-lane-wave-shooting/three-lane-wave-shooting-anim.html) · [PNG](media/three-lane-wave-shooting/three-lane-wave-shooting.png) · [Excalidraw](media/three-lane-wave-shooting/three-lane-wave-shooting.excalidraw)
+
+### [2-on-0 Wide and Middle](drills/two-on-zero-wide-and-middle.md)
+
+Teaches one rule kids can remember: one goes wide, one drives the net. The puck carrier enters wide while the partner drives the middle lane to the back post. The carrier cuts in and shoots (or passes across to the back post), and both attackers go to the net for the rebound. Then switch lanes.
+
+**Tags:** `half-ice`, `zone-entry`, `shooting`
+
+[Note](drills/two-on-zero-wide-and-middle.md) · [Drill page](drills/two-on-zero-wide-and-middle/) · [Animation](media/two-on-zero-wide-and-middle/two-on-zero-wide-and-middle-anim.html) · [PNG](media/two-on-zero-wide-and-middle/two-on-zero-wide-and-middle.png) · [Excalidraw](media/two-on-zero-wide-and-middle/two-on-zero-wide-and-middle.excalidraw)
+
+### [Figure-8s with Pivots](drills/figure-8-pivots.md)
+
+A simple pivot drill. Players skate a figure-8 around the two end-zone circles: the top circle skating forwards, then on the bottom circle pivot from forwards to backwards at the first cone and back to forwards at the second. Pivots are the U10-U11 skill coaches most often skip, and they're needed for defence and for opening up to receive a pass. Add a puck once players are comfortable.
+
+**Tags:** `skating`
+
+[Note](drills/figure-8-pivots.md) · [Drill page](drills/figure-8-pivots/) · [Animation](media/figure-8-pivots/figure-8-pivots-anim.html) · [PNG](media/figure-8-pivots/figure-8-pivots.png) · [Excalidraw](media/figure-8-pivots/figure-8-pivots.excalidraw)
+
 
 ## Add a drill
 
