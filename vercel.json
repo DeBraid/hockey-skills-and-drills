@@ -4,6 +4,30 @@
   "buildCommand": "python3 scripts/build_site.py",
   "rewrites": [
     {
+      "source": "/api/auth/:path*/",
+      "destination": "/api/auth/handler?__auth=:path*"
+    },
+    {
+      "source": "/api/auth/:path*",
+      "destination": "/api/auth/handler?__auth=:path*"
+    },
+    {
+      "source": "/api/plans/:id/",
+      "destination": "/api/plans/item?__plan=:id"
+    },
+    {
+      "source": "/api/plans/:id",
+      "destination": "/api/plans/item?__plan=:id"
+    },
+    {
+      "source": "/api/plans/",
+      "destination": "/api/plans"
+    },
+    {
+      "source": "/api/health/",
+      "destination": "/api/health"
+    },
+    {
       "source": "/hockey-skills-and-drills/api/:path*",
       "destination": "/api/:path*"
     },

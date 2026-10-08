@@ -1,4 +1,5 @@
 import { accountsReady, emailReady, googleReady, handleAuth, peekMagicLink, readSession } from "./auth.js"
+import { routedUrl } from "./base-path.js"
 import { json } from "./http.js"
 import { createPlan, deletePlan, getPlan, listPlans, PlanInputError, updatePlan } from "./plans.js"
 
@@ -72,7 +73,7 @@ async function readBody(request: Request): Promise<unknown> {
 }
 
 function planId(request: Request): string {
-  const parts = new URL(request.url).pathname.split("/").filter(Boolean)
+  const parts = routedUrl(request).pathname.split("/").filter(Boolean)
   const index = parts.lastIndexOf("plans")
   if (index === -1 || index + 1 >= parts.length) return ""
   return decodeURIComponent(parts[index + 1] || "")

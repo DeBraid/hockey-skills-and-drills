@@ -274,7 +274,7 @@ async function main(): Promise<void> {
   execSync("node scripts/migrate.mjs", { cwd: root, stdio: "inherit", env: process.env })
 
   const { closePool, getPool } = await import("../lib/db.js")
-  const { resolvePublicUrl } = await import("../lib/base-path.js")
+  const { resolvePublicUrl, routedUrl } = await import("../lib/base-path.js")
   const { accountsReady } = await import("../lib/auth.js")
   const { handleAuth } = await import("../lib/auth.js")
   const { handleHealth, handleMagicLink, handlePlanItem, handlePlansCollection } = await import("../lib/routes.js")
@@ -301,6 +301,47 @@ async function main(): Promise<void> {
   assert.equal(direct.basePath, "")
   assert.equal(direct.url.pathname, "/api/health")
   delete process.env.BASE_PATH
+  delete process.env.CANONICAL_HOST
+
+  const vercelConfig = JSON.parse(fs.readFileSync(path.join(root, "vercel.json"), "utf8")) as {
+    rewrites: { source: string; destination: string }[]
+  }
+  assert.equal(vercelConfig.rewrites[0].source, "/api/auth/:path*/")
+  assert.equal(vercelConfig.rewrites[1].destination, "/api/auth/handler?__auth=:path*")
+  assert.ok(vercelConfig.rewrites.some((rule) => rule.destination === "/api/plans/item?__plan=:id"))
+  assert.ok(vercelConfig.rewrites.some((rule) => rule.source === "/api/plans/:id/"))
+  assert.ok(vercelConfig.rewrites.some((rule) => rule.source === "/api/health/"))
+
+  const hintedAuth = routedUrl(
+    new Request("https://hockey-skills-and-drills.vercel.app/api/auth/handler?__auth=signin%2Fgoogle&callbackUrl=%2Faccount%2F")
+  )
+  assert.equal(hintedAuth.pathname, "/api/auth/signin/google")
+  assert.equal(hintedAuth.searchParams.get("__auth"), null)
+  assert.equal(hintedAuth.searchParams.get("callbackUrl"), "/account/")
+  const hintedCallback = routedUrl(
+    new Request("https://hockey-skills-and-drills.vercel.app/api/auth/handler?__auth=callback/google/&code=abc&state=xyz")
+  )
+  assert.equal(hintedCallback.pathname, "/api/auth/callback/google")
+  assert.equal(hintedCallback.searchParams.get("code"), "abc")
+  assert.equal(hintedCallback.searchParams.get("state"), "xyz")
+  const hintedPlan = routedUrl(
+    new Request("https://hockey.derekbraid.com/api/plans/item?__plan=123e4567-e89b-42d3-a456-426614174000")
+  )
+  assert.equal(hintedPlan.pathname, "/api/plans/123e4567-e89b-42d3-a456-426614174000")
+  assert.equal(hintedPlan.searchParams.get("__plan"), null)
+  const untouched = routedUrl(new Request("https://hockey.derekbraid.com/api/auth/csrf"))
+  assert.equal(untouched.pathname, "/api/auth/csrf")
+  const rejected = routedUrl(new Request("https://hockey.derekbraid.com/api/auth/handler?__auth=../health"))
+  assert.equal(rejected.pathname, "/api/auth/handler")
+
+  process.env.CANONICAL_HOST = "hockey.derekbraid.com"
+  const customDomain = resolvePublicUrl(
+    new Request("https://hockey-skills-and-drills.vercel.app/api/auth/handler?__auth=callback/google", {
+      headers: { "x-forwarded-host": "hockey.derekbraid.com", "x-forwarded-proto": "https" },
+    })
+  )
+  assert.equal(customDomain.basePath, "")
+  assert.equal(customDomain.url.href, "https://hockey.derekbraid.com/api/auth/callback/google")
   delete process.env.CANONICAL_HOST
 
   const server = http.createServer(async (req, res) => {
@@ -355,6 +396,11 @@ async function main(): Promise<void> {
     assert.equal(googleUrl.origin, "https://accounts.google.com")
     const redirectUri = googleUrl.searchParams.get("redirect_uri") || ""
     assert.equal(redirectUri, `${origin}/hockey-skills-and-drills/api/auth/callback/google`)
+    const viaRewrite = await postAuth(origin, googleJar, "handler?__auth=signin/google", {
+      callbackUrl: `${origin}/account/`,
+    })
+    assert.ok(viaRewrite.url)
+    assert.equal(new URL(viaRewrite.url).searchParams.get("redirect_uri"), redirectUri)
     const csrfResponse = await fetch(`${origin}/api/auth/csrf`)
     const setCookie = csrfResponse.headers.getSetCookie?.().join("\n") || ""
     assert.match(setCookie, /hsd\.csrf-token=/)
@@ -390,6 +436,10 @@ async function main(): Promise<void> {
     assert.equal(listed.data.plans.length, 1)
     assert.equal(listed.data.plans[0].drillCount, 2)
     assert.equal(listed.data.plans[0].totalMinutes, 15)
+
+    const viaItem = await api(origin, coachA, "GET", `/api/plans/item?__plan=${planId}`)
+    assert.equal(viaItem.status, 200)
+    assert.equal(viaItem.data.plan.title, "Tuesday practice")
 
     const renamed = await api(origin, coachA, "PATCH", `/api/plans/${planId}`, { title: "Thursday practice" })
     assert.equal(renamed.status, 200)
