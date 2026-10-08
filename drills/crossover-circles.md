@@ -25,7 +25,7 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 3. Swing toward the middle and take a long pass from the next player on the blue-line dot.
 4. Curl in and shoot. First goal wins.
 5. The passer goes next and the shooter goes to the back of the line. Next round, go the other way.
-6. Variation (step 2): see Crossover Circles: Pivot Race. One lap around the circle with a pivot at every cone.
+6. Variation (step 2): see Crossover Circles: Pivot Race. One lap around the circle with a pivot at every cone, then race to one loose puck.
 
 Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.
 

@@ -104,7 +104,7 @@ A skating race on the two end-zone faceoff circles. Each line stands on a neutra
 
 ### [Crossover Circles: Pivot Race](drills/crossover-circles-pivots.md)
 
-The step-2 version of the Crossover Circles Race. Lines stand on the neutral-zone faceoff dots near the blue line. Each racer skates into the zone and does ONE lap around the circle with a pivot at each of the 3 cones: forwards, backwards, forwards, backwards. Then turn forwards, take a long pass from your line and shoot. First goal wins.
+The step-2 version of the Crossover Circles Race. Lines stand on the neutral-zone faceoff dots near the blue line, with one puck in the middle of the ice. Each racer skates into the zone and does ONE lap around the circle with a pivot at each of the 3 cones: forwards, backwards, forwards, backwards. Then turn forwards and race to the puck. First one there picks it up and shoots.
 
 **Tags:** `skating`, `passing`, `shooting`
 
@@ -182,13 +182,13 @@ A backup when you run out of nets: defend a cone instead. 1 on 1 around a faceof
 
 [Note](drills/defend-the-cone.md) · [Drill page](drills/defend-the-cone/) · [Animation](media/defend-the-cone/defend-the-cone-anim.html) · [PNG](media/defend-the-cone/defend-the-cone.png) · [Excalidraw](media/defend-the-cone/defend-the-cone.excalidraw)
 
-### [1-on-1 Shooting Warm-up to 2-on-1](drills/one-on-one-shooting-to-two-on-one.md)
+### [Corner Pass to Half-Ice 1-on-1](drills/one-on-one-shooting-to-two-on-one.md)
 
-A full-ice shooting warm-up. Lines start in opposite corners. A player leaves one corner skating hard, gets a hard pass from the front of the far line, goes in and shoots. The passer then leaves and gets a pass from the other corner. Progression: a 2-on-1 off the same pattern.
+A half-ice 1-on-1 drill with three lines. Two lines stand against the boards in the corners, and one line stands in the middle of the ice at a cone level with the tops of the faceoff circles, with the pucks. The centre player passes to the front of a corner line, then steps in to defend. The corner player carries up the wall and attacks 1-on-1, staying in their half of the zone (split down the middle), and shoots. The next rep goes to the other corner.
 
-**Tags:** `full-ice`, `passing`, `shooting`
+**Tags:** `half-ice`, `passing`, `shooting`, `defence`
 
-[Note](drills/one-on-one-shooting-to-two-on-one.md) · [Drill page](drills/one-on-one-shooting-to-two-on-one/) · [Animation](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one-anim.html) · [PNG](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png) · [Excalidraw](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw)
+[Note](drills/one-on-one-shooting-to-two-on-one.md) · [Drill page](drills/one-on-one-shooting-to-two-on-one/) · [Animation](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one-anim.html) · [PNG](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png) · [Excalidraw](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.excalidraw)
 
 ### [Mirror Angling 2v1](drills/mirror-angling-2v1.md)
 

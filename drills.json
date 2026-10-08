@@ -268,7 +268,7 @@
         "Swing toward the middle and take a long pass from the next player on the blue-line dot.",
         "Curl in and shoot. First goal wins.",
         "The passer goes next and the shooter goes to the back of the line. Next round, go the other way.",
-        "Variation (step 2): see Crossover Circles: Pivot Race. One lap around the circle with a pivot at every cone."
+        "Variation (step 2): see Crossover Circles: Pivot Race. One lap around the circle with a pivot at every cone, then race to one loose puck."
       ],
       "related": [
         "crossover-circles-pivots",
@@ -278,9 +278,9 @@
     {
       "slug": "crossover-circles-pivots",
       "title": "Crossover Circles: Pivot Race",
-      "subtitle": "Race: one lap around the circle, pivot at every cone. Long pass from your line, shoot. First goal wins.",
-      "blurb": "The step-2 version of the Crossover Circles Race. Lines stand on the neutral-zone faceoff dots near the blue line. Each racer skates into the zone and does ONE lap around the circle with a pivot at each of the 3 cones: forwards, backwards, forwards, backwards. Then turn forwards, take a long pass from your line and shoot. First goal wins.",
-      "diagramAlt": "Half-ice diagram of Crossover Circles: Pivot Race. A line stands on each neutral-zone faceoff dot near the blue line with pucks, and three numbered pivot cones sit on each end-zone circle. The racer skates into the zone and does one clockwise lap: forwards to cone 1 and pivot to backwards, backwards to cone 2 and pivot to forwards, forwards to cone 3 and pivot to backwards, backwards to finish the lap. Then the racer turns forwards, takes a long pass from the blue-line dot and shoots. Forwards skating is a solid arrow, backwards skating is a dotted arrow. Both circles race at the same time.",
+      "subtitle": "Race: one lap around the circle, pivot at every cone. Then race to the puck. First one there shoots.",
+      "blurb": "The step-2 version of the Crossover Circles Race. Lines stand on the neutral-zone faceoff dots near the blue line, with one puck in the middle of the ice. Each racer skates into the zone and does ONE lap around the circle with a pivot at each of the 3 cones: forwards, backwards, forwards, backwards. Then turn forwards and race to the puck. First one there picks it up and shoots.",
+      "diagramAlt": "Half-ice diagram of Crossover Circles: Pivot Race. A line stands on each neutral-zone faceoff dot near the blue line, three numbered pivot cones sit on each end-zone circle, and one puck lies in the middle of the ice, halfway between the tops of the circles and the blue line. The racer skates into the zone and does one lap: forwards to cone 1 and pivot to backwards, backwards to cone 2 and pivot to forwards, forwards to cone 3 and pivot to backwards, backwards to finish the lap. Then both racers turn forwards and race to the puck. The first one there picks it up, skates in and shoots on the goalie; the other racer arrives just behind. Forwards skating is a solid arrow, backwards skating is a dotted arrow.",
       "tags": [
         "skating",
         "passing",
@@ -288,19 +288,20 @@
       ],
       "excalidrawUrl": null,
       "coachingPoints": [
-        "One lap, pivot at every cone.",
+        "One lap, pivot at every cone. First to the puck shoots.",
         "Pivot: open your hips toward the middle of the circle, keep your feet moving, eyes up.",
         "Backwards: stay low with your shoulders square, push with crossunders.",
-        "Turn forwards after the lap and show your stick for the pass.",
-        "Catch the long pass cleanly, then shoot to score. First goal wins."
+        "After the last pivot, turn forwards fast and sprint to the puck.",
+        "Get there second? Keep skating and backcheck the shooter."
       ],
       "steps": [
-        "Same setup as the Crossover Circles Race: a line on each neutral-zone faceoff dot near the blue line with pucks. Put 3 cones on each circle, spread evenly.",
+        "Same setup as the Crossover Circles Race: a line on each neutral-zone faceoff dot near the blue line. Put 3 cones on each circle, spread evenly. The coach puts ONE puck in the middle of the ice, halfway between the tops of the circles and the blue line.",
         "Race! Skate into the zone and go forwards to cone 1. Pivot to backwards.",
         "Backwards to cone 2. Pivot to forwards.",
         "Forwards to cone 3. Pivot to backwards.",
-        "Backwards to finish the lap, turn forwards and take a long pass from the next player on the blue-line dot.",
-        "Shoot! First goal wins. The passer goes next and the shooter goes to the back of the line."
+        "Backwards to finish the lap, then turn forwards and race to the puck.",
+        "First one to the puck picks it up and shoots.",
+        "Both racers go to the back of their line. The coach drops a new puck and the next pair goes."
       ],
       "related": [
         "crossover-circles",
@@ -516,26 +517,32 @@
     },
     {
       "slug": "one-on-one-shooting-to-two-on-one",
-      "title": "1-on-1 Shooting Warm-up to 2-on-1",
-      "subtitle": "Lines in opposite corners. Skate hard, take a pass from the far corner, go in and shoot. The passer goes next. Progress to a 2-on-1.",
-      "blurb": "A full-ice shooting warm-up. Lines start in opposite corners. A player leaves one corner skating hard, gets a hard pass from the front of the far line, goes in and shoots. The passer then leaves and gets a pass from the other corner. Progression: a 2-on-1 off the same pattern.",
-      "diagramAlt": "Full-ice diagram of 1-on-1 Shooting Warm-up. Lines sit in the bottom-left and top-right corners. The left player skates up the middle, takes a pass from the right corner, carries in and shoots on the right goalie. Then the right player skates out, takes a pass from the left corner, and shoots on the left goalie. Shooters join the line in the corner they shot from.",
-      "tags": ["full-ice", "passing", "shooting"],
+      "title": "Corner Pass to Half-Ice 1-on-1",
+      "subtitle": "Lines in both corners and at the centre cone. Centre passes to a corner, then defends. 1-on-1 in your half of the zone.",
+      "blurb": "A half-ice 1-on-1 drill with three lines. Two lines stand against the boards in the corners, and one line stands in the middle of the ice at a cone level with the tops of the faceoff circles, with the pucks. The centre player passes to the front of a corner line, then steps in to defend. The corner player carries up the wall and attacks 1-on-1, staying in their half of the zone (split down the middle), and shoots. The next rep goes to the other corner.",
+      "diagramAlt": "Half-ice diagram of Corner Pass to Half-Ice 1-on-1. One line of F's stands against the boards in each corner, and a line of D's with pucks stands in the middle of the ice at a cone level with the tops of the faceoff circles. The front D passes to the front F in the bottom corner, then steps across into that half of the ice. The F carries up the wall, curls in and attacks 1-on-1 while the D skates backwards to defend on the inside. The F shoots on the goalie. Then the F goes to the centre line and the D goes to that corner line. The next rep goes to the other corner.",
+      "tags": [
+        "half-ice",
+        "passing",
+        "shooting",
+        "defence"
+      ],
       "coachingPoints": [
-        "Skate hard out of the corner and show a target with your stick.",
-        "Passer: hard, flat pass in front of the skater, not at their feet.",
-        "Catch it in stride and keep your feet moving into the zone.",
-        "Shoot to score, then follow it for the rebound.",
-        "2-on-1: the D has a head start; the F's go when the D reaches the blue line."
+        "Passer: a hard, flat pass to the corner player's stick, then go defend right away.",
+        "Attacker: catch it, get your feet moving up the wall, then attack the net with speed.",
+        "Stay in your half of the zone. The middle of the ice is the boundary.",
+        "D: stay between the attacker and the net, stick on the ice, take away the middle.",
+        "Shoot to score, then follow it for the rebound."
       ],
       "steps": [
-        "Split the group into two lines in opposite corners, with pucks at each line. A goalie in each net.",
-        "The front of one line skates hard out of the corner. The front of the far line hits them with a hard pass.",
-        "The skater carries in and shoots on the far goalie, then joins the line in that corner.",
-        "The passer goes next: skate out and take a pass from the other corner, then go in and shoot.",
-        "Progression (2-on-1): send three players toward centre. The leader is a D with a head start; the F's go when the D reaches the blue line. The D takes the pass and drops it to an F, then it's a 2-on-1 the other way."
+        "Three lines: one against the boards in each corner, and one in the middle of the ice at a cone level with the tops of the faceoff circles. Pucks with the centre line. A goalie in the net.",
+        "The front centre player passes to the front of one corner line.",
+        "The corner player carries up the wall. The passer steps across into that half to defend.",
+        "1-on-1: the attacker curls in and attacks the net, staying in their half of the zone. The D skates backwards and stays on the inside.",
+        "The attacker shoots.",
+        "Rotation: the attacker goes to the centre line, the D goes to the corner line they defended. The next centre player passes to the other corner."
       ],
-      "excalidrawUrl": "https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw",
+      "excalidrawUrl": null,
       "related": []
     },
     {
