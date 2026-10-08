@@ -4,7 +4,8 @@ import Resend from "@auth/core/providers/resend"
 import NeonAdapter from "@auth/neon-adapter"
 import { resolvePublicUrl, type PublicUrl } from "./base-path.js"
 import { getPool } from "./db.js"
-import { json } from "./http.js"
+import { clientIp, json } from "./http.js"
+import { consumeLimit } from "./rate-limit.js"
 
 export interface AccountUser {
   id: string
@@ -29,8 +30,12 @@ export function googleReady(): boolean {
   return Boolean(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET)
 }
 
+export function devMagicLinkEnabled(): boolean {
+  return process.env.EMAIL_DELIVERY === "console" && !process.env.VERCEL_ENV
+}
+
 export function emailReady(): boolean {
-  if (process.env.EMAIL_DELIVERY === "console") return true
+  if (devMagicLinkEnabled()) return true
   return Boolean(process.env.AUTH_RESEND_KEY && process.env.EMAIL_FROM)
 }
 
@@ -44,6 +49,12 @@ export async function handleAuth(request: Request): Promise<Response> {
   }
   try {
     const publicUrl = resolvePublicUrl(request)
+    const raw = request.method === "POST" ? await request.arrayBuffer() : undefined
+    if (request.method === "POST" && /\/signin\/resend\/?$/.test(publicUrl.url.pathname)) {
+      const gate = await emailSignInGate(emailFromSignIn(raw, request.headers.get("content-type") || ""), clientIp(request))
+      if (gate === "limited") return json({ error: "Too many sign-in emails. Try again later." }, 429)
+      if (gate === "unavailable") return json({ error: "Sign-in is unavailable right now." }, 503)
+    }
     const headers = new Headers(request.headers)
     headers.set("x-forwarded-host", publicUrl.host)
     headers.set("x-forwarded-proto", publicUrl.protocol)
@@ -52,7 +63,7 @@ export async function handleAuth(request: Request): Promise<Response> {
     const authRequest = new Request(publicUrl.url, {
       method: request.method,
       headers,
-      body: request.method === "POST" ? await request.arrayBuffer() : undefined,
+      body: raw,
     })
     return await Auth(authRequest, authConfigFor(publicUrl))
   } catch (error) {
@@ -93,14 +104,18 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
   const secret = process.env.AUTH_SECRET
   if (!secret) throw new Error("AUTH_SECRET is not set")
   const secure = publicUrl.protocol === "https"
-  const prefix = secure ? "__Secure-" : ""
   const basePath = `${publicUrl.basePath}/api/auth`
   return {
     trustHost: true,
     secret,
     basePath,
     adapter: NeonAdapter(getPool() as never),
-    session: { strategy: "database" },
+    useSecureCookies: secure,
+    session: {
+      strategy: "database",
+      maxAge: 30 * 24 * 60 * 60,
+      updateAge: 24 * 60 * 60,
+    },
     pages: {
       signIn: `${publicUrl.basePath}/account/`,
       error: `${publicUrl.basePath}/account/`,
@@ -111,15 +126,13 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
     // browser stores the cookie for the host that set it (hockey.derekbraid.com
     // or the vercel.app host). Names are prefixed with hsd so they do not
     // collide with another app on a shared parent domain.
-    cookies: {
-      sessionToken: { name: `${prefix}hsd.session-token` },
-      callbackUrl: { name: `${prefix}hsd.callback-url` },
-      csrfToken: { name: `${secure ? "__Host-" : ""}hsd.csrf-token` },
-      pkceCodeVerifier: { name: `${prefix}hsd.pkce.code_verifier` },
-      state: { name: `${prefix}hsd.state` },
-      nonce: { name: `${prefix}hsd.nonce` },
-    },
+    cookies: authCookies(secure),
     callbacks: {
+      async signIn({ account, profile }) {
+        if (account?.provider !== "google") return true
+        const verified = (profile as { email_verified?: boolean } | undefined)?.email_verified
+        return verified !== false
+      },
       session({ session, user }) {
         const source = user ?? session.user
         const expires = session.expires as Date | string | undefined
@@ -134,15 +147,7 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
         }
       },
       redirect({ url, baseUrl }) {
-        const target = url.startsWith("/") ? `${baseUrl}${url}` : url
-        try {
-          const parsed = new URL(target)
-          if (!url.startsWith("/") && parsed.origin !== baseUrl) return baseUrl
-          parsed.pathname = parsed.pathname.replace(/\/index\.html$/, "/")
-          return parsed.href
-        } catch {
-          return baseUrl
-        }
+        return safeRedirectTarget(url, baseUrl)
       },
     },
     logger: {
@@ -155,6 +160,71 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
   }
 }
 
+function authCookies(secure: boolean): AuthConfig["cookies"] {
+  const name = (suffix: string) => `${secure ? "__Host-" : ""}hsd.${suffix}`
+  const options = (maxAge?: number) => ({
+    httpOnly: true,
+    sameSite: "lax" as const,
+    path: "/",
+    secure,
+    ...(maxAge ? { maxAge } : {}),
+  })
+  return {
+    sessionToken: { name: name("session-token"), options: options() },
+    callbackUrl: { name: name("callback-url"), options: options() },
+    csrfToken: { name: name("csrf-token"), options: options() },
+    pkceCodeVerifier: { name: name("pkce.code_verifier"), options: options(60 * 15) },
+    state: { name: name("state"), options: options(60 * 15) },
+    nonce: { name: name("nonce"), options: options() },
+  }
+}
+
+export function safeRedirectTarget(url: string, baseUrl: string): string {
+  let base: URL
+  try {
+    base = new URL(baseUrl)
+  } catch {
+    return baseUrl
+  }
+  const fallback = base.origin
+  if (!url || /[\s\\]/.test(url)) return fallback
+  try {
+    const relative = url.startsWith("/") && !url.startsWith("//")
+    const parsed = relative ? new URL(url, base.origin) : new URL(url)
+    if (parsed.origin !== base.origin) return fallback
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return fallback
+    parsed.pathname = parsed.pathname.replace(/\/index\.html$/, "/")
+    return parsed.href
+  } catch {
+    return fallback
+  }
+}
+
+async function emailSignInGate(email: string, ip: string): Promise<"ok" | "limited" | "unavailable"> {
+  try {
+    const addressOk = await consumeLimit("magic-email", email || "missing", 5, 60 * 60)
+    const ipOk = await consumeLimit("magic-ip", ip || "local", 30, 60 * 60)
+    return addressOk && ipOk ? "ok" : "limited"
+  } catch (error) {
+    console.error(error)
+    return "unavailable"
+  }
+}
+
+function emailFromSignIn(body: ArrayBuffer | undefined, contentType: string): string {
+  if (!body) return ""
+  const text = new TextDecoder().decode(body).slice(0, 4000)
+  if (contentType.includes("application/json")) {
+    try {
+      const data = JSON.parse(text) as { email?: unknown }
+      return typeof data.email === "string" ? data.email.trim().toLowerCase() : ""
+    } catch {
+      return ""
+    }
+  }
+  return (new URLSearchParams(text).get("email") || "").trim().toLowerCase()
+}
+
 function providers() {
   const list: AuthConfig["providers"] = []
   if (googleReady()) {
@@ -162,7 +232,6 @@ function providers() {
       Google({
         clientId: process.env.AUTH_GOOGLE_ID,
         clientSecret: process.env.AUTH_GOOGLE_SECRET,
-        allowDangerousEmailAccountLinking: true,
       })
     )
   }
@@ -184,10 +253,13 @@ async function sendMagicLink(params: {
   provider: { apiKey?: string; from?: string }
 }): Promise<void> {
   const { identifier: to, url, provider } = params
-  if (process.env.EMAIL_DELIVERY === "console") {
+  if (devMagicLinkEnabled()) {
     lastMagicLink = { email: to, url }
     console.log(`Magic link for ${to}: ${url}`)
     return
+  }
+  if (process.env.EMAIL_DELIVERY === "console") {
+    throw new Error("Email sign-in is not configured")
   }
   const apiKey = provider.apiKey || process.env.AUTH_RESEND_KEY
   const from = provider.from || process.env.EMAIL_FROM

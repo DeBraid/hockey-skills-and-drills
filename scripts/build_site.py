@@ -6,11 +6,13 @@ from __future__ import annotations
 import html
 import json
 import re
+import shutil
 import struct
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SITE = ROOT / "public"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 REQUIRED_MEDIA = ("png", "excalidraw")
 LINK_RE = re.compile(r"(?:href|src|poster)=\"([^\"]+)\"|\[[^\]]*\]\(([^)\s]+)\)")
@@ -565,8 +567,13 @@ def write_account() -> None:
       <div class="account-actions account-footer-actions">
         <a class="btn" href="../plan/">Practice plan</a>
         <button class="btn" type="button" id="account-signout">Sign out</button>
+        <button class="btn danger" type="button" id="account-delete">Delete account and saved plans</button>
       </div>
     </div>
+    <section class="account-privacy">
+      <h2>Privacy</h2>
+      <p>An account stores the name, email address, and profile photo from the sign-in provider, plus the practice plans you save. Share links do not include your notes. Saved plans are visible only to you. Delete account removes that profile and every plan saved to it.</p>
+    </section>
     <p class="plan-status" id="account-status" role="status"></p>
   </main>
 """
@@ -682,6 +689,8 @@ def check_output(drills: list[dict]) -> None:
         raise SystemExit("account page should stay read-only")
     if 'id="account-out" hidden' not in account or "data-account-slot hidden" not in account:
         raise SystemExit("account page should hide sign-in until the API is available")
+    if "Privacy" not in account or 'id="account-delete"' not in account:
+        raise SystemExit("account page is missing the privacy note or delete button")
     html_pages = [
         ROOT / "index.html",
         ROOT / "plan" / "index.html",
@@ -691,6 +700,63 @@ def check_output(drills: list[dict]) -> None:
     for html_path in html_pages:
         if "index.html" in html_path.read_text(encoding="utf-8"):
             raise SystemExit(f"{html_path.relative_to(ROOT)} still links index.html")
+
+
+def publish_site() -> None:
+    if SITE.exists():
+        shutil.rmtree(SITE)
+    SITE.mkdir()
+    for name in ("css", "js", "media"):
+        shutil.copytree(ROOT / name, SITE / name)
+    for name in ("favicon.svg", "robots.txt", ".nojekyll"):
+        source = ROOT / name
+        if source.is_file():
+            shutil.copy2(source, SITE / name)
+    shutil.copy2(ROOT / "index.html", SITE / "index.html")
+    for name in ("plan", "account"):
+        shutil.copytree(ROOT / name, SITE / name)
+    drills = SITE / "drills"
+    drills.mkdir()
+    for entry in (ROOT / "drills").iterdir():
+        page = entry / "index.html"
+        if entry.is_dir() and page.is_file():
+            dest = drills / entry.name
+            dest.mkdir()
+            shutil.copy2(page, dest / "index.html")
+    banned_names = {
+        "package.json",
+        "package-lock.json",
+        "tsconfig.json",
+        "vercel.json",
+        "drills.json",
+        ".env",
+        ".env.example",
+        ".env.local",
+        "README.md",
+        "SETUP-VERCEL.md",
+        "ADDING-A-DRILL.md",
+        ".gitignore",
+    }
+    banned_dirs = {"lib", "db", "scripts", "api", "node_modules", ".git"}
+    for path in SITE.rglob("*"):
+        relative = path.relative_to(SITE)
+        if path.name in banned_names or relative.parts[:1] and relative.parts[0] in banned_dirs:
+            raise SystemExit(f"public/ must not contain {relative}")
+        if path.suffix.lower() in {".md", ".ts", ".py", ".sql", ".mjs"}:
+            raise SystemExit(f"public/ must not contain {relative}")
+    required = [
+        SITE / "index.html",
+        SITE / "plan" / "index.html",
+        SITE / "account" / "index.html",
+        SITE / "js" / "site.js",
+        SITE / "css" / "styles.css",
+        SITE / "media" / "fonts" / "Virgil.woff2",
+        SITE / "media" / "cone-weave" / "cone-weave-anim.html",
+        SITE / "drills" / "cone-weave" / "index.html",
+    ]
+    missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
+    if missing:
+        raise SystemExit("public/ is missing site files:\n" + "\n".join(missing))
 
 
 def main() -> None:
@@ -705,6 +771,7 @@ def main() -> None:
     write_plan(data, labels)
     write_account()
     check_output(data["drills"])
+    publish_site()
     print(f"Built {len(data['drills'])} drills")
 
 

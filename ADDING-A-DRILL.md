@@ -36,7 +36,7 @@ From the repository root:
 python3 scripts/build_site.py
 ```
 
-That rewrites:
+That rewrites the pages in the repo and a `public/` copy that Vercel publishes. The `public/` folder is not committed. It rewrites:
 
 - `index.html`
 - `README.md` (from [`scripts/readme_template.md`](scripts/readme_template.md) plus the registry)

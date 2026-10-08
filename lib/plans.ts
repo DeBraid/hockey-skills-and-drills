@@ -8,6 +8,7 @@ const MAX_TITLE = 80
 const MAX_NOTE = 140
 const MAX_NOTES = 2000
 const MAX_MINUTES = 180
+const MAX_PLANS = 100
 
 export interface PlanItem {
   slug: string
@@ -79,6 +80,10 @@ export async function getPlan(userId: string, id: string): Promise<PlanRecord | 
 
 export async function createPlan(userId: string, input: unknown): Promise<PlanRecord> {
   const plan = validatePlan(input, { partial: false })
+  const existing = await query(`SELECT count(*)::int AS n FROM plans WHERE user_id = $1`, [userId])
+  if (Number(existing.rows[0]?.n || 0) >= MAX_PLANS) {
+    throw new PlanInputError(`You can save up to ${MAX_PLANS} plans. Delete one before adding another.`)
+  }
   const result = await query(
     `INSERT INTO plans (user_id, title, items, notes)
      VALUES ($1, $2, $3::jsonb, $4)

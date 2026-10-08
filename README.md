@@ -16,7 +16,9 @@ On the Vercel deployment, a coach can sign in with Google or an email link and s
 
 ## GitHub Pages
 
-Once GitHub Pages is enabled from the **main** branch, **root** folder, the public site will be [https://debraid.github.io/hockey-skills-and-drills/](https://debraid.github.io/hockey-skills-and-drills/). [`index.html`](index.html) is the home page. [`.nojekyll`](.nojekyll) is already in the root so Pages serves the HTML, CSS, and media as files. Pages does not run the account API. Turn Pages off after [https://hockey.derekbraid.com/](https://hockey.derekbraid.com/) is live; the steps are in [SETUP-VERCEL.md](SETUP-VERCEL.md).
+Leave GitHub Pages off once [https://hockey.derekbraid.com/](https://hockey.derekbraid.com/) is live. The steps are in [SETUP-VERCEL.md](SETUP-VERCEL.md). Pages does not run the account API.
+
+Do not publish this repository's root folder. That folder also contains the API source and the database schema. The build writes a `public/` folder with only the site (pages, CSS, JS, and media). If you need a static fallback, publish `public/`, not the root.
 
 ## Drills
 
