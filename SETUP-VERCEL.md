@@ -6,7 +6,7 @@ Until you finish this setup, the site works the same way it does today. The Sign
 
 You still add and edit drills in this repo. The website does not have a way for coaches to add drills.
 
-Set aside a quiet half hour. You will click through Vercel, Google, Resend, and Neon, then paste one rewrite into the main derekbraid.com project.
+Set aside a quiet half hour. You will click through Vercel, Google, Resend, Neon, and DNSimple. The site is its own Vercel project at `https://hockey.derekbraid.com`. Leave the main derekbraid.com project alone. There is no rewrite to paste there.
 
 ## 1. Import this repo into Vercel
 
@@ -18,9 +18,9 @@ Set aside a quiet half hour. You will click through Vercel, Google, Resend, and 
    - **Build Command:** `python3 scripts/build_site.py`
    - **Output Directory:** leave this as the project root. If the box is empty, leave it empty. If Vercel filled in a folder, clear it so the root is used. Do not set it to `public` or `dist`.
    - **Install Command:** `npm install` (the default is fine)
-5. Do not deploy yet. Open **Environment Variables** on that same screen and add the variables in the table in step 7. You can also deploy now and add the variables afterward, then redeploy. A redeploy is required after any variable change.
+5. Do not deploy yet. Open **Environment Variables** on that same screen and add the variables in the table in step 6. You can also deploy now and add the variables afterward, then redeploy. A redeploy is required after any variable change.
 
-The project gets an address like `https://hockey-skills-and-drills.vercel.app`. Yours may have a suffix. Copy that address. You need it for Google.
+The project gets an address like `https://hockey-skills-and-drills.vercel.app`. Copy that address. You need it for Google. The address coaches use is `https://hockey.derekbraid.com`, added in step 7.
 
 ## 2. Add the Neon database
 
@@ -60,15 +60,15 @@ npm run migrate
 5. Application type: **Web application**. Name: `Hockey Skills & Drills`.
 6. **Authorized JavaScript origins.** Add both, with no path on the end:
 
-   - `https://YOUR-PROJECT.vercel.app`
-   - `https://derekbraid.com`
+   - `https://hockey-skills-and-drills.vercel.app`
+   - `https://hockey.derekbraid.com`
 
-7. **Authorized redirect URIs.** Add both, exactly:
+   If Vercel gave the project a different `.vercel.app` address, use that one instead of the first line.
 
-   - `https://YOUR-PROJECT.vercel.app/api/auth/callback/google`
-   - `https://derekbraid.com/hockey-skills-and-drills/api/auth/callback/google`
+7. **Authorized redirect URIs.** Add both, exactly, with no trailing slash:
 
-   Replace `YOUR-PROJECT` with the Vercel address from step 1. The second one must include `/hockey-skills-and-drills`. There is no trailing slash.
+   - `https://hockey-skills-and-drills.vercel.app/api/auth/callback/google`
+   - `https://hockey.derekbraid.com/api/auth/callback/google`
 
 8. Create the client. Copy the **Client ID** and **Client secret**. Those are `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
 
@@ -111,43 +111,29 @@ In the Vercel project: **Settings → Environment Variables**. Add each name for
 | `AUTH_GOOGLE_SECRET` | Google client secret from step 3 | `GOCSPX-…` |
 | `AUTH_RESEND_KEY` | Resend API key from step 4 | `re_…` |
 | `EMAIL_FROM` | A from address on the verified domain | `Hockey Skills & Drills <plans@derekbraid.com>` |
-| `BASE_PATH` | Type this exactly | `/hockey-skills-and-drills` |
-| `CANONICAL_HOST` | Type this exactly | `derekbraid.com` |
+| `CANONICAL_HOST` | Type this exactly | `hockey.derekbraid.com` |
 
-`BASE_PATH` is the folder on derekbraid.com. `CANONICAL_HOST` tells sign-in to send coaches back to derekbraid.com when they came in through that address. The plain `….vercel.app` address keeps working too, which is why Google has two redirect URIs.
+Do **not** add `BASE_PATH`. The site is the whole address `hockey.derekbraid.com`, not a folder on derekbraid.com. If `BASE_PATH` is already set, delete it and redeploy.
+
+`CANONICAL_HOST` is the address coaches type. The plain `….vercel.app` address keeps working too, which is why Google has two redirect URIs.
 
 Do **not** add `EMAIL_DELIVERY` on Vercel. That switch is only for local tests. If it is set to `console`, email links are printed in the logs instead of sent.
 
-You do not need `AUTH_URL`. Leaving it unset lets both the Vercel address and derekbraid.com work.
+You do not need `AUTH_URL`. Leaving it unset lets both `hockey.derekbraid.com` and the `.vercel.app` address work.
 
-## 7. Rewrite on the main derekbraid.com project
+## 7. Custom domain in DNSimple
 
-The drill library is its own Vercel project. The main derekbraid.com project should pass `/hockey-skills-and-drills` through to it. The address in the browser stays `derekbraid.com/hockey-skills-and-drills`.
+Coaches use `https://hockey.derekbraid.com`. That name points straight at this Vercel project. Do not add a rewrite on the main derekbraid.com project.
 
-In the **main** derekbraid.com repo, edit `vercel.json`. If that file already has a `"rewrites"` list, add these three objects inside that list. Do not remove what is already there. If the file has no rewrites yet, the file can be:
+1. In this Vercel project, open **Settings → Domains**.
+2. Add `hockey.derekbraid.com`. Vercel will say it needs a DNS record.
+3. In DNSimple, open the `derekbraid.com` zone. Add a **CNAME**:
+   - Name: `hockey`
+   - Target: `cname.vercel-dns.com`
+4. Save. Wait until Vercel shows the domain as valid. This can take a few minutes.
+5. Open `https://hockey.derekbraid.com`. You should see the drill library.
 
-```json
-{
-  "rewrites": [
-    {
-      "source": "/hockey-skills-and-drills",
-      "destination": "https://YOUR-PROJECT.vercel.app"
-    },
-    {
-      "source": "/hockey-skills-and-drills/",
-      "destination": "https://YOUR-PROJECT.vercel.app/"
-    },
-    {
-      "source": "/hockey-skills-and-drills/:path*",
-      "destination": "https://YOUR-PROJECT.vercel.app/:path*"
-    }
-  ]
-}
-```
-
-Replace `YOUR-PROJECT.vercel.app` with the real Vercel address from step 1. Deploy the main project after saving.
-
-This is a rewrite, not a redirect. After it works, the browser bar still says `derekbraid.com/hockey-skills-and-drills`, and it does not jump to the vercel.app address.
+Sign-in routes such as `/api/auth/signin/google` are already wired in this repo’s `vercel.json`. Leave those rules in place when you deploy.
 
 ## 8. Try it
 
@@ -155,32 +141,34 @@ This is a rewrite, not a redirect. After it works, the browser bar still says `d
 2. Open **Sign in**. Try **Continue with Google**, then try the email link in a second browser or a private window.
 3. Build a small practice plan and tap **Save**. Open **My plans**. The plan should be listed. Open it, rename it, duplicate it, and delete the copy.
 4. Copy a share link, open it in a private window, and confirm the drills show up with no sign-in.
-5. Then open `https://derekbraid.com/hockey-skills-and-drills/` and sign in there too. Saving on that address should work, and the address should stay on derekbraid.com.
+5. Then open `https://hockey.derekbraid.com/` and sign in there too. Saving on that address should work, and the address should stay on hockey.derekbraid.com.
 
 The first time you sign in on a phone that already had a plan in the browser, the site asks if you want to save that browser plan to the account. **Not now** leaves it only on that phone.
 
 ## 9. Turn off GitHub Pages
 
-Do this only after step 8 works on derekbraid.com.
+Do this only after step 8 works on hockey.derekbraid.com.
 
 1. On GitHub, open this repo.
 2. **Settings → Pages**.
 3. Under **Build and deployment**, set **Source** to **None** (Disable).
 4. Save.
 
-GitHub Pages does not run accounts. Leaving it on can keep serving an older copy. Coaches should use `https://derekbraid.com/hockey-skills-and-drills/`. The `….github.io` address will stop.
+GitHub Pages does not run accounts. Leaving it on can keep serving an older copy. Coaches should use `https://hockey.derekbraid.com/`. The `….github.io` address will stop.
 
-Do not point a custom domain at this repo’s Pages site. derekbraid.com stays on the main Vercel project. This repo is only reached through the rewrite.
+Do not point `hockey.derekbraid.com` at this repo’s Pages site. The domain stays on this Vercel project, through the DNSimple CNAME in step 7.
 
 ## If something is off
 
-**No Sign in button.** You are probably still on GitHub Pages, or the Vercel deploy does not have the variables yet. Redeploy after saving variables. On the vercel.app address, Sign in should show even before the rewrite exists.
+**No Sign in button.** You are probably still on GitHub Pages, or the Vercel deploy does not have the variables yet. Redeploy after saving variables. On the vercel.app address, Sign in should show even before the custom domain is added.
 
 **Google says redirect_uri mismatch.** Copy the URI from the Google error and add it under Authorized redirect URIs. The two you want are listed in step 3. No trailing slash.
 
 **The email never arrives.** In Resend, the domain must say Verified, and `EMAIL_FROM` must use that domain. Check spam. Resend’s logs show whether the message was sent.
 
-**Sign-in works on the vercel.app address but not on derekbraid.com.** Check `BASE_PATH` is `/hockey-skills-and-drills` and `CANONICAL_HOST` is `derekbraid.com`, then redeploy this project. On the main project, the rule must be a rewrite. If the browser jumps to the vercel.app address, it is a redirect and the cookie will not stick to derekbraid.com.
+**Google sign-in shows a Vercel “404: NOT_FOUND”.** Redeploy from the latest `main`. This repo’s `vercel.json` sends `/api/auth/…` to the sign-in function. Do not remove those rules.
+
+**Sign-in works on the vercel.app address but not on hockey.derekbraid.com.** Check `CANONICAL_HOST` is `hockey.derekbraid.com`, and that `BASE_PATH` is not set, then redeploy. In DNSimple the `hockey` CNAME must point at `cname.vercel-dns.com`. The browser address should stay on hockey.derekbraid.com.
 
 **Save says it could not reach the database.** The migration in step 2 did not run, or `DATABASE_URL` is missing. Run the SQL file in Neon and redeploy.
 

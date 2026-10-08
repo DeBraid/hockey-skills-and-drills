@@ -107,10 +107,10 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
       verifyRequest: `${publicUrl.basePath}/account/`,
     },
     providers: providers(),
-    // Cookie path stays "/" (the Auth.js default) and no Domain is set.
-    // Through the derekbraid.com rewrite the browser stores the cookie for
-    // derekbraid.com, and Path=/ sends it back on /hockey-skills-and-drills.
-    // Names are prefixed with hsd so they do not collide with another app on that host.
+    // Cookie path stays "/" (the Auth.js default) and no Domain is set, so the
+    // browser stores the cookie for the host that set it (hockey.derekbraid.com
+    // or the vercel.app host). Names are prefixed with hsd so they do not
+    // collide with another app on a shared parent domain.
     cookies: {
       sessionToken: { name: `${prefix}hsd.session-token` },
       callbackUrl: { name: `${prefix}hsd.callback-url` },

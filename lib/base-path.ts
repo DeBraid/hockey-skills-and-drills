@@ -25,8 +25,41 @@ function hostnameOf(host: string): string {
   return host.trim().toLowerCase().replace(/:\d+$/, "")
 }
 
+const SEGMENT = /^[A-Za-z0-9_-]+$/
+
+function safeSegments(value: string): string {
+  let decoded = value
+  if (decoded.includes("%")) {
+    try {
+      decoded = decodeURIComponent(decoded)
+    } catch {
+      return ""
+    }
+  }
+  const parts = decoded.replace(/^\/+|\/+$/g, "").split("/").filter(Boolean)
+  if (!parts.length || parts.some((part) => !SEGMENT.test(part))) return ""
+  return parts.join("/")
+}
+
+export function routedUrl(request: Request): URL {
+  const url = new URL(request.url)
+  const authHint = url.searchParams.get("__auth")
+  if (authHint !== null) {
+    const suffix = safeSegments(authHint)
+    if (suffix) url.pathname = `/api/auth/${suffix}`
+    url.searchParams.delete("__auth")
+  }
+  const planHint = url.searchParams.get("__plan")
+  if (planHint !== null) {
+    const id = safeSegments(planHint)
+    if (id && !id.includes("/")) url.pathname = `/api/plans/${id}`
+    url.searchParams.delete("__plan")
+  }
+  return url
+}
+
 export function resolvePublicUrl(request: Request): PublicUrl {
-  const incoming = new URL(request.url)
+  const incoming = routedUrl(request)
   const forwardedHost = firstHeader(request, "x-forwarded-host")
   const hostHeader = firstHeader(request, "host")
   const host = forwardedHost || hostHeader || incoming.host
