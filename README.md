@@ -62,11 +62,11 @@ Corner 1v1. On 'Go' the D touches the goal line and the F touches the blue line.
 
 [Note](drills/one-up-one-down.md) · [Drill page](drills/one-up-one-down/) · [Animation](media/one-up-one-down/one-up-one-down-anim.html) · [PNG](media/one-up-one-down/one-up-one-down.png) · [Excalidraw](media/one-up-one-down/one-up-one-down.excalidraw)
 
-### [Olympic Breakout Pass](drills/olympic-breakout-pass.md)
+### [Olympic Breakout to 2-on-1](drills/olympic-breakout-pass.md)
 
-A simple three-player breakout. The coach rims the puck around the boards, the D turns from the front of the net to get it, and passes to the winger on the half-wall. The winger passes to the centre curling low through the middle, and the centre carries the puck out over the blue line with the winger skating up the wall.
+A full-ice breakout with three players: one D, a winger and a centre. The D gets the coach's rim and passes to the winger on the wall, who hits the centre curling low. They skate it out of the zone together while the D races up ice, pivots at the far blue line and defends a 2-on-1.
 
-**Tags:** `half-ice`, `passing`, `breakout`
+**Tags:** `full-ice`, `breakout`, `passing`, `shooting`, `zone-entry`
 
 [Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/) · [Animation](media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw)
 

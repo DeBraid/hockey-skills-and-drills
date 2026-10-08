@@ -32,6 +32,6 @@ Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change
 ## Related drills
 
 - [Controlled-Skating Breakout](controlled-skating-breakout.md)
-- [Olympic Breakout Pass](olympic-breakout-pass.md)
+- [Olympic Breakout to 2-on-1](olympic-breakout-pass.md)
 - [Zone Exits: Bounce Pass](zone-exit-bounce-pass.md)
 
