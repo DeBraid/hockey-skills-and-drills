@@ -6,7 +6,7 @@ Carry in, drive to the dot, curl, pass up to the D. D shoots.
 
 Same entry for every low-to-high drill: carry in, drive to the dot, curl toward the boards, and pass up the wall. Only the finish changes.
 
-[All drills](../README.md) · [Drill page](low-to-high-shot/index.html) · [Animation](../media/low-to-high-shot/low-to-high-shot-anim.html) · [PNG](../media/low-to-high-shot/low-to-high-shot.png) · [Excalidraw](../media/low-to-high-shot/low-to-high-shot.excalidraw)
+[All drills](../README.md) · [Drill page](low-to-high-shot/) · [Animation](../media/low-to-high-shot/low-to-high-shot-anim.html) · [PNG](../media/low-to-high-shot/low-to-high-shot.png) · [Excalidraw](../media/low-to-high-shot/low-to-high-shot.excalidraw)
 
 ![Half-ice diagram of Low-to-High D Shot. The forward curls at the dot, passes up the wall to the defence, the defence shoots, and the forward drives the net.](../media/low-to-high-shot/low-to-high-shot.png)
 

@@ -4,7 +4,7 @@ Sideways crossover step-overs down a lane of cones, pivoting 180 degrees at each
 
 **Tags:** `skating`
 
-[All drills](../README.md) · [Drill page](lateral-step-overs/index.html) · [Animation](../media/lateral-step-overs/lateral-step-overs-anim.html) · [PNG](../media/lateral-step-overs/lateral-step-overs.png) · [Excalidraw](../media/lateral-step-overs/lateral-step-overs.excalidraw)
+[All drills](../README.md) · [Drill page](lateral-step-overs/) · [Animation](../media/lateral-step-overs/lateral-step-overs-anim.html) · [PNG](../media/lateral-step-overs/lateral-step-overs.png) · [Excalidraw](../media/lateral-step-overs/lateral-step-overs.excalidraw)
 
 ![Zone diagram of Lateral Step-overs with Pivots. Three lines move sideways from the blue line toward the goal line, stepping over to each of three cones and pivoting at each one.](../media/lateral-step-overs/lateral-step-overs.png)
 

@@ -134,13 +134,15 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
         }
       },
       redirect({ url, baseUrl }) {
-        if (url.startsWith("/")) return `${baseUrl}${url}`
+        const target = url.startsWith("/") ? `${baseUrl}${url}` : url
         try {
-          if (new URL(url).origin === baseUrl) return url
+          const parsed = new URL(target)
+          if (!url.startsWith("/") && parsed.origin !== baseUrl) return baseUrl
+          parsed.pathname = parsed.pathname.replace(/\/index\.html$/, "/")
+          return parsed.href
         } catch {
           return baseUrl
         }
-        return baseUrl
       },
     },
     logger: {

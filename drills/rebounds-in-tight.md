@@ -4,7 +4,7 @@ Small nets with a cone on each side. Bank the puck off the net, gather it in tig
 
 **Tags:** `shooting`
 
-[All drills](../README.md) · [Drill page](rebounds-in-tight/index.html) · [Animation](../media/rebounds-in-tight/rebounds-in-tight-anim.html) · [PNG](../media/rebounds-in-tight/rebounds-in-tight.png) · [Excalidraw](../media/rebounds-in-tight/rebounds-in-tight.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=u4NG-OQpm0b38sXS58YqP,Pr1iaBNiW94fWT4ydVqC0A)
+[All drills](../README.md) · [Drill page](rebounds-in-tight/) · [Animation](../media/rebounds-in-tight/rebounds-in-tight-anim.html) · [PNG](../media/rebounds-in-tight/rebounds-in-tight.png) · [Excalidraw](../media/rebounds-in-tight/rebounds-in-tight.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=u4NG-OQpm0b38sXS58YqP,Pr1iaBNiW94fWT4ydVqC0A)
 
 ![Zone diagram of Rebounds: In-tight Hands. Small nets sit at the bottom of the faceoff circles with a cone on each side. The front of the line passes the puck off the post, skates in to gather it beside the net, and shoots into the small net, then returns to the back of the line.](../media/rebounds-in-tight/rebounds-in-tight.png)
 

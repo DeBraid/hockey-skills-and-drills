@@ -4,7 +4,7 @@ Groups of 5-7 in a small circle: passers keep the puck away from a defender in t
 
 **Tags:** `passing`, `small-area-game`
 
-[All drills](../README.md) · [Drill page](rondo-passing/index.html) · [Animation](../media/rondo-passing/rondo-passing-anim.html) · [PNG](../media/rondo-passing/rondo-passing.png) · [Excalidraw](../media/rondo-passing/rondo-passing.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1iQYrQZ1I5S0RjrQhcTch,13-N7oyKVGGFOjJQSDirxg)
+[All drills](../README.md) · [Drill page](rondo-passing/) · [Animation](../media/rondo-passing/rondo-passing-anim.html) · [PNG](../media/rondo-passing/rondo-passing.png) · [Excalidraw](../media/rondo-passing/rondo-passing.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1iQYrQZ1I5S0RjrQhcTch,13-N7oyKVGGFOjJQSDirxg)
 
 ![Zone diagram of Rondo Passing. Five passers stand around a faceoff circle with one X defender in the middle. The puck goes from passer to passer across and around the circle, and the X intercepts the fourth pass. The X then takes that passer's spot and the passer moves to the middle.](../media/rondo-passing/rondo-passing.png)
 

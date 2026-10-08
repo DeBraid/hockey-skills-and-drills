@@ -264,9 +264,16 @@ async function main(): Promise<void> {
   assert.doesNotMatch(home, /My plans/)
   assert.doesNotMatch(home, /Fork or star/)
   assert.doesNotMatch(home, /Add a drill/)
+  assert.doesNotMatch(home, /index\.html/)
+  assert.match(home, /href="\.\/"/)
+  assert.match(home, /href="drills\/cone-weave\/"/)
   const planHtml = fs.readFileSync(path.join(root, "plan/index.html"), "utf8")
   assert.match(planHtml, /id="plan-save" hidden/)
   assert.match(planHtml, /Copy share link/)
+  assert.doesNotMatch(planHtml, /index\.html/)
+  assert.match(planHtml, /"page": "\.\.\/drills\/cone-weave\/"/)
+  const accountHtml = fs.readFileSync(path.join(root, "account/index.html"), "utf8")
+  assert.doesNotMatch(accountHtml, /index\.html/)
 
   ensureDatabase()
   setAuthEnv()
@@ -304,8 +311,15 @@ async function main(): Promise<void> {
   delete process.env.CANONICAL_HOST
 
   const vercelConfig = JSON.parse(fs.readFileSync(path.join(root, "vercel.json"), "utf8")) as {
+    redirects: { source: string; destination: string; permanent: boolean }[]
     rewrites: { source: string; destination: string }[]
   }
+  assert.equal(vercelConfig.redirects[0].source, "/index.html")
+  assert.equal(vercelConfig.redirects[0].destination, "/")
+  assert.equal(vercelConfig.redirects[0].permanent, true)
+  assert.equal(vercelConfig.redirects[1].source, "/:path*/index.html")
+  assert.equal(vercelConfig.redirects[1].destination, "/:path*/")
+  assert.equal(vercelConfig.redirects[1].permanent, true)
   assert.equal(vercelConfig.rewrites[0].source, "/api/auth/:path*/")
   assert.equal(vercelConfig.rewrites[1].destination, "/api/auth/handler?__auth=:path*")
   assert.ok(vercelConfig.rewrites.some((rule) => rule.destination === "/api/plans/item?__plan=:id"))

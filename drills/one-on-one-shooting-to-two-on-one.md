@@ -4,7 +4,7 @@ Lines in opposite corners. Skate hard, take a pass from the far corner, go in an
 
 **Tags:** `full-ice`, `passing`, `shooting`
 
-[All drills](../README.md) · [Drill page](one-on-one-shooting-to-two-on-one/index.html) · [Animation](../media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one-anim.html) · [PNG](../media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png) · [Excalidraw](../media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw)
+[All drills](../README.md) · [Drill page](one-on-one-shooting-to-two-on-one/) · [Animation](../media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one-anim.html) · [PNG](../media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png) · [Excalidraw](../media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw)
 
 ![Full-ice diagram of 1-on-1 Shooting Warm-up. Lines sit in the bottom-left and top-right corners. The left player skates up the middle, takes a pass from the right corner, carries in and shoots on the right goalie. Then the right player skates out, takes a pass from the left corner, and shoots on the left goalie. Shooters join the line in the corner they shot from.](../media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png)
 

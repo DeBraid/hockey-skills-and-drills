@@ -4,7 +4,7 @@ Goal line to far blue, stop, back to near blue, stop, then to the far dots. No p
 
 **Tags:** `skating`, `full-ice`
 
-[All drills](../README.md) · [Drill page](stops-and-starts/index.html) · [Animation](../media/stops-and-starts/stops-and-starts-anim.html) · [PNG](../media/stops-and-starts/stops-and-starts.png) · [Excalidraw](../media/stops-and-starts/stops-and-starts.excalidraw)
+[All drills](../README.md) · [Drill page](stops-and-starts/) · [Animation](../media/stops-and-starts/stops-and-starts-anim.html) · [PNG](../media/stops-and-starts/stops-and-starts.png) · [Excalidraw](../media/stops-and-starts/stops-and-starts.excalidraw)
 
 ![Full-ice diagram of Stops and Starts. Three skaters on the left goal line sprint to the far blue line, skate back to the near blue line, then sprint to the far faceoff dots, with a goalie in the right net.](../media/stops-and-starts/stops-and-starts.png)
 

@@ -4,7 +4,7 @@ Gap and angling 1v1. D touches the goal line, F touches the blue line, then play
 
 **Tags:** `defence`, `small-area-game`
 
-[All drills](../README.md) · [Drill page](one-up-one-down/index.html) · [Animation](../media/one-up-one-down/one-up-one-down-anim.html) · [PNG](../media/one-up-one-down/one-up-one-down.png) · [Excalidraw](../media/one-up-one-down/one-up-one-down.excalidraw)
+[All drills](../README.md) · [Drill page](one-up-one-down/) · [Animation](../media/one-up-one-down/one-up-one-down-anim.html) · [PNG](../media/one-up-one-down/one-up-one-down.png) · [Excalidraw](../media/one-up-one-down/one-up-one-down.excalidraw)
 
 ![Zone diagram of 1 Up / 1 Down. The defence skates to the goal line, the forward skates to the blue line, the coach passes to the forward, the forward attacks and shoots while the defence closes the gap and angles.](../media/one-up-one-down/one-up-one-down.png)
 

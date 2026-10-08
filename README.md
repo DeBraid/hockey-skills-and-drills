@@ -26,7 +26,7 @@ Full ice, two-sided. Lines along each goal line; the front player at the boards 
 
 **Tags:** `full-ice`, `passing`, `shooting`
 
-[Note](drills/follow-the-pass.md) · [Drill page](drills/follow-the-pass/index.html) · [Animation](media/follow-the-pass/follow-the-pass-anim.html) · [PNG](media/follow-the-pass/follow-the-pass.png) · [Excalidraw](media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
+[Note](drills/follow-the-pass.md) · [Drill page](drills/follow-the-pass/) · [Animation](media/follow-the-pass/follow-the-pass-anim.html) · [PNG](media/follow-the-pass/follow-the-pass.png) · [Excalidraw](media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
 
 ### [Low-to-High: D Shot](drills/low-to-high-shot.md)
 
@@ -34,7 +34,7 @@ Half-ice zone entry. Carry in, drive to the dot, curl toward the boards, and pas
 
 **Tags:** `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`
 
-[Note](drills/low-to-high-shot.md) · [Drill page](drills/low-to-high-shot/index.html) · [Animation](media/low-to-high-shot/low-to-high-shot-anim.html) · [PNG](media/low-to-high-shot/low-to-high-shot.png) · [Excalidraw](media/low-to-high-shot/low-to-high-shot.excalidraw)
+[Note](drills/low-to-high-shot.md) · [Drill page](drills/low-to-high-shot/) · [Animation](media/low-to-high-shot/low-to-high-shot-anim.html) · [PNG](media/low-to-high-shot/low-to-high-shot.png) · [Excalidraw](media/low-to-high-shot/low-to-high-shot.excalidraw)
 
 ### [Low-to-High: Give-and-Go](drills/low-to-high-give-and-go.md)
 
@@ -42,7 +42,7 @@ Same zone entry. After the low-to-high pass, the D gives it back to the forward 
 
 **Tags:** `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`
 
-[Note](drills/low-to-high-give-and-go.md) · [Drill page](drills/low-to-high-give-and-go/index.html) · [Animation](media/low-to-high-give-and-go/low-to-high-give-and-go-anim.html) · [PNG](media/low-to-high-give-and-go/low-to-high-give-and-go.png) · [Excalidraw](media/low-to-high-give-and-go/low-to-high-give-and-go.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PKA09mlyorcRyYW7XvmM5,sz7tsIEBbCT4iNpaD84QZA)
+[Note](drills/low-to-high-give-and-go.md) · [Drill page](drills/low-to-high-give-and-go/) · [Animation](media/low-to-high-give-and-go/low-to-high-give-and-go-anim.html) · [PNG](media/low-to-high-give-and-go/low-to-high-give-and-go.png) · [Excalidraw](media/low-to-high-give-and-go/low-to-high-give-and-go.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PKA09mlyorcRyYW7XvmM5,sz7tsIEBbCT4iNpaD84QZA)
 
 ### [Low-to-High: D-to-D](drills/low-to-high-d-to-d.md)
 
@@ -50,7 +50,7 @@ Same zone entry. The bottom D passes across to the top D, the top D shoots, and 
 
 **Tags:** `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`
 
-[Note](drills/low-to-high-d-to-d.md) · [Drill page](drills/low-to-high-d-to-d/index.html) · [Animation](media/low-to-high-d-to-d/low-to-high-d-to-d-anim.html) · [PNG](media/low-to-high-d-to-d/low-to-high-d-to-d.png) · [Excalidraw](media/low-to-high-d-to-d/low-to-high-d-to-d.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA)
+[Note](drills/low-to-high-d-to-d.md) · [Drill page](drills/low-to-high-d-to-d/) · [Animation](media/low-to-high-d-to-d/low-to-high-d-to-d-anim.html) · [PNG](media/low-to-high-d-to-d/low-to-high-d-to-d.png) · [Excalidraw](media/low-to-high-d-to-d/low-to-high-d-to-d.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=bSyjPWAizPxD8DlFI9vmA,zrpEIlD7lgwLffcBUvRNrA)
 
 ### [1 Up / 1 Down](drills/one-up-one-down.md)
 
@@ -58,7 +58,7 @@ Corner 1v1. On 'Go' the D touches the goal line and the F touches the blue line.
 
 **Tags:** `defence`, `small-area-game`
 
-[Note](drills/one-up-one-down.md) · [Drill page](drills/one-up-one-down/index.html) · [Animation](media/one-up-one-down/one-up-one-down-anim.html) · [PNG](media/one-up-one-down/one-up-one-down.png) · [Excalidraw](media/one-up-one-down/one-up-one-down.excalidraw)
+[Note](drills/one-up-one-down.md) · [Drill page](drills/one-up-one-down/) · [Animation](media/one-up-one-down/one-up-one-down-anim.html) · [PNG](media/one-up-one-down/one-up-one-down.png) · [Excalidraw](media/one-up-one-down/one-up-one-down.excalidraw)
 
 ### [Olympic Breakout Pass](drills/olympic-breakout-pass.md)
 
@@ -66,7 +66,7 @@ Continuous groups of three in one zone. F passes low to X, pivots on the wall, t
 
 **Tags:** `passing`, `shooting`, `breakout`
 
-[Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/index.html) · [Animation](media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
+[Note](drills/olympic-breakout-pass.md) · [Drill page](drills/olympic-breakout-pass/) · [Animation](media/olympic-breakout-pass/olympic-breakout-pass-anim.html) · [PNG](media/olympic-breakout-pass/olympic-breakout-pass.png) · [Excalidraw](media/olympic-breakout-pass/olympic-breakout-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1Cttzcue5rLcbEE9KRBvl,fSHHU7jO5wDHNoktif0FRw)
 
 ### [Zone Exits: Bounce Pass](drills/zone-exit-bounce-pass.md)
 
@@ -74,7 +74,7 @@ Defensive-zone exits from a line in each corner. Start with a self-pass off the 
 
 **Tags:** `passing`, `breakout`
 
-[Note](drills/zone-exit-bounce-pass.md) · [Drill page](drills/zone-exit-bounce-pass/index.html) · [Animation](media/zone-exit-bounce-pass/zone-exit-bounce-pass-anim.html) · [PNG](media/zone-exit-bounce-pass/zone-exit-bounce-pass.png) · [Excalidraw](media/zone-exit-bounce-pass/zone-exit-bounce-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ)
+[Note](drills/zone-exit-bounce-pass.md) · [Drill page](drills/zone-exit-bounce-pass/) · [Animation](media/zone-exit-bounce-pass/zone-exit-bounce-pass-anim.html) · [PNG](media/zone-exit-bounce-pass/zone-exit-bounce-pass.png) · [Excalidraw](media/zone-exit-bounce-pass/zone-exit-bounce-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=LYlXdSwxemY2ccKBTi6_0,j1BlMvOLs4v_knxBVl3tlQ)
 
 ### [Tip-and-Dig Shooting](drills/tip-and-dig-shooting.md)
 
@@ -82,7 +82,7 @@ Zone shooting with two nets: an empty net at the hash marks and the regular net 
 
 **Tags:** `shooting`
 
-[Note](drills/tip-and-dig-shooting.md) · [Drill page](drills/tip-and-dig-shooting/index.html) · [Animation](media/tip-and-dig-shooting/tip-and-dig-shooting-anim.html) · [PNG](media/tip-and-dig-shooting/tip-and-dig-shooting.png) · [Excalidraw](media/tip-and-dig-shooting/tip-and-dig-shooting.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA)
+[Note](drills/tip-and-dig-shooting.md) · [Drill page](drills/tip-and-dig-shooting/) · [Animation](media/tip-and-dig-shooting/tip-and-dig-shooting-anim.html) · [PNG](media/tip-and-dig-shooting/tip-and-dig-shooting.png) · [Excalidraw](media/tip-and-dig-shooting/tip-and-dig-shooting.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=963ZHchOsI-Ys_CZvIBWr,mw1tUKfsvbjCyeP7MTChCA)
 
 ### [4-Lane Warm-up](drills/four-lane-warmup.md)
 
@@ -90,7 +90,7 @@ Full-ice warm-up. Cones split the ice into four lanes and one line starts in the
 
 **Tags:** `full-ice`, `skating`, `shooting`
 
-[Note](drills/four-lane-warmup.md) · [Drill page](drills/four-lane-warmup/index.html) · [Animation](media/four-lane-warmup/four-lane-warmup-anim.html) · [PNG](media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
+[Note](drills/four-lane-warmup.md) · [Drill page](drills/four-lane-warmup/) · [Animation](media/four-lane-warmup/four-lane-warmup-anim.html) · [PNG](media/four-lane-warmup/four-lane-warmup.png) · [Excalidraw](media/four-lane-warmup/four-lane-warmup.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=6H_H1FHA3XMtYoFA_wdPI,jMK9cMTpa2-BUzVrkgGTMg)
 
 ### [Crossover Circles](drills/crossover-circles.md)
 
@@ -98,7 +98,7 @@ A skating warm-up on the faceoff circles. Skaters do crossovers around the circl
 
 **Tags:** `skating`
 
-[Note](drills/crossover-circles.md) · [Drill page](drills/crossover-circles/index.html) · [Animation](media/crossover-circles/crossover-circles-anim.html) · [PNG](media/crossover-circles/crossover-circles.png) · [Excalidraw](media/crossover-circles/crossover-circles.excalidraw)
+[Note](drills/crossover-circles.md) · [Drill page](drills/crossover-circles/) · [Animation](media/crossover-circles/crossover-circles-anim.html) · [PNG](media/crossover-circles/crossover-circles.png) · [Excalidraw](media/crossover-circles/crossover-circles.excalidraw)
 
 ### [Stops and Starts](drills/stops-and-starts.md)
 
@@ -106,7 +106,7 @@ Waves of skaters start on the goal line, sprint to the far blue line, stop hard,
 
 **Tags:** `skating`, `full-ice`
 
-[Note](drills/stops-and-starts.md) · [Drill page](drills/stops-and-starts/index.html) · [Animation](media/stops-and-starts/stops-and-starts-anim.html) · [PNG](media/stops-and-starts/stops-and-starts.png) · [Excalidraw](media/stops-and-starts/stops-and-starts.excalidraw)
+[Note](drills/stops-and-starts.md) · [Drill page](drills/stops-and-starts/) · [Animation](media/stops-and-starts/stops-and-starts-anim.html) · [PNG](media/stops-and-starts/stops-and-starts.png) · [Excalidraw](media/stops-and-starts/stops-and-starts.excalidraw)
 
 ### [Edges: Cone Weave](drills/cone-weave.md)
 
@@ -114,7 +114,7 @@ Three or four lanes of cones run from the blue line to the goal line. Skaters we
 
 **Tags:** `skating`
 
-[Note](drills/cone-weave.md) · [Drill page](drills/cone-weave/index.html) · [Animation](media/cone-weave/cone-weave-anim.html) · [PNG](media/cone-weave/cone-weave.png) · [Excalidraw](media/cone-weave/cone-weave.excalidraw)
+[Note](drills/cone-weave.md) · [Drill page](drills/cone-weave/) · [Animation](media/cone-weave/cone-weave-anim.html) · [PNG](media/cone-weave/cone-weave.png) · [Excalidraw](media/cone-weave/cone-weave.excalidraw)
 
 ### [Lateral Step-overs with Pivots](drills/lateral-step-overs.md)
 
@@ -122,7 +122,7 @@ Skaters move sideways down a lane with crossover step-overs, pivoting at each co
 
 **Tags:** `skating`
 
-[Note](drills/lateral-step-overs.md) · [Drill page](drills/lateral-step-overs/index.html) · [Animation](media/lateral-step-overs/lateral-step-overs-anim.html) · [PNG](media/lateral-step-overs/lateral-step-overs.png) · [Excalidraw](media/lateral-step-overs/lateral-step-overs.excalidraw)
+[Note](drills/lateral-step-overs.md) · [Drill page](drills/lateral-step-overs/) · [Animation](media/lateral-step-overs/lateral-step-overs-anim.html) · [PNG](media/lateral-step-overs/lateral-step-overs.png) · [Excalidraw](media/lateral-step-overs/lateral-step-overs.excalidraw)
 
 ### [Cone Relay with Pucks](drills/cone-relay-with-pucks.md)
 
@@ -130,7 +130,7 @@ Three or four lines race at once, each with 3 or 4 cones. At each cone the skate
 
 **Tags:** `skating`, `passing`
 
-[Note](drills/cone-relay-with-pucks.md) · [Drill page](drills/cone-relay-with-pucks/index.html) · [Animation](media/cone-relay-with-pucks/cone-relay-with-pucks-anim.html) · [PNG](media/cone-relay-with-pucks/cone-relay-with-pucks.png) · [Excalidraw](media/cone-relay-with-pucks/cone-relay-with-pucks.excalidraw)
+[Note](drills/cone-relay-with-pucks.md) · [Drill page](drills/cone-relay-with-pucks/) · [Animation](media/cone-relay-with-pucks/cone-relay-with-pucks-anim.html) · [PNG](media/cone-relay-with-pucks/cone-relay-with-pucks.png) · [Excalidraw](media/cone-relay-with-pucks/cone-relay-with-pucks.excalidraw)
 
 ### [2v2 Point Shot Small Area Game](drills/two-v-two-point-shot.md)
 
@@ -138,7 +138,7 @@ Groups of five at each corner net: 2 O, 2 D and a point player. The point dumps 
 
 **Tags:** `small-area-game`, `shooting`, `defence`
 
-[Note](drills/two-v-two-point-shot.md) · [Drill page](drills/two-v-two-point-shot/index.html) · [Animation](media/two-v-two-point-shot/two-v-two-point-shot-anim.html) · [PNG](media/two-v-two-point-shot/two-v-two-point-shot.png) · [Excalidraw](media/two-v-two-point-shot/two-v-two-point-shot.excalidraw)
+[Note](drills/two-v-two-point-shot.md) · [Drill page](drills/two-v-two-point-shot/) · [Animation](media/two-v-two-point-shot/two-v-two-point-shot-anim.html) · [PNG](media/two-v-two-point-shot/two-v-two-point-shot.png) · [Excalidraw](media/two-v-two-point-shot/two-v-two-point-shot.excalidraw)
 
 ### [2v2 Hard Rim](drills/two-v-two-hard-rim.md)
 
@@ -146,7 +146,7 @@ Two lines of forwards with pucks at the hash marks and two D at the dots. The fi
 
 **Tags:** `small-area-game`, `passing`, `defence`
 
-[Note](drills/two-v-two-hard-rim.md) · [Drill page](drills/two-v-two-hard-rim/index.html) · [Animation](media/two-v-two-hard-rim/two-v-two-hard-rim-anim.html) · [PNG](media/two-v-two-hard-rim/two-v-two-hard-rim.png) · [Excalidraw](media/two-v-two-hard-rim/two-v-two-hard-rim.excalidraw)
+[Note](drills/two-v-two-hard-rim.md) · [Drill page](drills/two-v-two-hard-rim/) · [Animation](media/two-v-two-hard-rim/two-v-two-hard-rim-anim.html) · [PNG](media/two-v-two-hard-rim/two-v-two-hard-rim.png) · [Excalidraw](media/two-v-two-hard-rim/two-v-two-hard-rim.excalidraw)
 
 ### [3v3 Circle Game](drills/three-v-three-circle-game.md)
 
@@ -154,7 +154,7 @@ Two nets face each other inside a faceoff circle. It's 3 on 3, but only one play
 
 **Tags:** `small-area-game`, `passing`, `shooting`
 
-[Note](drills/three-v-three-circle-game.md) · [Drill page](drills/three-v-three-circle-game/index.html) · [Animation](media/three-v-three-circle-game/three-v-three-circle-game-anim.html) · [PNG](media/three-v-three-circle-game/three-v-three-circle-game.png) · [Excalidraw](media/three-v-three-circle-game/three-v-three-circle-game.excalidraw)
+[Note](drills/three-v-three-circle-game.md) · [Drill page](drills/three-v-three-circle-game/) · [Animation](media/three-v-three-circle-game/three-v-three-circle-game-anim.html) · [PNG](media/three-v-three-circle-game/three-v-three-circle-game.png) · [Excalidraw](media/three-v-three-circle-game/three-v-three-circle-game.excalidraw)
 
 ### [Half-ice 3v3](drills/half-ice-3v3.md)
 
@@ -162,7 +162,7 @@ Two nets face each other inside a faceoff circle. It's 3 on 3, but only one play
 
 **Tags:** `small-area-game`, `half-ice`, `defence`
 
-[Note](drills/half-ice-3v3.md) · [Drill page](drills/half-ice-3v3/index.html) · [Animation](media/half-ice-3v3/half-ice-3v3-anim.html) · [PNG](media/half-ice-3v3/half-ice-3v3.png) · [Excalidraw](media/half-ice-3v3/half-ice-3v3.excalidraw)
+[Note](drills/half-ice-3v3.md) · [Drill page](drills/half-ice-3v3/) · [Animation](media/half-ice-3v3/half-ice-3v3-anim.html) · [PNG](media/half-ice-3v3/half-ice-3v3.png) · [Excalidraw](media/half-ice-3v3/half-ice-3v3.excalidraw)
 
 ### [Defend the Cone](drills/defend-the-cone.md)
 
@@ -170,7 +170,7 @@ A backup when you run out of nets: defend a cone instead. 1 on 1 around a faceof
 
 **Tags:** `small-area-game`, `defence`
 
-[Note](drills/defend-the-cone.md) · [Drill page](drills/defend-the-cone/index.html) · [Animation](media/defend-the-cone/defend-the-cone-anim.html) · [PNG](media/defend-the-cone/defend-the-cone.png) · [Excalidraw](media/defend-the-cone/defend-the-cone.excalidraw)
+[Note](drills/defend-the-cone.md) · [Drill page](drills/defend-the-cone/) · [Animation](media/defend-the-cone/defend-the-cone-anim.html) · [PNG](media/defend-the-cone/defend-the-cone.png) · [Excalidraw](media/defend-the-cone/defend-the-cone.excalidraw)
 
 ### [1-on-1 Shooting Warm-up to 2-on-1](drills/one-on-one-shooting-to-two-on-one.md)
 
@@ -178,7 +178,7 @@ A full-ice shooting warm-up. Lines start in opposite corners. A player leaves on
 
 **Tags:** `full-ice`, `passing`, `shooting`
 
-[Note](drills/one-on-one-shooting-to-two-on-one.md) · [Drill page](drills/one-on-one-shooting-to-two-on-one/index.html) · [Animation](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one-anim.html) · [PNG](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png) · [Excalidraw](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw)
+[Note](drills/one-on-one-shooting-to-two-on-one.md) · [Drill page](drills/one-on-one-shooting-to-two-on-one/) · [Animation](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one-anim.html) · [PNG](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png) · [Excalidraw](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw)
 
 ### [Mirror Angling 2v1](drills/mirror-angling-2v1.md)
 
@@ -186,7 +186,7 @@ A half-ice station. The F carries a loop around the cones while the D mirrors ar
 
 **Tags:** `small-area-game`, `defence`
 
-[Note](drills/mirror-angling-2v1.md) · [Drill page](drills/mirror-angling-2v1/index.html) · [Animation](media/mirror-angling-2v1/mirror-angling-2v1-anim.html) · [PNG](media/mirror-angling-2v1/mirror-angling-2v1.png) · [Excalidraw](media/mirror-angling-2v1/mirror-angling-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PNj_Sj_tq-88-kGwGPLcF,9-JRM9DgIdxbd56pxisUjw)
+[Note](drills/mirror-angling-2v1.md) · [Drill page](drills/mirror-angling-2v1/) · [Animation](media/mirror-angling-2v1/mirror-angling-2v1-anim.html) · [PNG](media/mirror-angling-2v1/mirror-angling-2v1.png) · [Excalidraw](media/mirror-angling-2v1/mirror-angling-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PNj_Sj_tq-88-kGwGPLcF,9-JRM9DgIdxbd56pxisUjw)
 
 ### [1v1 Puck Race to 2v1](drills/puck-race-1v1-to-2v1.md)
 
@@ -194,7 +194,7 @@ Two players start side by side and race for a puck rimmed into the corner. The w
 
 **Tags:** `small-area-game`, `defence`, `passing`
 
-[Note](drills/puck-race-1v1-to-2v1.md) · [Drill page](drills/puck-race-1v1-to-2v1/index.html) · [Animation](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1-anim.html) · [PNG](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.png) · [Excalidraw](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=KL4tW9041BEB-XQh7Xgmf,-zxqXq6WmGDGtFSI1gIOYw)
+[Note](drills/puck-race-1v1-to-2v1.md) · [Drill page](drills/puck-race-1v1-to-2v1/) · [Animation](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1-anim.html) · [PNG](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.png) · [Excalidraw](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=KL4tW9041BEB-XQh7Xgmf,-zxqXq6WmGDGtFSI1gIOYw)
 
 ### [Rebounds: In-tight Hands](drills/rebounds-in-tight.md)
 
@@ -202,7 +202,7 @@ A net-front station with small nets. Two cones sit on either side of the net. Fa
 
 **Tags:** `shooting`
 
-[Note](drills/rebounds-in-tight.md) · [Drill page](drills/rebounds-in-tight/index.html) · [Animation](media/rebounds-in-tight/rebounds-in-tight-anim.html) · [PNG](media/rebounds-in-tight/rebounds-in-tight.png) · [Excalidraw](media/rebounds-in-tight/rebounds-in-tight.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=u4NG-OQpm0b38sXS58YqP,Pr1iaBNiW94fWT4ydVqC0A)
+[Note](drills/rebounds-in-tight.md) · [Drill page](drills/rebounds-in-tight/) · [Animation](media/rebounds-in-tight/rebounds-in-tight-anim.html) · [PNG](media/rebounds-in-tight/rebounds-in-tight.png) · [Excalidraw](media/rebounds-in-tight/rebounds-in-tight.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=u4NG-OQpm0b38sXS58YqP,Pr1iaBNiW94fWT4ydVqC0A)
 
 ### [Goalie Rebound Game](drills/goalie-rebound-game.md)
 
@@ -210,7 +210,7 @@ A goalie game for rebound control. Two nets sit side by side, each with a goalie
 
 **Tags:** `small-area-game`, `shooting`
 
-[Note](drills/goalie-rebound-game.md) · [Drill page](drills/goalie-rebound-game/index.html) · [Animation](media/goalie-rebound-game/goalie-rebound-game-anim.html) · [PNG](media/goalie-rebound-game/goalie-rebound-game.png) · [Excalidraw](media/goalie-rebound-game/goalie-rebound-game.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=kNeWmKZpnBiY3kItD8jnG,jPaA7y939n9TMuOjUR1B2A)
+[Note](drills/goalie-rebound-game.md) · [Drill page](drills/goalie-rebound-game/) · [Animation](media/goalie-rebound-game/goalie-rebound-game-anim.html) · [PNG](media/goalie-rebound-game/goalie-rebound-game.png) · [Excalidraw](media/goalie-rebound-game/goalie-rebound-game.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=kNeWmKZpnBiY3kItD8jnG,jPaA7y939n9TMuOjUR1B2A)
 
 ### [Rondo Passing Progressions](drills/rondo-passing.md)
 
@@ -218,7 +218,7 @@ A small-area passing game. 4-5 passers around a 20x20 ft circle (a faceoff circl
 
 **Tags:** `passing`, `small-area-game`
 
-[Note](drills/rondo-passing.md) · [Drill page](drills/rondo-passing/index.html) · [Animation](media/rondo-passing/rondo-passing-anim.html) · [PNG](media/rondo-passing/rondo-passing.png) · [Excalidraw](media/rondo-passing/rondo-passing.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1iQYrQZ1I5S0RjrQhcTch,13-N7oyKVGGFOjJQSDirxg)
+[Note](drills/rondo-passing.md) · [Drill page](drills/rondo-passing/) · [Animation](media/rondo-passing/rondo-passing-anim.html) · [PNG](media/rondo-passing/rondo-passing.png) · [Excalidraw](media/rondo-passing/rondo-passing.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1iQYrQZ1I5S0RjrQhcTch,13-N7oyKVGGFOjJQSDirxg)
 
 ### [Zone Entries: Delay](drills/zone-entry-delay.md)
 
@@ -226,7 +226,7 @@ Two delay variations of the zone entry. Delay: carry in wide, stop and curl back
 
 **Tags:** `zone-entry`, `half-ice`, `passing`, `shooting`
 
-[Note](drills/zone-entry-delay.md) · [Drill page](drills/zone-entry-delay/index.html) · [Animation](media/zone-entry-delay/zone-entry-delay-anim.html) · [PNG](media/zone-entry-delay/zone-entry-delay.png) · [Excalidraw](media/zone-entry-delay/zone-entry-delay.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ)
+[Note](drills/zone-entry-delay.md) · [Drill page](drills/zone-entry-delay/) · [Animation](media/zone-entry-delay/zone-entry-delay-anim.html) · [PNG](media/zone-entry-delay/zone-entry-delay.png) · [Excalidraw](media/zone-entry-delay/zone-entry-delay.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ)
 
 
 ## Add a drill

@@ -4,7 +4,7 @@
 
 **Tags:** `small-area-game`, `shooting`, `defence`
 
-[All drills](../README.md) · [Drill page](two-v-two-point-shot/index.html) · [Animation](../media/two-v-two-point-shot/two-v-two-point-shot-anim.html) · [PNG](../media/two-v-two-point-shot/two-v-two-point-shot.png) · [Excalidraw](../media/two-v-two-point-shot/two-v-two-point-shot.excalidraw)
+[All drills](../README.md) · [Drill page](two-v-two-point-shot/) · [Animation](../media/two-v-two-point-shot/two-v-two-point-shot-anim.html) · [PNG](../media/two-v-two-point-shot/two-v-two-point-shot.png) · [Excalidraw](../media/two-v-two-point-shot/two-v-two-point-shot.excalidraw)
 
 ![Zone diagram of 2v2 Point Shot. The point player dumps the puck into the corner, an O player wins it and carries up the wall, passes to the point, and the point shoots on the corner net while the other O goes to the net.](../media/two-v-two-point-shot/two-v-two-point-shot.png)
 

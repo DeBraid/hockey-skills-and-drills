@@ -538,7 +538,7 @@
         fallback.hidden = true;
         return;
       }
-      var url = shared ? window.location.href : buildShareUrl(plan);
+      var url = shared ? cleanPageUrl(window.location.href) : buildShareUrl(plan);
       copyText(url).then(function () {
         fallback.hidden = true;
         status.textContent = "Share link copied.";
@@ -600,7 +600,7 @@
       plan = loaded;
       shared = false;
       skipped = 0;
-      var clean = window.location.pathname;
+      var clean = window.location.pathname.replace(/\/index\.html$/, "/");
       history.replaceState(null, "", clean);
       status.textContent = "Saved in this browser. You can edit this copy.";
       fallback.hidden = true;
@@ -829,6 +829,16 @@
     });
   }
 
+  function cleanPageUrl(value) {
+    try {
+      var url = new URL(value, rootUrl);
+      url.pathname = url.pathname.replace(/\/index\.html$/, "/");
+      return url.href;
+    } catch (error) {
+      return value;
+    }
+  }
+
   function apiUrl(path) {
     return new URL(String(path).replace(/^\//, ""), rootUrl).href;
   }
@@ -854,7 +864,7 @@
 
   function signInHref() {
     var url = new URL("account/", rootUrl);
-    url.searchParams.set("next", window.location.href);
+    url.searchParams.set("next", cleanPageUrl(window.location.href));
     return url.href;
   }
 
@@ -867,7 +877,7 @@
       if (url.origin !== rootUrl.origin) return fallback;
       var rootPath = rootUrl.pathname;
       if (rootPath !== "/" && url.pathname.indexOf(rootPath) !== 0) return fallback;
-      return url.href;
+      return cleanPageUrl(url.href);
     } catch (error) {
       return fallback;
     }
@@ -1115,8 +1125,9 @@
     if (signOutBtn) {
       signOutBtn.addEventListener("click", function () {
         signOutBtn.disabled = true;
-        authPost("signout", { callbackUrl: new URL("account/", rootUrl).href }).then(function (data) {
-          window.location.href = data.url || new URL("account/", rootUrl).href;
+        var accountHome = new URL("account/", rootUrl).href;
+        authPost("signout", { callbackUrl: accountHome }).then(function (data) {
+          window.location.href = cleanPageUrl(data.url || accountHome);
         }, function () {
           signOutBtn.disabled = false;
           if (status) status.textContent = "Could not sign out. Try again.";

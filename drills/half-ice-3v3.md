@@ -4,7 +4,7 @@ O tries to score. D must win the puck AND pass it to the coach at the blue line.
 
 **Tags:** `small-area-game`, `half-ice`, `defence`
 
-[All drills](../README.md) · [Drill page](half-ice-3v3/index.html) · [Animation](../media/half-ice-3v3/half-ice-3v3-anim.html) · [PNG](../media/half-ice-3v3/half-ice-3v3.png) · [Excalidraw](../media/half-ice-3v3/half-ice-3v3.excalidraw)
+[All drills](../README.md) · [Drill page](half-ice-3v3/) · [Animation](../media/half-ice-3v3/half-ice-3v3-anim.html) · [PNG](../media/half-ice-3v3/half-ice-3v3.png) · [Excalidraw](../media/half-ice-3v3/half-ice-3v3.excalidraw)
 
 ![Half-ice diagram of Half-ice 3v3. The O carry in and pass to a teammate in the slot, who shoots. A D player wins the rebound, passes to a teammate, who passes to the coach at the blue line. The D then go to the waiting line.](../media/half-ice-3v3/half-ice-3v3.png)
 

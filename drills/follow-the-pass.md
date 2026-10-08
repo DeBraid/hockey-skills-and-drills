@@ -4,7 +4,7 @@ Pass, follow your pass to that spot. Catch it at cone 3, drive and shoot.
 
 **Tags:** `full-ice`, `passing`, `shooting`
 
-[All drills](../README.md) · [Drill page](follow-the-pass/index.html) · [Animation](../media/follow-the-pass/follow-the-pass-anim.html) · [PNG](../media/follow-the-pass/follow-the-pass.png) · [Excalidraw](../media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
+[All drills](../README.md) · [Drill page](follow-the-pass/) · [Animation](../media/follow-the-pass/follow-the-pass-anim.html) · [PNG](../media/follow-the-pass/follow-the-pass.png) · [Excalidraw](../media/follow-the-pass/follow-the-pass.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=yZtRxgmM5Zzl64BXsT1-y,DNP04A28RrNvco2lrc3lyQ)
 
 ![Full-ice diagram of Follow the Pass. Lines sit on both goal lines, three cones mark each side, and the flow ends with a shot before joining the far line.](../media/follow-the-pass/follow-the-pass.png)
 
