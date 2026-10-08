@@ -4,6 +4,7 @@ import Resend from "@auth/core/providers/resend"
 import NeonAdapter from "@auth/neon-adapter"
 import { resolvePublicUrl, type PublicUrl } from "./base-path.js"
 import { getPool } from "./db.js"
+import { logEvent } from "./events.js"
 import { clientIp, json } from "./http.js"
 import { consumeLimit } from "./rate-limit.js"
 
@@ -148,6 +149,15 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
       },
       redirect({ url, baseUrl }) {
         return safeRedirectTarget(url, baseUrl)
+      },
+    },
+    events: {
+      async signIn({ user, account, isNewUser }) {
+        await logEvent({
+          name: "sign_in",
+          userId: user?.id ? String(user.id) : null,
+          props: { provider: account?.provider === "google" ? "google" : "email", new: Boolean(isNewUser) },
+        })
       },
     },
     logger: {
