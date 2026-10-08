@@ -114,6 +114,7 @@ In the Vercel project: **Settings → Environment Variables**. Add each name for
 | `AUTH_RESEND_KEY` | Resend API key from step 4 | `re_…` |
 | `EMAIL_FROM` | A from address on the verified domain | `Hockey Skills & Drills <plans@derekbraid.com>` |
 | `CANONICAL_HOST` | Type this exactly | `hockey.derekbraid.com` |
+| `ADMIN_EMAILS` | Your sign-in email. Only these accounts can open `/admin`. Separate several with commas. Production only. | `you@gmail.com` |
 
 Do **not** add `BASE_PATH`. The site is the whole address `hockey.derekbraid.com`, not a folder on derekbraid.com. If `BASE_PATH` is already set, delete it and redeploy.
 
@@ -122,6 +123,12 @@ Do **not** add `BASE_PATH`. The site is the whole address `hockey.derekbraid.com
 Do **not** add `EMAIL_DELIVERY` on Vercel. That switch is only for local tests. If it is set to `console`, email links are printed in the logs instead of sent.
 
 You do not need `AUTH_URL`. Leaving it unset lets both `hockey.derekbraid.com` and the `.vercel.app` address work.
+
+### Usage stats
+
+- **Vercel Web Analytics** (page views, referrers, devices) is on in **Analytics** for this project. Every page loads `/_vercel/insights/script.js`. It sets no cookies.
+- **Event log**: `db/migrations/003_events.sql` adds an `events` table. Run `npm run migrate` (or paste the file in the Neon SQL editor) once. Pages send `page_view`, `drill_view`, `drill_add_to_plan`, `plan_share`, and `plan_print` to `POST /api/event`. The server logs `sign_in`, `plan_create`, `plan_save`, and `plan_delete` itself. Rows hold a random browser ID and the account ID, never an email, IP address, or device details.
+- **Dashboard**: sign in, then open `/admin`. Anyone not listed in `ADMIN_EMAILS` gets a 404. Nothing on the public site links to it.
 
 ## 7. Custom domain in DNSimple
 

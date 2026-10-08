@@ -168,7 +168,14 @@ def plan_button(slug: str, title: str) -> str:
     )
 
 
-def page_shell(title: str, prefix: str, body: str) -> str:
+# Vercel Web Analytics: cookieless page views, served from the same origin.
+# Enabled per project in Vercel; the script is a no-op 404 on other hosts.
+ANALYTICS_SNIPPET = """  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+  <script defer src="/_vercel/insights/script.js"></script>"""
+
+
+def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: str = "") -> str:
+    drill_attr = f' data-drill="{esc(drill)}"' if drill else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,8 +187,9 @@ def page_shell(title: str, prefix: str, body: str) -> str:
   <title>{esc(title)}</title>
   <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{prefix}css/styles.css">
+{ANALYTICS_SNIPPET}
 </head>
-<body>
+<body data-page="{page}"{drill_attr}>
   <a class="skip" href="#content">Skip to content</a>
   <header class="site-header">
     <div class="header-inner">
@@ -266,7 +274,7 @@ def write_index(data: dict, labels: dict[str, str]) -> None:
     </div>
   </main>
 """
-    text = page_shell(data["title"], "", body)
+    text = page_shell(data["title"], "", body, page="home")
     (ROOT / "index.html").write_text(text, encoding="utf-8")
 
 
@@ -376,7 +384,7 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     out_dir = ROOT / "drills" / slug
     out_dir.mkdir(parents=True, exist_ok=True)
     title = f"{drill['title']} · Hockey Skills & Drills"
-    (out_dir / "index.html").write_text(page_shell(title, prefix, body), encoding="utf-8")
+    (out_dir / "index.html").write_text(page_shell(title, prefix, body, page="drill", drill=slug), encoding="utf-8")
 
 
 def md_links(drill: dict, root_prefix: str, page_prefix: str) -> str:
@@ -528,7 +536,7 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
     out = ROOT / "plan"
     out.mkdir(parents=True, exist_ok=True)
     title = "Practice plan · Hockey Skills & Drills"
-    (out / "index.html").write_text(page_shell(title, "../", body), encoding="utf-8")
+    (out / "index.html").write_text(page_shell(title, "../", body, page="plan"), encoding="utf-8")
 
 
 def write_account() -> None:
@@ -573,6 +581,7 @@ def write_account() -> None:
     <section class="account-privacy">
       <h2>Privacy</h2>
       <p>An account stores the name, email address, and profile photo from the sign-in provider, plus the practice plans you save. Share links do not include your notes. Saved plans are visible only to you. Delete account removes that profile and every plan saved to it.</p>
+      <p>To see which drills get used, the site counts page views and plan actions with a random ID kept in this browser. It does not use cookies for this and does not record your email, IP address, or device details.</p>
     </section>
     <p class="plan-status" id="account-status" role="status"></p>
   </main>
@@ -580,14 +589,14 @@ def write_account() -> None:
     out = ROOT / "account"
     out.mkdir(parents=True, exist_ok=True)
     title = "My plans · Hockey Skills & Drills"
-    (out / "index.html").write_text(page_shell(title, "../", body), encoding="utf-8")
+    (out / "index.html").write_text(page_shell(title, "../", body, page="account"), encoding="utf-8")
 
 
 def local_targets(text: str) -> list[str]:
     targets = []
     for href, md in LINK_RE.findall(text):
         url = href or md
-        if not url or url.startswith(("http://", "https://", "mailto:", "#")):
+        if not url or url.startswith(("http://", "https://", "mailto:", "#", "/_vercel/")):
             continue
         targets.append(url.split("#", 1)[0])
     return targets
@@ -698,8 +707,13 @@ def check_output(drills: list[dict]) -> None:
     ]
     html_pages.extend(ROOT / "drills" / drill["slug"] / "index.html" for drill in drills)
     for html_path in html_pages:
-        if "index.html" in html_path.read_text(encoding="utf-8"):
+        text = html_path.read_text(encoding="utf-8")
+        if "index.html" in text:
             raise SystemExit(f"{html_path.relative_to(ROOT)} still links index.html")
+        if 'src="/_vercel/insights/script.js"' not in text:
+            raise SystemExit(f"{html_path.relative_to(ROOT)} is missing the Vercel Web Analytics script")
+        if "/admin" in text:
+            raise SystemExit(f"{html_path.relative_to(ROOT)} should not link the admin page")
 
 
 def publish_site() -> None:

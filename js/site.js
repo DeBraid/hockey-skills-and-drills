@@ -2,6 +2,7 @@
   var script = document.currentScript;
   var rootUrl = new URL("../", script.src);
   var STORAGE_KEY = "hsd-practice-plan";
+  var ANON_KEY = "hsd-anon-id";
   var IMPORT_KEY = "hsd-import-offered";
   var accountState = { ready: false, enabled: false, google: false, email: false, user: null };
   var accountReady = [];
@@ -106,6 +107,69 @@
     else current.items.splice(index, 1);
     if (!savePlan(current)) return;
     syncToggles(current);
+    if (index === -1) track("drill_add_to_plan", { drill: slug });
+  }
+
+  // Usage counts for the private stats page. A random browser ID only: no
+  // cookies, names, or emails. Sent only where the site's API is running.
+  var anonCache = "";
+
+  function anonId() {
+    if (anonCache) return anonCache;
+    var id = "";
+    try {
+      id = localStorage.getItem(ANON_KEY) || "";
+    } catch (error) {
+      id = "";
+    }
+    if (!/^[A-Za-z0-9_-]{16,64}$/.test(id)) {
+      id = randomId();
+      try {
+        localStorage.setItem(ANON_KEY, id);
+      } catch (error) {
+        // Private mode: this page view still counts with a one-off ID.
+      }
+    }
+    anonCache = id;
+    return id;
+  }
+
+  function randomId() {
+    var bytes = new Uint8Array(16);
+    if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+    else for (var i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+    var out = "";
+    for (var j = 0; j < bytes.length; j += 1) out += (bytes[j] < 16 ? "0" : "") + bytes[j].toString(16);
+    return out;
+  }
+
+  function track(name, fields) {
+    whenAccountReady(function (state) {
+      if (!state.enabled) return;
+      var payload = { name: name, anon: anonId() };
+      Object.keys(fields || {}).forEach(function (key) {
+        payload[key] = fields[key];
+      });
+      var body = JSON.stringify(payload);
+      var url = apiUrl("api/event");
+      try {
+        if (navigator.sendBeacon && navigator.sendBeacon(url, body)) return;
+      } catch (error) {
+        // Fall through to fetch.
+      }
+      try {
+        fetch(url, { method: "POST", body: body, credentials: "same-origin", keepalive: true }).catch(function () {});
+      } catch (error) {
+        return;
+      }
+    });
+  }
+
+  function trackPageView() {
+    var page = document.body ? document.body.getAttribute("data-page") || "other" : "other";
+    var drill = document.body ? document.body.getAttribute("data-drill") : "";
+    if (page === "drill" && drill) track("drill_view", { drill: drill });
+    else track("page_view", { page: page });
   }
 
   document.addEventListener("click", function (event) {
@@ -207,6 +271,7 @@
   initPlanPage();
   initAccountPage();
   initAccounts();
+  trackPageView();
 
   function initPlanPage() {
     var catalogNode = document.getElementById("drill-catalog");
@@ -539,6 +604,7 @@
         return;
       }
       var url = shared ? cleanPageUrl(window.location.href) : buildShareUrl(plan);
+      track("plan_share", { drills: plan.items.length });
       copyText(url).then(function () {
         fallback.hidden = true;
         status.textContent = "Share link copied.";
@@ -552,6 +618,7 @@
     });
 
     printBtn.addEventListener("click", function () {
+      track("plan_print", { drills: plan.items.length });
       window.print();
     });
 

@@ -1,7 +1,8 @@
 import { deleteUserAccount, DELETE_CONFIRM } from "./account.js"
 import { accountsReady, devMagicLinkEnabled, emailReady, googleReady, handleAuth, peekMagicLink, readSession } from "./auth.js"
 import { resolvePublicUrl, routedUrl } from "./base-path.js"
-import { json } from "./http.js"
+import { logEvent, MAX_EVENT_BODY, parseClientEvent, recordEvent } from "./events.js"
+import { clientIp, json } from "./http.js"
 import { createPlan, deletePlan, getPlan, isUuid, listPlans, PlanInputError, updatePlan } from "./plans.js"
 import { consumeLimit } from "./rate-limit.js"
 
@@ -33,7 +34,9 @@ export async function handlePlansCollection(request: Request): Promise<Response>
     if (request.method === "POST") {
       const blocked = await mutationGuard(request, user.id)
       if (blocked) return blocked
-      return json({ plan: await createPlan(user.id, await readBody(request)) }, 201)
+      const plan = await createPlan(user.id, await readBody(request))
+      await logEvent({ name: "plan_create", userId: user.id, planId: plan.id, props: { drills: plan.items.length } })
+      return json({ plan }, 201)
     }
     return json({ error: "Method not allowed." }, 405)
   } catch (error) {
@@ -59,11 +62,13 @@ export async function handlePlanItem(request: Request): Promise<Response> {
     if (request.method === "PATCH") {
       const plan = await updatePlan(user.id, id, await readBody(request))
       if (!plan) return json({ error: "Plan not found." }, 404)
+      await logEvent({ name: "plan_save", userId: user.id, planId: plan.id, props: { drills: plan.items.length } })
       return json({ plan })
     }
     if (request.method === "DELETE") {
       const removed = await deletePlan(user.id, id)
       if (!removed) return json({ error: "Plan not found." }, 404)
+      await logEvent({ name: "plan_delete", userId: user.id, planId: id })
       return json({ ok: true })
     }
     return json({ error: "Method not allowed." }, 405)
@@ -91,7 +96,52 @@ export async function handleAccount(request: Request): Promise<Response> {
   }
 }
 
+// POST /api/event: write-only usage beacon. It never returns stored data.
+export async function handleEvent(request: Request): Promise<Response> {
+  if (request.method !== "POST") return empty(405, { allow: "POST" })
+  if (!sameOriginBeacon(request)) return empty(403)
+  const claimed = Number(request.headers.get("content-length") || 0)
+  if (Number.isFinite(claimed) && claimed > MAX_EVENT_BODY) return empty(413)
+  const text = await request.text()
+  if (!text) return empty(400)
+  if (text.length > MAX_EVENT_BODY) return empty(413)
+  let body: unknown
+  try {
+    body = JSON.parse(text)
+  } catch {
+    return empty(400)
+  }
+  const event = parseClientEvent(body)
+  if (!event) return empty(400)
+  try {
+    const allowed = await consumeLimit("event", clientIp(request), 600, 60 * 60)
+    if (!allowed) return empty(429)
+    if (hasSessionCookie(request)) {
+      const user = await requireUser(request)
+      if (user) event.userId = user.id
+    }
+    await recordEvent(event)
+    return empty(204)
+  } catch (error) {
+    console.error("event endpoint failed", error instanceof Error ? error.message : error)
+    return empty(503)
+  }
+}
+
 export { handleAuth }
+
+function empty(status: number, extra?: Record<string, string>): Response {
+  return new Response(null, { status, headers: { "cache-control": "no-store", ...extra } })
+}
+
+function sameOriginBeacon(request: Request): boolean {
+  if (request.headers.get("origin")) return originAllowed(request)
+  return request.headers.get("sec-fetch-site") === "same-origin"
+}
+
+function hasSessionCookie(request: Request): boolean {
+  return /(?:^|;\s*)(?:__Host-)?hsd\.session-token=/.test(request.headers.get("cookie") || "")
+}
 
 async function requireUser(request: Request) {
   const user = await readSession(request)

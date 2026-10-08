@@ -319,12 +319,15 @@ async function main(): Promise<void> {
   const { closePool, getPool } = await import("../lib/db.js")
   const { resolvePublicUrl, routedUrl } = await import("../lib/base-path.js")
   const { accountsReady, devMagicLinkEnabled, handleAuth, safeRedirectTarget } = await import("../lib/auth.js")
-  const { handleAccount, handleHealth, handleMagicLink, handlePlanItem, handlePlansCollection } = await import("../lib/routes.js")
+  const { handleAccount, handleEvent, handleHealth, handleMagicLink, handlePlanItem, handlePlansCollection } = await import("../lib/routes.js")
+  const { handleAdmin } = await import("../lib/admin.js")
   const { blockedStaticPath } = await import("../lib/static-guard.js")
 
   await getPool().query("TRUNCATE users CASCADE")
   await getPool().query("TRUNCATE verification_token")
   await getPool().query("TRUNCATE rate_limits")
+  await getPool().query("TRUNCATE events")
+  delete process.env.ADMIN_EMAILS
 
   const previousSecret = process.env.AUTH_SECRET
   delete process.env.AUTH_SECRET
@@ -457,6 +460,8 @@ async function main(): Promise<void> {
     else if (pathname === "/api/account") response = await handleAccount(request)
     else if (pathname.startsWith("/api/plans/")) response = await handlePlanItem(request)
     else if (pathname.startsWith("/api/auth/")) response = await handleAuth(request)
+    else if (pathname === "/api/event") response = await handleEvent(request)
+    else if (pathname === "/admin" || pathname === "/admin/") response = await handleAdmin(request)
     else response = new Response("Not found", { status: 404 })
     res.statusCode = response.status
     response.headers.forEach((value, key) => {
@@ -575,6 +580,94 @@ async function main(): Promise<void> {
     const gone = await api(origin, coachA, "GET", `/api/plans/${planId}`)
     assert.equal(gone.status, 404)
 
+    // Usage events: server-side rows for sign-in and plan writes.
+    const serverEvents = await getPool().query(
+      "SELECT name, user_id, plan_id, props FROM events WHERE user_id = $1 ORDER BY id",
+      [userId]
+    )
+    const serverNames = serverEvents.rows.map((row) => row.name)
+    assert.ok(serverNames.includes("sign_in"))
+    assert.ok(serverNames.includes("plan_create"))
+    assert.ok(serverNames.includes("plan_save"))
+    assert.ok(serverNames.includes("plan_delete"))
+    assert.equal(serverEvents.rows.find((row) => row.name === "plan_create")?.plan_id, planId)
+
+    // Browser beacon: validated, write-only, and same-origin only.
+    const anonKey = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+    const beacon = (body: unknown, headers: Record<string, string> = { origin }) =>
+      fetch(`${origin}/api/event`, { method: "POST", headers, body: typeof body === "string" ? body : JSON.stringify(body) })
+    const viewed = await beacon({ name: "drill_view", anon: anonKey, drill: "cone-weave", email: "leak@example.com", props: { x: 1 } })
+    assert.equal(viewed.status, 204)
+    assert.equal(await viewed.text(), "")
+    const viewRow = await getPool().query("SELECT * FROM events WHERE name = 'drill_view' ORDER BY id DESC LIMIT 1")
+    assert.equal(viewRow.rows[0].anon_id, anonKey)
+    assert.equal(viewRow.rows[0].drill_slug, "cone-weave")
+    assert.equal(viewRow.rows[0].user_id, null)
+    assert.doesNotMatch(JSON.stringify(viewRow.rows[0]), /leak@example\.com/)
+    assert.equal((await beacon({ name: "page_view", anon: anonKey, page: "home" })).status, 204)
+    assert.equal((await beacon({ name: "page_view", anon: anonKey, page: "<script>" })).status, 204)
+    const pageRow = await getPool().query("SELECT props FROM events WHERE name = 'page_view' ORDER BY id DESC LIMIT 1")
+    assert.deepEqual(pageRow.rows[0].props, { page: "other" })
+    assert.equal((await beacon({ name: "sign_in", anon: anonKey })).status, 400)
+    assert.equal((await beacon({ name: "plan_create", anon: anonKey })).status, 400)
+    assert.equal((await beacon({ name: "drill_view", anon: "short", drill: "cone-weave" })).status, 400)
+    assert.equal((await beacon({ name: "drill_view", anon: anonKey, drill: "../etc" })).status, 400)
+    assert.equal((await beacon({ name: "drill_view", anon: anonKey })).status, 400)
+    assert.equal((await beacon("not json")).status, 400)
+    assert.equal((await beacon({ name: "page_view", anon: anonKey, pad: "x".repeat(3000) })).status, 413)
+    assert.equal((await beacon({ name: "page_view", anon: anonKey }, {})).status, 403)
+    assert.equal((await beacon({ name: "page_view", anon: anonKey }, { origin: "https://evil.example" })).status, 403)
+    assert.equal(
+      (await beacon({ name: "page_view", anon: anonKey }, { "sec-fetch-site": "same-origin" })).status,
+      204
+    )
+    const readAttempt = await fetch(`${origin}/api/event`)
+    assert.equal(readAttempt.status, 405)
+    assert.equal(await readAttempt.text(), "")
+    const signedBeacon = await beacon(
+      { name: "drill_add_to_plan", anon: anonKey, drill: "stops-and-starts" },
+      { origin, cookie: coachA.header() }
+    )
+    assert.equal(signedBeacon.status, 204)
+    const addRow = await getPool().query("SELECT user_id FROM events WHERE name = 'drill_add_to_plan' ORDER BY id DESC LIMIT 1")
+    assert.equal(addRow.rows[0].user_id, userId)
+    const piiColumns = await getPool().query(
+      "SELECT column_name FROM information_schema.columns WHERE table_name = 'events' ORDER BY column_name"
+    )
+    assert.deepEqual(
+      piiColumns.rows.map((row) => row.column_name),
+      ["anon_id", "created_at", "drill_slug", "id", "name", "plan_id", "props", "user_id"]
+    )
+
+    // Admin dashboard: 404 unless the session email is in ADMIN_EMAILS.
+    const adminGet = (jar: CookieJar, pathname = "/admin") =>
+      fetch(`${origin}${pathname}`, { headers: { cookie: jar.header() }, redirect: "manual" })
+    const noAdminsSet = await adminGet(coachA)
+    assert.equal(noAdminsSet.status, 404)
+    process.env.ADMIN_EMAILS = " Coach-A@Example.com , other@example.com"
+    const signedOutAdmin = await adminGet(new CookieJar())
+    assert.equal(signedOutAdmin.status, 404)
+    assert.equal(await signedOutAdmin.text(), "Not found")
+    const coachBAdmin = await adminGet(coachB)
+    assert.equal(coachBAdmin.status, 404)
+    assert.doesNotMatch(await coachBAdmin.text(), /coach-a@example\.com/)
+    const forged = await fetch(`${origin}/admin`, { headers: { cookie: "__Host-hsd.session-token=forged; hsd.session-token=forged" } })
+    assert.equal(forged.status, 404)
+    const adminPage = await adminGet(coachA, "/admin/")
+    assert.equal(adminPage.status, 200)
+    assert.equal(adminPage.headers.get("x-robots-tag"), "noindex, nofollow")
+    assert.match(adminPage.headers.get("cache-control") || "", /no-store/)
+    const adminHtml = await adminPage.text()
+    assert.match(adminHtml, /<meta name="robots" content="noindex, nofollow">/)
+    assert.match(adminHtml, /Site stats/)
+    assert.match(adminHtml, /Last 7 days/)
+    assert.match(adminHtml, /Cone weave/)
+    assert.match(adminHtml, /coach-b@example\.com/)
+    assert.match(adminHtml, /vercel\.com\/debraids-projects\/hockey-skills-and-drills\/analytics/)
+    assert.doesNotMatch(adminHtml, /<script/i)
+    assert.equal((await fetch(`${origin}/admin`, { method: "POST", headers: { cookie: coachA.header() } })).status, 404)
+    delete process.env.ADMIN_EMAILS
+
     const staticServer = http.createServer((req, res) => {
       const url = new URL(req.url || "/", origin)
       if (url.pathname.startsWith("/api")) {
@@ -638,6 +731,8 @@ async function main(): Promise<void> {
     const signInLink = signedOut.window.document.querySelector("[data-account-slot] a") as HTMLAnchorElement
     assert.match(signInLink.href, /\/hockey-skills-and-drills\/account\/$/)
     assert.ok(signedOutCalls.some((url) => url.endsWith("/hockey-skills-and-drills/api/health")))
+    assert.ok(signedOutCalls.some((url) => url.endsWith("/hockey-skills-and-drills/api/event")))
+    assert.equal(absentCalls.some((url) => url.includes("/api/event")), false)
     signedOut.window.close()
 
     const user = { id: "123e4567-e89b-42d3-a456-426614174000", name: "Derek", email: "derek@example.com", image: "" }

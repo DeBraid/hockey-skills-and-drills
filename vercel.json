@@ -45,6 +45,18 @@
       "destination": "/api/account"
     },
     {
+      "source": "/api/event/",
+      "destination": "/api/event"
+    },
+    {
+      "source": "/admin",
+      "destination": "/api/admin"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/api/admin"
+    },
+    {
       "source": "/hockey-skills-and-drills/api/:path*",
       "destination": "/api/:path*"
     },
