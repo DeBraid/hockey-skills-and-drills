@@ -628,6 +628,208 @@
       ],
       "related": ["low-to-high-give-and-go", "low-to-high-d-to-d", "low-to-high-shot"],
       "excalidrawUrl": "https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ"
+    },
+    {
+      "slug": "give-and-go-shot",
+      "title": "Give-and-Go to Shot",
+      "skillGroup": "Combo",
+      "subtitle": "Skate up the wall, give-and-go with the coach, round the pylon, take the return pass and drive in for a shot.",
+      "blurb": "A half-ice skate, pass and shoot combo built around the give-and-go, the first passing play U11s use in games. The player skates up the wall from the corner, takes a pass from the coach and gives it right back, rounds a pylon near the red line, takes a second pass from the coach and drives in for a shot. Adapted from Hockey Canada's U11 (Atom) skate/shoot combo.",
+      "diagramAlt": "Half-ice diagram of Give-and-Go to Shot. A line of players starts in the bottom corner. The front player skates up the bottom wall; a coach in the middle of the zone passes to them and they pass it straight back. They keep skating, round a pylon near the red line, take a second pass from the coach and carry in to shoot on the goalie, then return to the back of the line.",
+      "tags": ["half-ice", "passing", "shooting"],
+      "coachingPoints": [
+        "Give a target: stick on the ice, blade facing the coach.",
+        "Make eye contact with the passer before the puck comes.",
+        "One-touch pass back: cushion it and give it right back.",
+        "Keep your feet moving through the pylon; don't glide.",
+        "Drive the net after the catch and shoot to score."
+      ],
+      "steps": [
+        "One line in the corner. A coach with pucks stands in the middle of the zone. A pylon near the red line on the same side.",
+        "The front player skates up the wall. The coach passes to them.",
+        "Give it right back to the coach (give-and-go) and keep skating toward the pylon.",
+        "Round the pylon. The coach passes again as you come out of the turn.",
+        "Drive in and shoot, then join the back of the line. Alternate sides each round."
+      ],
+      "related": ["follow-the-pass", "low-to-high-give-and-go"],
+      "excalidrawUrl": null
+    },
+    {
+      "slug": "stationary-partner-passing",
+      "title": "Stationary Partner Passing",
+      "skillGroup": "Passing",
+      "subtitle": "Partners 10-13 ft apart pass back and forth: forehand, then backhand, then switch sides. Step back as passes get crisp.",
+      "blurb": "The U11 starting point for passing. Everyone pairs up with one puck, standing 10-13 ft (3-4 m) apart. Pass forehand back and forth, then backhand, then switch sides so the other player works the backhand. Step further apart as the passes get crisp. Good as a quick station or warm-up; works anywhere on the ice.",
+      "diagramAlt": "Zone diagram of Stationary Partner Passing. Two pairs of players stand facing each other about 12 feet apart, one pair near each faceoff circle. In each pair the first player passes to the partner and the partner passes it back.",
+      "tags": ["passing"],
+      "coachingPoints": [
+        "Give a target: blade square to your partner, stick on the ice.",
+        "Sweep the puck, don't slap it. Follow through to your target.",
+        "Cushion the pass as it arrives: soft hands, let the blade give.",
+        "Eyes up: look at your partner before you pass.",
+        "Backhand too: cup the puck and follow through low."
+      ],
+      "steps": [
+        "Everyone pairs up with one puck, partners facing each other 10-13 ft (3-4 m) apart.",
+        "Pass forehand to your partner.",
+        "Your partner cushions it and passes it back.",
+        "After 10 good passes, switch to backhand passes, then swap sides so you both work forehand and backhand.",
+        "When the passes are crisp, both take a step back and keep going."
+      ],
+      "related": ["rondo-passing"],
+      "excalidrawUrl": "https://excalidraw.com/#json=xMvVjvCJChlDuDz-PcGzO,udng8Sg37DOB2i0mem5KFw"
+    },
+    {
+      "slug": "d-to-wall-breakout",
+      "title": "Breakout: D to the Wall",
+      "skillGroup": "Breakout",
+      "subtitle": "F passes to the D, loops low and opens up on the wall. D skates it behind the net and hits the F, who attacks and shoots.",
+      "blurb": "The core breakout pattern stripped to two players (Weiss Tech phase 1). The forward passes to the D on the dot, then loops low and opens up on the half-wall. The D skates the puck behind the net and passes to the forward on the wall, who carries up the boards. This half-ice version has the forward curl at a cone near the red line and attack the same net for a shot.",
+      "diagramAlt": "Half-ice diagram of Breakout: D to the Wall. Forwards line up at the top of the blue line; defence line up at the bottom faceoff dot. The forward passes to the D, then skates down through the slot and loops up to the top half-wall. The D carries behind the net to the top corner and passes to the forward on the wall. The forward carries up the wall, curls at a cone near the red line, and attacks the net to shoot.",
+      "tags": ["half-ice", "breakout", "passing"],
+      "coachingPoints": [
+        "F: pivot to face the puck and keep your eyes on the D while you get open.",
+        "F: stop on the wall with your stick on the ice. Give a target.",
+        "D: look over your shoulder before you go behind the net, and move the puck quickly.",
+        "Pass hard and flat to the forehand on the wall.",
+        "Catch it and go: feet moving up the wall right away."
+      ],
+      "steps": [
+        "Forwards line up on the blue line with pucks. The D going steps out to the faceoff dot; the other D wait behind.",
+        "The F passes to the D on the dot.",
+        "The D skates the puck behind the net. At the same time the F loops low and opens up on the half-wall.",
+        "The D passes to the F on the wall.",
+        "The F carries up the wall, curls at the cone near the red line, then attacks and shoots. Both go to the back of their lines.",
+        "Progression (phase 2): add a second forward swinging through the middle for a touch pass and a 2-on-0."
+      ],
+      "related": ["controlled-skating-breakout", "olympic-breakout-pass", "zone-exit-bounce-pass"],
+      "excalidrawUrl": null
+    },
+    {
+      "slug": "controlled-skating-breakout",
+      "title": "Controlled-Skating Breakout",
+      "skillGroup": "Breakout",
+      "subtitle": "D skates the puck behind the net while the F glides through 4 spots, showing a target at each. D passes on time; F attacks 1-on-0.",
+      "blurb": "A timing and support drill for young players (Weiss Tech). The forward passes to the D, then skates slowly through four receiving spots marked with cones (high slot, low corner, half-wall, high on the wall), showing a target at each one. The D skates the puck behind the net and passes when the forward arrives at a spot, then the forward attacks 1-on-0. This half-ice version curls at a cone near the red line and attacks the same net.",
+      "diagramAlt": "Half-ice diagram of Controlled-Skating Breakout. A forward line waits at the blue line and a D line at the bottom faceoff dot. Four numbered cones mark receiving spots on the top side: high slot, low by the boards, half-wall, and high on the wall. The F passes to the D, who carries behind the net. The F glides from spot 1 to spot 4; the D passes at spot 4. The F carries out, curls at a cone near the red line and shoots on the goalie.",
+      "tags": ["half-ice", "breakout", "passing"],
+      "coachingPoints": [
+        "Control skate: slow and smooth, arriving at each spot on time.",
+        "Show a target at every spot: stick on the ice, blade facing the puck.",
+        "Never take your eyes off the puck.",
+        "D: pass when the F is ready, not before. Hard and flat to the forehand.",
+        "After the catch, attack with speed and shoot to score."
+      ],
+      "steps": [
+        "Forwards line up at the blue line, D at the faceoff dot. Place four cones as receiving spots: high slot, low by the boards, half-wall, and high on the wall.",
+        "The F passes to the D, who pivots toward the boards and skates the puck behind the net.",
+        "The F skates slowly through spots 1, 2 and 3, showing a target at each.",
+        "The F arrives at spot 4 and the D passes on time.",
+        "The F carries out, curls at the cone near the red line and attacks 1-on-0.",
+        "Option: the coach calls which spot gets the pass. Later, add a D at the far blue line for a 1-on-1."
+      ],
+      "related": ["d-to-wall-breakout", "olympic-breakout-pass"],
+      "excalidrawUrl": null
+    },
+    {
+      "slug": "wide-entry-drive-net",
+      "title": "Wide Entry, Drive the Net",
+      "skillGroup": "Entry",
+      "subtitle": "Carry in wide over the blue line, keep your feet moving around the cone, cut to the net and shoot.",
+      "blurb": "The simplest U11 zone entry: wide with speed, then drive the net. The player carries the puck wide over the blue line, keeps their feet moving around a cone inside the zone, cuts to the net and shoots, then follows the shot for the rebound. Progression: add a D at the blue line for a 1-on-1. From a Hockey Canada U11 zone-entry station.",
+      "diagramAlt": "Half-ice diagram of Wide Entry, Drive the Net. A line of forwards waits at the red line by the bottom boards with pucks. The front player carries wide along the boards over the blue line, turns tightly around a cone near the bottom of the circle, cuts toward the net and shoots on the goalie, then skates in for the rebound.",
+      "tags": ["half-ice", "zone-entry", "shooting"],
+      "coachingPoints": [
+        "Go wide with speed to push the defender back.",
+        "Keep your feet moving around the cone. No gliding.",
+        "Protect the puck on the turn: body between the cone and the puck.",
+        "Cut hard to the net and shoot in stride.",
+        "Follow your shot for the rebound."
+      ],
+      "steps": [
+        "One line at the red line by the boards, with pucks. A cone inside the blue line, wide near the bottom of the circle. A goalie in net.",
+        "Carry the puck wide over the blue line with speed.",
+        "Go around the cone with your feet moving, then cut to the net.",
+        "Shoot, then drive the net for a rebound. Join the back of the line.",
+        "Alternate sides each round. Progression: add a D at the blue line for a 1-on-1."
+      ],
+      "related": ["two-on-zero-wide-and-middle", "zone-entry-delay"],
+      "excalidrawUrl": "https://excalidraw.com/#json=QggkHSIQB9fxeKdPa58M0,oq0VSZv6oSIBDI1Ts_ZAvg"
+    },
+    {
+      "slug": "three-lane-wave-shooting",
+      "title": "Three-Lane Wave Shooting",
+      "skillGroup": "Shooting",
+      "subtitle": "Three lanes go one after another: carry in, shoot, then clear out to the side so the next shooter has room.",
+      "blurb": "Lots of shots and simple to run. Three lines wait at the red line (left, middle, right lanes), each with pucks. One player from each lane carries in and shoots, one after another, and clears out to the side so the next shooter has a clear lane. The goalie gets a short reset between waves. From a Hockey Canada U9 practice plan.",
+      "diagramAlt": "Half-ice diagram of Three-Lane Wave Shooting. Three lines labelled 1, 2 and 3 wait at the red line in the top, middle and bottom lanes, each with pucks. Lane 1 carries in and shoots from the top slot, lane 2 from the middle, and lane 3 from the bottom slot, one after another. Each shooter clears out along the side and returns to their own line.",
+      "tags": ["half-ice", "shooting"],
+      "coachingPoints": [
+        "Head up while you carry; pick your spot before you shoot.",
+        "Shoot in stride, quick release.",
+        "Go when the player before you reaches the blue line.",
+        "After the shot, clear out to the side. Don't skate through the next shooter's lane.",
+        "Shoot to score: low blocker or low glove."
+      ],
+      "steps": [
+        "Three lines at the red line (top, middle and bottom lanes), each with pucks. A goalie in net.",
+        "Lane 1 carries in and shoots.",
+        "Lane 2 goes when lane 1 reaches the blue line, and shoots. Lane 1 clears out to the side.",
+        "Lane 3 goes next and shoots. Lane 2 clears out.",
+        "Everyone returns to their own lane's line. The next wave goes when the goalie is set."
+      ],
+      "related": ["follow-the-pass"],
+      "excalidrawUrl": null
+    },
+    {
+      "slug": "two-on-zero-wide-and-middle",
+      "title": "2-on-0 Wide and Middle",
+      "skillGroup": "Entry",
+      "subtitle": "One goes wide with the puck, one drives the middle to the back post. Shoot (or pass), and both go to the net.",
+      "blurb": "Teaches one rule kids can remember: one goes wide, one drives the net. The puck carrier enters wide while the partner drives the middle lane to the back post. The carrier cuts in and shoots (or passes across to the back post), and both attackers go to the net for the rebound. Then switch lanes.",
+      "diagramAlt": "Half-ice diagram of 2-on-0 Wide and Middle. A wide line with pucks waits at the red line by the bottom boards and a middle line waits in the centre lane. The wide player carries over the blue line along the boards and cuts in toward the slot; the middle player skates straight down the middle and on to the back post. The wide player shoots and skates to the net front.",
+      "tags": ["half-ice", "zone-entry", "shooting"],
+      "coachingPoints": [
+        "Carrier: wide with speed, then cut in with your head up.",
+        "Middle player: drive hard to the back post, stick on the ice.",
+        "Shoot for a rebound, or pass across if the back post is open.",
+        "Both players go to the net after the shot.",
+        "Switch lanes every rep so everyone plays both roles."
+      ],
+      "steps": [
+        "A wide line at the red line by the boards with pucks, and a middle line in the centre lane. A goalie in net.",
+        "The wide player carries over the blue line along the boards while the partner drives the middle lane.",
+        "The carrier cuts in; the middle player keeps going to the back post.",
+        "The carrier shoots (or passes across to the back post). Both go to the net for the rebound.",
+        "Switch lines: the carrier joins the middle line and the middle player joins the wide line."
+      ],
+      "related": ["wide-entry-drive-net", "zone-entry-delay"],
+      "excalidrawUrl": null
+    },
+    {
+      "slug": "figure-8-pivots",
+      "title": "Figure-8s with Pivots",
+      "skillGroup": "Skating",
+      "subtitle": "Skate a figure-8 around the two circles: forwards around the top circle, pivot to backwards at the cone on the bottom circle, pivot back to forwards at the next cone.",
+      "blurb": "A simple pivot drill. Players skate a figure-8 around the two end-zone circles: the top circle skating forwards, then on the bottom circle pivot from forwards to backwards at the first cone and back to forwards at the second. Pivots are the U10-U11 skill coaches most often skip, and they're needed for defence and for opening up to receive a pass. Add a puck once players are comfortable.",
+      "diagramAlt": "Zone diagram of Figure-8s with Pivots. A line of skaters waits between the two faceoff circles near the blue line. The front skater skates forwards clockwise around the top circle, crosses diagonally to the bottom circle, pivots to backwards at cone 1, skates backwards around the bottom of the circle, pivots back to forwards at cone 2, and crosses back to the line.",
+      "tags": ["skating"],
+      "coachingPoints": [
+        "Pivot on the balls of your feet with knees bent. Stay low.",
+        "Keep your head and chest facing the same way through the pivot.",
+        "Don't stop: keep moving through every pivot.",
+        "Crossovers on the forward circle, C-cuts going backwards.",
+        "Pivot both ways: switch the direction of the figure-8 every few reps."
+      ],
+      "steps": [
+        "One line between the two faceoff circles. Cones at two points on the bottom circle.",
+        "Skate forwards around the top circle.",
+        "Cross to the bottom circle and pivot to backwards at cone 1.",
+        "Skate backwards to cone 2, pivot back to forwards and finish the figure-8.",
+        "Back of the line. The next skater goes when you reach cone 1. Later, do it with a puck."
+      ],
+      "related": ["crossover-circles", "stops-and-starts"],
+      "excalidrawUrl": null
     }
   ]
 }
