@@ -23,7 +23,7 @@ function poolConfig(connectionString: string): PoolConfig {
     max: 1,
     idleTimeoutMillis: 10_000,
   }
-  if (isNeon(connectionString)) config.ssl = { rejectUnauthorized: false }
+  if (isNeon(connectionString)) config.ssl = { rejectUnauthorized: true }
   return config
 }
 

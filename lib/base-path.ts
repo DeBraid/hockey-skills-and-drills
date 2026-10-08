@@ -17,12 +17,66 @@ export function configuredBasePath(): string {
   return path
 }
 
+const PRODUCTION_HOSTS = new Set([
+  "hockey.derekbraid.com",
+  "hockey-skills-and-drills.vercel.app",
+])
+
 export function canonicalHost(): string {
-  return (process.env.CANONICAL_HOST || "").trim().toLowerCase().split(":")[0] || ""
+  return hostnameOf(process.env.CANONICAL_HOST || "")
 }
 
-function hostnameOf(host: string): string {
-  return host.trim().toLowerCase().replace(/:\d+$/, "")
+export function hostnameOf(host: string): string {
+  const trimmed = host.trim().toLowerCase()
+  if (trimmed.startsWith("[")) {
+    const end = trimmed.indexOf("]")
+    return end === -1 ? "" : trimmed.slice(0, end + 1)
+  }
+  return trimmed.replace(/:\d+$/, "")
+}
+
+function portOf(host: string): string {
+  const trimmed = host.trim().toLowerCase()
+  if (trimmed.startsWith("[")) {
+    const end = trimmed.indexOf("]")
+    if (end === -1 || trimmed[end + 1] !== ":") return ""
+    return trimmed.slice(end + 2)
+  }
+  const match = trimmed.match(/:(\d+)$/)
+  return match?.[1] || ""
+}
+
+function isLocalHost(name: string): boolean {
+  return name === "localhost" || name === "127.0.0.1" || name === "::1" || name === "[::1]"
+}
+
+export function isTrustedHost(host: string): boolean {
+  const name = hostnameOf(host)
+  if (!name || name.length > 253 || !/^[a-z0-9.-]+$|^\[[0-9a-f:]+\]$/.test(name)) return false
+  if (isLocalHost(name) || PRODUCTION_HOSTS.has(name)) return true
+  const canonical = canonicalHost()
+  if (canonical && name === canonical) return true
+  const configured = [
+    process.env.VERCEL_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_BRANCH_URL,
+  ]
+  return configured.some((value) => value && hostnameOf(value) === name)
+}
+
+function forwardedHostAllowed(host: string): boolean {
+  if (!isTrustedHost(host)) return false
+  const port = portOf(host)
+  if (!port) return true
+  if (isLocalHost(hostnameOf(host))) return true
+  return port === "80" || port === "443"
+}
+
+function protocolFor(host: string, hinted: string, incoming: string): string {
+  if (!isLocalHost(hostnameOf(host))) return "https"
+  if (hinted === "http" || hinted === "https") return hinted
+  if (incoming === "http" || incoming === "https") return incoming
+  return "http"
 }
 
 const SEGMENT = /^[A-Za-z0-9_-]+$/
@@ -62,9 +116,11 @@ export function resolvePublicUrl(request: Request): PublicUrl {
   const incoming = routedUrl(request)
   const forwardedHost = firstHeader(request, "x-forwarded-host")
   const hostHeader = firstHeader(request, "host")
-  const host = forwardedHost || hostHeader || incoming.host
+  let host = incoming.host
+  if (forwardedHost && forwardedHostAllowed(forwardedHost)) host = forwardedHost
+  else if (hostHeader && forwardedHostAllowed(hostHeader)) host = hostHeader
   const protoHeader = firstHeader(request, "x-forwarded-proto").replace(/:$/, "")
-  const protocol = protoHeader || incoming.protocol.replace(":", "") || "https"
+  const protocol = protocolFor(host, protoHeader, incoming.protocol.replace(":", ""))
   const origin = `${protocol}://${host}`
   const basePath = basePathFor(host, incoming.pathname)
   let pathname = incoming.pathname

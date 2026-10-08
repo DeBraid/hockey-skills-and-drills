@@ -10,3 +10,11 @@ export function firstHeader(request: Request, name: string): string {
   if (!value) return ""
   return value.split(",")[0]?.trim() || ""
 }
+
+export function clientIp(request: Request): string {
+  const real = firstHeader(request, "x-real-ip")
+  if (real) return real.slice(0, 80)
+  const forwarded = firstHeader(request, "x-forwarded-for")
+  if (forwarded) return forwarded.slice(0, 80)
+  return "local"
+}

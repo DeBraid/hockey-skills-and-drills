@@ -63,6 +63,25 @@ class CookieJar {
   }
 }
 
+async function finalUrl(jar: CookieJar, url: string): Promise<string> {
+  let current = url
+  for (let hop = 0; hop < 8; hop += 1) {
+    const response = await fetch(current, {
+      headers: { cookie: jar.header() },
+      redirect: "manual",
+    })
+    jar.absorb(response)
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get("location")
+      if (!location) return current
+      current = new URL(location, current).href
+      continue
+    }
+    return current
+  }
+  throw new Error("too many redirects")
+}
+
 async function follow(jar: CookieJar, url: string): Promise<Response> {
   let current = url
   for (let hop = 0; hop < 6; hop += 1) {
@@ -128,12 +147,20 @@ async function signIn(origin: string, email: string): Promise<CookieJar> {
   return fresh
 }
 
-async function api(origin: string, jar: CookieJar, method: string, pathname: string, body?: unknown): Promise<{ status: number; data: any }> {
+async function api(
+  origin: string,
+  jar: CookieJar,
+  method: string,
+  pathname: string,
+  body?: unknown,
+  options?: { omitOrigin?: boolean }
+): Promise<{ status: number; data: any }> {
   const response = await fetch(`${origin}${pathname}`, {
     method,
     headers: {
       cookie: jar.header(),
       accept: "application/json",
+      ...(options?.omitOrigin ? {} : { origin }),
       ...(body === undefined ? {} : { "content-type": "application/json" }),
     },
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -274,6 +301,15 @@ async function main(): Promise<void> {
   assert.match(planHtml, /"page": "\.\.\/drills\/cone-weave\/"/)
   const accountHtml = fs.readFileSync(path.join(root, "account/index.html"), "utf8")
   assert.doesNotMatch(accountHtml, /index\.html/)
+  assert.match(accountHtml, /Privacy/)
+  assert.match(accountHtml, /id="account-delete"/)
+  for (const banned of ["package.json", "lib/auth.ts", "db/migrations/001_init.sql", ".env", "api/health.ts", "scripts/build_site.py", "drills.json"]) {
+    assert.equal(fs.existsSync(path.join(root, "public", banned)), false, banned)
+  }
+  assert.equal(fs.existsSync(path.join(root, "public/drills/cone-weave.md")), false)
+  assert.equal(fs.existsSync(path.join(root, "public/index.html")), true)
+  assert.equal(fs.existsSync(path.join(root, "public/media/cone-weave/cone-weave-anim.html")), true)
+  assert.equal(fs.existsSync(path.join(root, "public/drills/cone-weave/index.html")), true)
 
   ensureDatabase()
   setAuthEnv()
@@ -282,12 +318,13 @@ async function main(): Promise<void> {
 
   const { closePool, getPool } = await import("../lib/db.js")
   const { resolvePublicUrl, routedUrl } = await import("../lib/base-path.js")
-  const { accountsReady } = await import("../lib/auth.js")
-  const { handleAuth } = await import("../lib/auth.js")
-  const { handleHealth, handleMagicLink, handlePlanItem, handlePlansCollection } = await import("../lib/routes.js")
+  const { accountsReady, devMagicLinkEnabled, handleAuth, safeRedirectTarget } = await import("../lib/auth.js")
+  const { handleAccount, handleHealth, handleMagicLink, handlePlanItem, handlePlansCollection } = await import("../lib/routes.js")
+  const { blockedStaticPath } = await import("../lib/static-guard.js")
 
   await getPool().query("TRUNCATE users CASCADE")
   await getPool().query("TRUNCATE verification_token")
+  await getPool().query("TRUNCATE rate_limits")
 
   const previousSecret = process.env.AUTH_SECRET
   delete process.env.AUTH_SECRET
@@ -311,8 +348,10 @@ async function main(): Promise<void> {
   delete process.env.CANONICAL_HOST
 
   const vercelConfig = JSON.parse(fs.readFileSync(path.join(root, "vercel.json"), "utf8")) as {
+    outputDirectory?: string
     redirects: { source: string; destination: string; permanent: boolean }[]
     rewrites: { source: string; destination: string }[]
+    headers?: { source: string; headers: { key: string; value: string }[] }[]
   }
   assert.equal(vercelConfig.redirects[0].source, "/index.html")
   assert.equal(vercelConfig.redirects[0].destination, "/")
@@ -325,6 +364,43 @@ async function main(): Promise<void> {
   assert.ok(vercelConfig.rewrites.some((rule) => rule.destination === "/api/plans/item?__plan=:id"))
   assert.ok(vercelConfig.rewrites.some((rule) => rule.source === "/api/plans/:id/"))
   assert.ok(vercelConfig.rewrites.some((rule) => rule.source === "/api/health/"))
+  assert.ok(vercelConfig.rewrites.some((rule) => rule.source === "/api/account/" && rule.destination === "/api/account"))
+  assert.equal(vercelConfig.outputDirectory, "public")
+  const headerGroups = vercelConfig.headers || []
+  const allHeaders = headerGroups.flatMap((group) => group.headers)
+  const csp = allHeaders.find((header) => header.key === "Content-Security-Policy" && header.value.includes("frame-ancestors 'self'"))
+  assert.ok(csp)
+  assert.match(csp.value, /googleusercontent\.com/)
+  assert.match(csp.value, /font-src 'self'/)
+  assert.match(csp.value, /script-src 'self' 'unsafe-inline'/)
+  assert.match(csp.value, /frame-ancestors 'self'/)
+  assert.match(allHeaders.map((header) => header.key).join(" "), /X-Content-Type-Options/)
+  assert.match(allHeaders.map((header) => header.key).join(" "), /Referrer-Policy/)
+  assert.match(allHeaders.map((header) => header.key).join(" "), /Permissions-Policy/)
+  assert.match(allHeaders.map((header) => header.key).join(" "), /X-Frame-Options/)
+  assert.match(allHeaders.map((header) => header.key).join(" "), /Strict-Transport-Security/)
+  assert.equal(blockedStaticPath("/lib/auth.ts"), true)
+  assert.equal(blockedStaticPath("/package.json"), true)
+  assert.equal(blockedStaticPath("/db/migrations/001_init.sql"), true)
+  assert.equal(blockedStaticPath("/.env"), true)
+  assert.equal(blockedStaticPath("/.env.local"), true)
+  assert.equal(blockedStaticPath("/api/health.ts"), true)
+  assert.equal(blockedStaticPath("/scripts/test_accounts.ts"), true)
+  assert.equal(blockedStaticPath("/drills/cone-weave.md"), true)
+  assert.equal(blockedStaticPath("/"), false)
+  assert.equal(blockedStaticPath("/api/plans"), false)
+  assert.equal(blockedStaticPath("/api/health"), false)
+  assert.equal(blockedStaticPath("/media/cone-weave/cone-weave-anim.html"), false)
+  assert.equal(blockedStaticPath("/js/site.js"), false)
+  const authSource = fs.readFileSync(path.join(root, "lib/auth.ts"), "utf8")
+  assert.doesNotMatch(authSource, /allowDangerousEmailAccountLinking/)
+  assert.equal(safeRedirectTarget("https://evil.example/phish", "https://hockey.derekbraid.com"), "https://hockey.derekbraid.com")
+  assert.equal(safeRedirectTarget("//evil.example", "https://hockey.derekbraid.com"), "https://hockey.derekbraid.com")
+  assert.equal(safeRedirectTarget("/account/", "https://hockey.derekbraid.com"), "https://hockey.derekbraid.com/account/")
+  assert.equal(
+    safeRedirectTarget("https://hockey.derekbraid.com/plan/index.html", "https://hockey.derekbraid.com"),
+    "https://hockey.derekbraid.com/plan/"
+  )
 
   const hintedAuth = routedUrl(
     new Request("https://hockey-skills-and-drills.vercel.app/api/auth/handler?__auth=signin%2Fgoogle&callbackUrl=%2Faccount%2F")
@@ -378,6 +454,7 @@ async function main(): Promise<void> {
     if (pathname === "/api/health") response = handleHealth()
     else if (pathname === "/api/dev/magic-link") response = handleMagicLink()
     else if (pathname === "/api/plans") response = await handlePlansCollection(request)
+    else if (pathname === "/api/account") response = await handleAccount(request)
     else if (pathname.startsWith("/api/plans/")) response = await handlePlanItem(request)
     else if (pathname.startsWith("/api/auth/")) response = await handleAuth(request)
     else response = new Response("Not found", { status: 404 })
@@ -592,6 +669,159 @@ async function main(): Promise<void> {
     assert.equal(accountDown.window.document.getElementById("account-out")?.hidden, true)
     assert.equal(accountDown.window.document.querySelector("[data-account-slot]")?.hasAttribute("hidden"), true)
     accountDown.window.close()
+
+    const poisoned = resolvePublicUrl(
+      new Request("https://hockey-skills-and-drills.vercel.app/api/health", {
+        headers: { "x-forwarded-host": "evil.example", "x-forwarded-proto": "http" },
+      })
+    )
+    assert.equal(poisoned.origin, "https://hockey-skills-and-drills.vercel.app")
+    const secureCookies = await handleAuth(
+      new Request("https://hockey.derekbraid.com/api/auth/csrf", {
+        headers: { host: "hockey.derekbraid.com", "x-forwarded-proto": "https" },
+      })
+    )
+    const secureSet = secureCookies.headers.getSetCookie?.().join("\n") || ""
+    assert.match(secureSet, /__Host-hsd\.csrf-token=/)
+    assert.match(secureSet, /HttpOnly/i)
+    assert.match(secureSet, /Secure/)
+    assert.match(secureSet, /SameSite=Lax/i)
+    assert.doesNotMatch(secureSet, /Domain=/i)
+
+    const xssUrl =
+      `${origin}/plan/?d=cone-weave&m=10&t=` + encodeURIComponent('<img src=x onerror="alert(1)">')
+    const xss = await page(planHtml, xssUrl, null, [])
+    assert.equal(xss.window.document.querySelectorAll('img[src="x"]').length, 0)
+    assert.equal(xss.window.document.querySelector("#plan-list script"), null)
+    assert.match((xss.window.document.getElementById("plan-title") as HTMLInputElement).value, /<img/)
+    assert.match(xss.window.document.getElementById("plan-print-title")?.textContent || "", /<img/)
+    assert.equal(xss.window.document.querySelector("#plan-print-title img"), null)
+    xss.window.close()
+
+    const avatarUser = {
+      id: "123e4567-e89b-42d3-a456-426614174000",
+      name: "Derek",
+      email: "derek@example.com",
+      image: "javascript:alert(1)",
+    }
+    const badAvatar = await page(fs.readFileSync(path.join(root, "index.html"), "utf8"), `${origin}/`, avatarUser, [])
+    assert.equal(badAvatar.window.document.querySelector("[data-account-slot] img"), null)
+    assert.match(badAvatar.window.document.querySelector("[data-account-slot]")?.textContent || "", /Derek/)
+    badAvatar.window.close()
+    const goodAvatar = await page(fs.readFileSync(path.join(root, "index.html"), "utf8"), `${origin}/`, {
+      ...avatarUser,
+      image: "https://lh3.googleusercontent.com/a/example",
+    }, [])
+    const avatar = goodAvatar.window.document.querySelector("[data-account-slot] img") as HTMLImageElement
+    assert.ok(avatar)
+    assert.match(avatar.src, /^https:\/\/lh3\.googleusercontent\.com\//)
+    goodAvatar.window.close()
+
+    const noOrigin = await api(origin, coachA, "POST", "/api/plans", { title: "Nope" }, { omitOrigin: true })
+    assert.equal(noOrigin.status, 403)
+    const tooBig = await api(origin, coachA, "POST", "/api/plans", { title: "Big", notes: "n".repeat(40_000) })
+    assert.equal(tooBig.status, 400)
+    assert.match(tooBig.data.error, /too large/i)
+    const badId = await api(origin, coachA, "GET", "/api/plans/not-a-uuid")
+    assert.equal(badId.status, 404)
+    const manyItems = await api(origin, coachA, "POST", "/api/plans", {
+      title: "Too many",
+      items: Array.from({ length: 61 }, (_item, index) => ({ slug: `drill-${index}`, minutes: 1, note: "" })),
+    })
+    assert.equal(manyItems.status, 400)
+
+    await getPool().query(
+      `INSERT INTO plans (user_id, title) SELECT $1, 'cap ' || g FROM generate_series(1, 100) g`,
+      [userId]
+    )
+    const capped = await api(origin, coachA, "POST", "/api/plans", { title: "One more" })
+    assert.equal(capped.status, 400)
+    assert.match(capped.data.error, /100/)
+
+    const poisonJar = new CookieJar()
+    const poisonResponse = await fetch(`${origin}/api/auth/csrf`, { headers: { cookie: poisonJar.header() } })
+    poisonJar.absorb(poisonResponse)
+    const poisonCsrf = ((await poisonResponse.json()) as { csrfToken?: string }).csrfToken || ""
+    const poisonBody = new URLSearchParams({
+      csrfToken: poisonCsrf,
+      email: "poisoned@example.com",
+      callbackUrl: `${origin}/account/`,
+    })
+    await fetch(`${origin}/api/auth/signin/resend`, {
+      method: "POST",
+      headers: {
+        cookie: poisonJar.header(),
+        "content-type": "application/x-www-form-urlencoded",
+        "X-Auth-Return-Redirect": "1",
+        "x-forwarded-host": "evil.example",
+      },
+      body: poisonBody,
+    })
+    const poisonLink = (await (await fetch(`${origin}/api/dev/magic-link`)).json()) as { url?: string }
+    assert.ok(poisonLink.url)
+    assert.equal(new URL(poisonLink.url).host, new URL(origin).host)
+    assert.doesNotMatch(poisonLink.url, /evil\.example/)
+
+    const redirectJar = new CookieJar()
+    await postAuth(origin, redirectJar, "signin/resend", {
+      email: "redirect@example.com",
+      callbackUrl: "https://evil.example/phish",
+    })
+    const redirectLink = (await (await fetch(`${origin}/api/dev/magic-link`)).json()) as { url?: string }
+    assert.ok(redirectLink.url)
+    const landed = await finalUrl(new CookieJar(), redirectLink.url)
+    assert.equal(new URL(landed).origin, origin)
+    assert.doesNotMatch(landed, /evil\.example/)
+
+    const coachC = await signIn(origin, "coach-c@example.com")
+    const createdC = await api(origin, coachC, "POST", "/api/plans", { title: "Keep me" })
+    assert.equal(createdC.status, 201)
+    const coachCId = ((await api(origin, coachC, "GET", "/api/auth/session")).data.user.id) as string
+    const unconfirmed = await api(origin, coachA, "DELETE", "/api/account", { confirm: "no" })
+    assert.equal(unconfirmed.status, 400)
+    const deleted = await api(origin, coachA, "DELETE", "/api/account", {
+      confirm: "delete my account",
+      user_id: coachCId,
+    })
+    assert.equal(deleted.status, 200)
+    const coachAGone = await api(origin, coachA, "GET", "/api/plans")
+    assert.equal(coachAGone.status, 401)
+    const coachCStill = await api(origin, coachC, "GET", "/api/plans")
+    assert.equal(coachCStill.status, 200)
+    assert.equal(coachCStill.data.plans[0].title, "Keep me")
+    const userRows = await getPool().query("SELECT id FROM users WHERE id = $1", [userId])
+    assert.equal(userRows.rowCount, 0)
+    const otherRows = await getPool().query("SELECT id FROM users WHERE id = $1", [coachCId])
+    assert.equal(otherRows.rowCount, 1)
+
+    process.env.VERCEL_ENV = "production"
+    assert.equal(devMagicLinkEnabled(), false)
+    const hiddenLink = await fetch(`${origin}/api/dev/magic-link`)
+    assert.equal(hiddenLink.status, 404)
+    delete process.env.VERCEL_ENV
+    assert.equal(devMagicLinkEnabled(), true)
+
+    let limited = 0
+    for (let attempt = 0; attempt < 6; attempt += 1) {
+      const result = await postAuth(origin, new CookieJar(), "signin/resend", {
+        email: "bomb@example.com",
+        callbackUrl: `${origin}/account/`,
+      })
+      if ((result as { error?: string }).error) limited += 1
+    }
+    const sixth = await fetch(`${origin}/api/auth/signin/resend`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        origin,
+      },
+      body: new URLSearchParams({ email: "bomb@example.com", csrfToken: "ignored", callbackUrl: `${origin}/account/` }),
+    })
+    assert.equal(sixth.status, 429)
+    const sixthBody = (await sixth.json()) as { error?: string }
+    assert.match(sixthBody.error || "", /too many/i)
+    assert.doesNotMatch(JSON.stringify(sixthBody), /bomb@example.com/)
+    assert.ok(limited >= 1)
   } finally {
     await close(server)
     await closePool()

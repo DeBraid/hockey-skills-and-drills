@@ -16,8 +16,10 @@ Set aside a quiet half hour. You will click through Vercel, Google, Resend, Neon
 4. On the import screen, set:
    - **Framework Preset:** Other
    - **Build Command:** `python3 scripts/build_site.py`
-   - **Output Directory:** leave this as the project root. If the box is empty, leave it empty. If Vercel filled in a folder, clear it so the root is used. Do not set it to `public` or `dist`.
+   - **Output Directory:** `public`
    - **Install Command:** `npm install` (the default is fine)
+
+The build writes the site into `public/`. Vercel should publish that folder, not the repository root. The root also contains the API source, tests, and the database schema. If **Project Settings** has an override for the output directory, set that override to `public` as well. A value saved in the dashboard wins over `vercel.json`.
 5. Do not deploy yet. Open **Environment Variables** on that same screen and add the variables in the table in step 6. You can also deploy now and add the variables afterward, then redeploy. A redeploy is required after any variable change.
 
 The project gets an address like `https://hockey-skills-and-drills.vercel.app`. Copy that address. You need it for Google. The address coaches use is `https://hockey.derekbraid.com`, added in step 7.
@@ -38,8 +40,8 @@ The migration creates the tables for coaches and for saved plans. Do this once.
 
 1. In Neon, open **SQL Editor**.
 2. Open `db/migrations/001_init.sql` from this repo (on GitHub, click the file, then Raw, and copy the whole file).
-3. Paste it into the SQL editor and click **Run**.
-4. You should see success, not a red error. Running it a second time is safe.
+3. Paste it into the SQL editor and click **Run**. Then do the same with `db/migrations/002_rate_limits.sql`.
+4. You should see success, not a red error. Running either file a second time is safe.
 
 **Terminal path,** if you already use a terminal:
 
@@ -154,9 +156,9 @@ Do this only after step 8 works on hockey.derekbraid.com.
 3. Under **Build and deployment**, set **Source** to **None** (Disable).
 4. Save.
 
-GitHub Pages does not run accounts. Leaving it on can keep serving an older copy. Coaches should use `https://hockey.derekbraid.com/`. The `….github.io` address will stop.
+GitHub Pages does not run accounts. Publishing the repository root also publishes the API source and the database schema. Leave Pages off. Coaches should use `https://hockey.derekbraid.com/`.
 
-Do not point `hockey.derekbraid.com` at this repo’s Pages site. The domain stays on this Vercel project, through the DNSimple CNAME in step 7.
+Do not point `hockey.derekbraid.com` at this repo’s Pages site. The domain stays on this Vercel project, through the DNSimple CNAME in step 7. If you ever want a static fallback, publish the `public/` folder the build creates, not the repository root.
 
 ## If something is off
 
@@ -173,3 +175,16 @@ Do not point `hockey.derekbraid.com` at this repo’s Pages site. The domain sta
 **Save says it could not reach the database.** The migration in step 2 did not run, or `DATABASE_URL` is missing. Run the SQL file in Neon and redeploy.
 
 **A coach can see someone else’s plan.** They should not. Plans are loaded with the signed-in coach’s id on the server. If you ever see that, do not keep using that deploy. Write down the address and the time.
+
+## Security settings only you can change
+
+These are not in the repo. After this deploy:
+
+1. **Vercel → Project Settings → Build and Deployment.** Output Directory must be `public`. If an override is saved in the dashboard, change it to `public` and redeploy. The dashboard value wins over `vercel.json`.
+2. **Vercel → Deployment Protection.** Turn protection on for Preview deployments. Do not copy production `DATABASE_URL`, `AUTH_SECRET`, or the Google and Resend secrets into Preview unless those preview URLs are locked. A public preview is another copy of the app.
+3. **Google Cloud → OAuth consent screen.** Keep the scopes to email, profile, and openid. While the app is in Testing, only listed test users can sign in. Publish the consent screen when any coach should be able to use Google. Add both redirect URIs from step 3 if they are not there yet.
+4. **Neon.** The integration role owns the database. When you want a smaller app login, follow the comments in `db/least-privilege.sql`, then point the Vercel `DATABASE_URL` at that role and redeploy. Keep running migrations as the owner in the SQL editor.
+5. **Sign in again** on hockey.derekbraid.com after this deploy. The session cookie name changed, so the old cookie stops working. You do not need to rotate `AUTH_SECRET`, the Google client secret, the Resend key, or `DATABASE_URL` because of this review. Nothing secret was found in git history.
+6. Do not set `EMAIL_DELIVERY` on Vercel. That switch prints magic links instead of sending them, and production ignores it.
+
+A coach deletes their account from **My plans**. That removes the profile and every saved plan.

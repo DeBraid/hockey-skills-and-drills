@@ -874,6 +874,7 @@
     if (!next) return fallback;
     try {
       var url = new URL(next, rootUrl);
+      if (url.protocol !== "https:" && url.protocol !== "http:") return fallback;
       if (url.origin !== rootUrl.origin) return fallback;
       var rootPath = rootUrl.pathname;
       if (rootPath !== "/" && url.pathname.indexOf(rootPath) !== 0) return fallback;
@@ -1029,10 +1030,11 @@
     chip.className = "account-chip";
     chip.href = new URL("account/", rootUrl).href;
     chip.setAttribute("aria-label", label);
-    if (user.image) {
+    var avatar = safeAvatar(user.image);
+    if (avatar) {
       var img = document.createElement("img");
       img.className = "avatar";
-      img.src = user.image;
+      img.src = avatar;
       img.alt = "";
       img.referrerPolicy = "no-referrer";
       chip.appendChild(img);
@@ -1082,12 +1084,14 @@
     var importYes = document.getElementById("account-import-yes");
     var importNo = document.getElementById("account-import-no");
     var signOutBtn = document.getElementById("account-signout");
+    var deleteBtn = document.getElementById("account-delete");
 
     if (googleBtn) {
       googleBtn.addEventListener("click", function () {
         googleBtn.disabled = true;
         authPost("signin/google", { callbackUrl: safeNext() }).then(function (data) {
-          if (data.url) window.location.href = data.url;
+          var target = data && data.url ? safeHttpUrl(data.url) : "";
+          if (target) window.location.href = target;
           else {
             googleBtn.disabled = false;
             if (status) status.textContent = "Google sign-in did not start. Try again.";
@@ -1108,6 +1112,10 @@
         if (submit) submit.disabled = true;
         authPost("signin/resend", { email: email, callbackUrl: safeNext() }).then(function (data) {
           if (submit) submit.disabled = false;
+          if (data && data.error) {
+            if (status) status.textContent = String(data.error).slice(0, 200);
+            return;
+          }
           if (data.url && data.url.indexOf("verify-request") === -1 && data.url.indexOf("error=") !== -1) {
             if (status) status.textContent = "Could not send the sign-in email.";
             return;
@@ -1122,12 +1130,38 @@
 
     if (importYes) importYes.addEventListener("click", function () { importLocalPlan(importBanner); });
     if (importNo) importNo.addEventListener("click", function () { dismissImport(importBanner); });
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", function () {
+        var typed = window.prompt("This deletes your account and every saved plan. Type delete to confirm.");
+        if (typed !== "delete") {
+          if (typed && status) status.textContent = "Account was not deleted.";
+          return;
+        }
+        deleteBtn.disabled = true;
+        fetchJson(apiUrl("api/account"), {
+          method: "DELETE",
+          body: JSON.stringify({ confirm: "delete my account" })
+        }).then(function (result) {
+          if (!result.ok) {
+            deleteBtn.disabled = false;
+            if (status) status.textContent = (result.data && result.data.error) || "Could not delete the account.";
+            return;
+          }
+          window.location.href = new URL("account/", rootUrl).href;
+        }, function () {
+          deleteBtn.disabled = false;
+          if (status) status.textContent = "Could not reach your account.";
+        });
+      });
+    }
+
     if (signOutBtn) {
       signOutBtn.addEventListener("click", function () {
         signOutBtn.disabled = true;
         var accountHome = new URL("account/", rootUrl).href;
         authPost("signout", { callbackUrl: accountHome }).then(function (data) {
-          window.location.href = cleanPageUrl(data.url || accountHome);
+          var next = sameOriginUrl(data && data.url) || accountHome;
+          window.location.href = cleanPageUrl(next);
         }, function () {
           signOutBtn.disabled = false;
           if (status) status.textContent = "Could not sign out. Try again.";
@@ -1335,7 +1369,41 @@
     if (code === "Verification") return "That sign-in link expired or was already used. Request a new one.";
     if (code === "AccessDenied") return "That sign-in was cancelled.";
     if (code === "Configuration") return "Sign-in is not set up yet.";
+    if (code === "OAuthAccountNotLinked") return "An account with that email already exists. Sign in the same way you did the first time.";
     return "Sign-in did not work. Try again.";
+  }
+
+  function safeHttpUrl(url) {
+    try {
+      var parsed = new URL(url, rootUrl);
+      if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return "";
+      return parsed.href;
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function sameOriginUrl(url) {
+    var parsed = safeHttpUrl(url);
+    if (!parsed) return "";
+    try {
+      if (new URL(parsed).origin !== rootUrl.origin) return "";
+    } catch (error) {
+      return "";
+    }
+    return parsed;
+  }
+
+  function safeAvatar(url) {
+    try {
+      var parsed = new URL(url);
+      if (parsed.protocol !== "https:") return "";
+      var host = parsed.hostname.toLowerCase();
+      if (host === "lh3.googleusercontent.com" || host.endsWith(".googleusercontent.com")) return parsed.href;
+    } catch (error) {
+      return "";
+    }
+    return "";
   }
 
   function authPost(action, fields) {

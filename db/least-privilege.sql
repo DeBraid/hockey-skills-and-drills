@@ -1,0 +1,18 @@
+-- Optional. Run this in the Neon SQL editor as the database owner.
+-- Do not commit a real password. The app role can read and write rows.
+-- It cannot drop tables or read other databases.
+-- Keep using the owner role only in the SQL editor when applying migrations.
+-- Then set the Vercel DATABASE_URL to this role's connection string and redeploy.
+--
+-- Replace neondb if the Neon dashboard shows a different database name.
+-- Replace the password with a long random string (password manager or openssl rand -base64 32).
+
+-- CREATE ROLE hsd_app LOGIN PASSWORD 'replace-with-a-long-random-password';
+-- GRANT CONNECT ON DATABASE neondb TO hsd_app;
+-- GRANT USAGE ON SCHEMA public TO hsd_app;
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO hsd_app;
+-- GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO hsd_app;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA public
+--   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO hsd_app;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA public
+--   GRANT USAGE, SELECT ON SEQUENCES TO hsd_app;

@@ -9,8 +9,8 @@ if (!connectionString) {
   process.exit(1)
 }
 
-const file = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "db", "migrations", "001_init.sql")
-const sql = fs.readFileSync(file, "utf8")
+const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "db", "migrations")
+const files = fs.readdirSync(dir).filter((name) => name.endsWith(".sql")).sort()
 const pool = new pg.Pool({
   connectionString,
   max: 1,
@@ -18,8 +18,11 @@ const pool = new pg.Pool({
 })
 
 try {
-  await pool.query(sql)
-  console.log("Migration applied: db/migrations/001_init.sql")
+  for (const name of files) {
+    const sql = fs.readFileSync(path.join(dir, name), "utf8")
+    await pool.query(sql)
+    console.log(`Migration applied: db/migrations/${name}`)
+  }
 } catch (error) {
   console.error(error instanceof Error ? error.message : error)
   process.exitCode = 1
@@ -30,7 +33,7 @@ try {
 function sslFor(value) {
   try {
     const host = new URL(value).hostname
-    if (host.includes("neon.tech")) return { rejectUnauthorized: false }
+    if (host.includes("neon.tech")) return { rejectUnauthorized: true }
   } catch {
     return undefined
   }
