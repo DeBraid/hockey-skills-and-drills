@@ -29,5 +29,5 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 ## Related drills
 
-- [Olympic Breakout Pass](olympic-breakout-pass.md)
+- [Olympic Breakout to 2-on-1](olympic-breakout-pass.md)
 
