@@ -32,4 +32,5 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 - [Low-to-High: D Shot](low-to-high-shot.md)
 - [Low-to-High: D-to-D](low-to-high-d-to-d.md)
+- [Zone Entries: Delay](zone-entry-delay.md)
 

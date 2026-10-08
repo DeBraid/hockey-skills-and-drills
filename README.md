@@ -168,6 +168,62 @@ A backup when you run out of nets: defend a cone instead. 1 on 1 around a faceof
 
 [Note](drills/defend-the-cone.md) · [Drill page](drills/defend-the-cone/index.html) · [Animation](media/defend-the-cone/defend-the-cone-anim.html) · [PNG](media/defend-the-cone/defend-the-cone.png) · [Excalidraw](media/defend-the-cone/defend-the-cone.excalidraw)
 
+### [1-on-1 Shooting Warm-up to 2-on-1](drills/one-on-one-shooting-to-two-on-one.md)
+
+A full-ice shooting warm-up. Lines start in opposite corners. A player leaves one corner skating hard, gets a hard pass from the front of the far line, goes in and shoots. The passer then leaves and gets a pass from the other corner. Progression: a 2-on-1 off the same pattern.
+
+**Tags:** `full-ice`, `passing`, `shooting`
+
+[Note](drills/one-on-one-shooting-to-two-on-one.md) · [Drill page](drills/one-on-one-shooting-to-two-on-one/index.html) · [Animation](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one-anim.html) · [PNG](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png) · [Excalidraw](media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw)
+
+### [Mirror Angling 2v1](drills/mirror-angling-2v1.md)
+
+A half-ice station. The F carries a loop around the cones while the D mirrors around the cone at the faceoff dot, working on angling. Then a second F joins and it's a quick 2v1 on net. Both attackers drive the net; the puck carrier can pass, shoot or delay on the wall. Uses 2 D and 4-6 F.
+
+**Tags:** `small-area-game`, `defence`
+
+[Note](drills/mirror-angling-2v1.md) · [Drill page](drills/mirror-angling-2v1/index.html) · [Animation](media/mirror-angling-2v1/mirror-angling-2v1-anim.html) · [PNG](media/mirror-angling-2v1/mirror-angling-2v1.png) · [Excalidraw](media/mirror-angling-2v1/mirror-angling-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=PNj_Sj_tq-88-kGwGPLcF,9-JRM9DgIdxbd56pxisUjw)
+
+### [1v1 Puck Race to 2v1](drills/puck-race-1v1-to-2v1.md)
+
+Two players start side by side and race for a puck rimmed into the corner. The winner retrieves it and starts the attack with a low-to-high pass to a high player; the loser becomes the D. Then it's a 2v1 on net.
+
+**Tags:** `small-area-game`, `defence`, `passing`
+
+[Note](drills/puck-race-1v1-to-2v1.md) · [Drill page](drills/puck-race-1v1-to-2v1/index.html) · [Animation](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1-anim.html) · [PNG](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.png) · [Excalidraw](media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=KL4tW9041BEB-XQh7Xgmf,-zxqXq6WmGDGtFSI1gIOYw)
+
+### [Rebounds: In-tight Hands](drills/rebounds-in-tight.md)
+
+A net-front station with small nets. Two cones sit on either side of the net. Facing the net, the player banks the puck off the net, gathers it in tight and shoots. A coach or the next player in line can bank it instead. 2-3 players per net.
+
+**Tags:** `shooting`
+
+[Note](drills/rebounds-in-tight.md) · [Drill page](drills/rebounds-in-tight/index.html) · [Animation](media/rebounds-in-tight/rebounds-in-tight-anim.html) · [PNG](media/rebounds-in-tight/rebounds-in-tight.png) · [Excalidraw](media/rebounds-in-tight/rebounds-in-tight.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=u4NG-OQpm0b38sXS58YqP,Pr1iaBNiW94fWT4ydVqC0A)
+
+### [Goalie Rebound Game](drills/goalie-rebound-game.md)
+
+A goalie game for rebound control. Two nets sit side by side, each with a goalie. The coach shoots on one goalie, who tries to deflect the rebound into the other goalie's net. Switch nets after 5-10 shots and keep score.
+
+**Tags:** `small-area-game`, `shooting`
+
+[Note](drills/goalie-rebound-game.md) · [Drill page](drills/goalie-rebound-game/index.html) · [Animation](media/goalie-rebound-game/goalie-rebound-game-anim.html) · [PNG](media/goalie-rebound-game/goalie-rebound-game.png) · [Excalidraw](media/goalie-rebound-game/goalie-rebound-game.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=kNeWmKZpnBiY3kItD8jnG,jPaA7y939n9TMuOjUR1B2A)
+
+### [Rondo Passing Progressions](drills/rondo-passing.md)
+
+A small-area passing game. 4-5 passers around a 20x20 ft circle (a faceoff circle works) keep the puck away from 1-2 defenders in the middle. A defender who intercepts swaps with the passer. Rotate defenders every 30-60 seconds; points for 5+ passes in a row. Build it up through the progressions.
+
+**Tags:** `passing`, `small-area-game`
+
+[Note](drills/rondo-passing.md) · [Drill page](drills/rondo-passing/index.html) · [Animation](media/rondo-passing/rondo-passing-anim.html) · [PNG](media/rondo-passing/rondo-passing.png) · [Excalidraw](media/rondo-passing/rondo-passing.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=1iQYrQZ1I5S0RjrQhcTch,13-N7oyKVGGFOjJQSDirxg)
+
+### [Zone Entries: Delay](drills/zone-entry-delay.md)
+
+Two delay variations of the zone entry. Delay: carry in wide, stop and curl back up the wall to buy time, then attack the net. Delay, low-to-slot (dynamic): carry in and delay, then hit a catcher streaking to the net for a catch-and-shoot from the slot. The other two variations in this progression match Low-to-High: Give-and-Go and Low-to-High: D-to-D. Can also be run in the neutral zone or on small ice.
+
+**Tags:** `zone-entry`, `half-ice`, `passing`, `shooting`
+
+[Note](drills/zone-entry-delay.md) · [Drill page](drills/zone-entry-delay/index.html) · [Animation](media/zone-entry-delay/zone-entry-delay-anim.html) · [PNG](media/zone-entry-delay/zone-entry-delay.png) · [Excalidraw](media/zone-entry-delay/zone-entry-delay.excalidraw) · [Edit in Excalidraw](https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ)
+
 
 ## Add a drill
 

@@ -59,7 +59,7 @@
         "The defence catches and shoots. Drive to the front of the net for a tip or a rebound.",
         "Leave the net and return to the back of the line. The next forward goes."
       ],
-      "related": ["low-to-high-give-and-go", "low-to-high-d-to-d"]
+      "related": ["low-to-high-give-and-go", "low-to-high-d-to-d", "zone-entry-delay"]
     },
     {
       "slug": "low-to-high-give-and-go",
@@ -84,7 +84,7 @@
         "Defence passes the puck back to the forward on that cut.",
         "The forward shoots, then returns to the back of the line."
       ],
-      "related": ["low-to-high-shot", "low-to-high-d-to-d"]
+      "related": ["low-to-high-shot", "low-to-high-d-to-d", "zone-entry-delay"]
     },
     {
       "slug": "low-to-high-d-to-d",
@@ -109,7 +109,7 @@
         "Top defence shoots. The forward drives the net and screens the goalie.",
         "Clear the front of the net and return to the back of the line."
       ],
-      "related": ["low-to-high-shot", "low-to-high-give-and-go"]
+      "related": ["low-to-high-shot", "low-to-high-give-and-go", "zone-entry-delay"]
     },
     {
       "slug": "one-up-one-down",
@@ -460,6 +460,174 @@
         "Swap: the attacker joins the defender line and the defender joins the attack line."
       ],
       "related": []
+    },
+    {
+      "slug": "one-on-one-shooting-to-two-on-one",
+      "title": "1-on-1 Shooting Warm-up to 2-on-1",
+      "subtitle": "Lines in opposite corners. Skate hard, take a pass from the far corner, go in and shoot. The passer goes next. Progress to a 2-on-1.",
+      "blurb": "A full-ice shooting warm-up. Lines start in opposite corners. A player leaves one corner skating hard, gets a hard pass from the front of the far line, goes in and shoots. The passer then leaves and gets a pass from the other corner. Progression: a 2-on-1 off the same pattern.",
+      "diagramAlt": "Full-ice diagram of 1-on-1 Shooting Warm-up. Lines sit in the bottom-left and top-right corners. The left player skates up the middle, takes a pass from the right corner, carries in and shoots on the right goalie. Then the right player skates out, takes a pass from the left corner, and shoots on the left goalie. Shooters join the line in the corner they shot from.",
+      "tags": ["full-ice", "passing", "shooting"],
+      "coachingPoints": [
+        "Skate hard out of the corner and show a target with your stick.",
+        "Passer: hard, flat pass in front of the skater, not at their feet.",
+        "Catch it in stride and keep your feet moving into the zone.",
+        "Shoot to score, then follow it for the rebound.",
+        "2-on-1: the D has a head start; the F's go when the D reaches the blue line."
+      ],
+      "steps": [
+        "Split the group into two lines in opposite corners, with pucks at each line. A goalie in each net.",
+        "The front of one line skates hard out of the corner. The front of the far line hits them with a hard pass.",
+        "The skater carries in and shoots on the far goalie, then joins the line in that corner.",
+        "The passer goes next: skate out and take a pass from the other corner, then go in and shoot.",
+        "Progression (2-on-1): send three players toward centre. The leader is a D with a head start; the F's go when the D reaches the blue line. The D takes the pass and drops it to an F, then it's a 2-on-1 the other way."
+      ],
+      "excalidrawUrl": "https://excalidraw.com/#json=2xlS1tKKB3HOahKDD5QQ-,axKcPi8lBktI4T_JRWBTXw",
+      "related": []
+    },
+    {
+      "slug": "mirror-angling-2v1",
+      "title": "Mirror Angling 2v1",
+      "subtitle": "F loops the cones while the D mirrors around the dot, then a quick 2v1 rush. Both attackers drive the net.",
+      "blurb": "A half-ice station. The F carries a loop around the cones while the D mirrors around the cone at the faceoff dot, working on angling. Then a second F joins and it's a quick 2v1 on net. Both attackers drive the net; the puck carrier can pass, shoot or delay on the wall. Uses 2 D and 4-6 F.",
+      "diagramAlt": "Zone diagram of Mirror Angling 2v1. An F line at the top of the circle and an X line at the dot. The F loops cone 1 and rounds cone 2 toward the boards while the X mirrors around the cone below the dot and angles the carrier toward the wall. A second F drives the net, the carrier passes to them, and they shoot on the goalie.",
+      "tags": ["small-area-game", "defence"],
+      "coachingPoints": [
+        "D: mirror the carrier, keep your stick on the ice, and angle them to the boards.",
+        "Close the gap with your feet, not a reach. Take away the middle.",
+        "F: protect the puck through the cones and keep your feet moving.",
+        "2v1: both attackers drive the net. Carrier reads the D: pass, shoot or delay on the wall.",
+        "Quick reps: one rush, then the next group."
+      ],
+      "steps": [
+        "Set three cones: one below the faceoff dot for the D, and two by the F line. F's line up at the top of the circle with pucks; D's line up at the dot.",
+        "The F carries a loop around the first cone while the D pivots around the cone by the dot, mirroring the F.",
+        "The F rounds the second cone and cuts toward the net along the wall. The D angles them toward the boards.",
+        "A second F drives the net. It's 2v1: the carrier can pass, shoot or delay on the wall.",
+        "Play it out, then everyone returns to their line and the next group goes."
+      ],
+      "excalidrawUrl": "https://excalidraw.com/#json=PNj_Sj_tq-88-kGwGPLcF,9-JRM9DgIdxbd56pxisUjw",
+      "related": []
+    },
+    {
+      "slug": "puck-race-1v1-to-2v1",
+      "title": "1v1 Puck Race to 2v1",
+      "subtitle": "Two players race for the puck. The winner attacks with a low-to-high pass; the loser defends the 2v1.",
+      "blurb": "Two players start side by side and race for a puck rimmed into the corner. The winner retrieves it and starts the attack with a low-to-high pass to a high player; the loser becomes the D. Then it's a 2v1 on net.",
+      "diagramAlt": "Zone diagram of 1v1 Puck Race to 2v1. A coach behind the net rims a puck into the corner. Two players start side by side near the net and race for it. The winner carries up the wall and passes low-to-high to a player at the top of the circle by a cone, who carries to the slot and shoots while the winner drives the net. The loser defends.",
+      "tags": ["small-area-game", "defence", "passing"],
+      "coachingPoints": [
+        "Race: first three strides hard, and win body position on the puck.",
+        "Winner: protect the puck on the wall, then look up for the low-to-high pass.",
+        "High player: be ready, stick on the ice, and attack the net after the catch.",
+        "Loser: recover fast and defend the 2v1. Take away the pass and let the goalie have the shooter.",
+        "Attackers: drive the net for rebounds."
+      ],
+      "steps": [
+        "Two players start side by side near the net. A high player waits at the top of the circle by a cone. The coach has pucks behind the net.",
+        "The coach rims a puck into the corner and both players race for it.",
+        "The winner retrieves the puck and carries up the wall.",
+        "The winner passes low-to-high to the high player.",
+        "The high player attacks and shoots while the winner drives the net. The loser defends the 2v1. Play it out, then the next pair goes."
+      ],
+      "excalidrawUrl": "https://excalidraw.com/#json=KL4tW9041BEB-XQh7Xgmf,-zxqXq6WmGDGtFSI1gIOYw",
+      "related": []
+    },
+    {
+      "slug": "rebounds-in-tight",
+      "title": "Rebounds: In-tight Hands",
+      "subtitle": "Small nets with a cone on each side. Bank the puck off the net, gather it in tight and shoot.",
+      "blurb": "A net-front station with small nets. Two cones sit on either side of the net. Facing the net, the player banks the puck off the net, gathers it in tight and shoots. A coach or the next player in line can bank it instead. 2-3 players per net.",
+      "diagramAlt": "Zone diagram of Rebounds: In-tight Hands. Small nets sit at the bottom of the faceoff circles with a cone on each side. The front of the line passes the puck off the post, skates in to gather it beside the net, and shoots into the small net, then returns to the back of the line.",
+      "tags": ["shooting"],
+      "coachingPoints": [
+        "Soft hands: cushion the puck as it comes off the net.",
+        "Quick release in tight. Don't wind up.",
+        "Stay low with your stick on the ice, ready for the bounce.",
+        "Shoot to score: look for the open side, high or low.",
+        "Keep it moving: 2-3 players per net, lots of reps."
+      ],
+      "steps": [
+        "Set up small nets with a cone on each side. 2-3 players per net, pucks at the line.",
+        "Facing the net, the front of the line banks the puck off the net (or a coach/partner banks it).",
+        "Gather the rebound in tight beside the net.",
+        "Shoot quickly into the small net.",
+        "Back of the line. The next player goes."
+      ],
+      "excalidrawUrl": "https://excalidraw.com/#json=u4NG-OQpm0b38sXS58YqP,Pr1iaBNiW94fWT4ydVqC0A",
+      "related": []
+    },
+    {
+      "slug": "goalie-rebound-game",
+      "title": "Goalie Rebound Game",
+      "subtitle": "The coach shoots on one goalie. That goalie tries to steer the rebound into the other goalie's net.",
+      "blurb": "A goalie game for rebound control. Two nets sit side by side, each with a goalie. The coach shoots on one goalie, who tries to deflect the rebound into the other goalie's net. Switch nets after 5-10 shots and keep score.",
+      "diagramAlt": "Zone diagram of Goalie Rebound Game. Two nets sit side by side along the top of the zone, each with a goalie. The coach shoots from the circle at the right net, and that goalie steers the rebound toward the left net.",
+      "tags": ["small-area-game", "shooting"],
+      "coachingPoints": [
+        "Goalies: square up to the shooter and track the puck all the way in.",
+        "Control the rebound with your pads and stick. Steer it, don't just block it.",
+        "Recover fast: the other goalie can fire one back.",
+        "Coach: vary the shots (low to the pads, glove side, blocker side)."
+      ],
+      "steps": [
+        "Put two nets side by side, each with a goalie. The coach has pucks out front.",
+        "The coach shoots on one goalie.",
+        "That goalie tries to direct the rebound into the other goalie's net.",
+        "Alternate which goalie gets the shot.",
+        "Scoring: each goalie starts on 10. Lose 1 for a direct goal against you and 2 for a rebound steered into your net. First to 0 loses. Switch nets after 5-10 shots."
+      ],
+      "excalidrawUrl": "https://excalidraw.com/#json=kNeWmKZpnBiY3kItD8jnG,jPaA7y939n9TMuOjUR1B2A",
+      "related": []
+    },
+    {
+      "slug": "rondo-passing",
+      "title": "Rondo Passing Progressions",
+      "subtitle": "Groups of 5-7 in a small circle: passers keep the puck away from a defender in the middle. Steal it and you swap.",
+      "blurb": "A small-area passing game. 4-5 passers around a 20x20 ft circle (a faceoff circle works) keep the puck away from 1-2 defenders in the middle. A defender who intercepts swaps with the passer. Rotate defenders every 30-60 seconds; points for 5+ passes in a row. Build it up through the progressions.",
+      "diagramAlt": "Zone diagram of Rondo Passing. Five passers stand around a faceoff circle with one X defender in the middle. The puck goes from passer to passer across and around the circle, and the X intercepts the fourth pass. The X then takes that passer's spot and the passer moves to the middle.",
+      "tags": ["passing", "small-area-game"],
+      "coachingPoints": [
+        "Head up: know where your next pass is going before the puck arrives.",
+        "Quick, flat passes. Move the puck before the defender closes.",
+        "Show a target with your stick and give the passer an option.",
+        "Defender: take away the middle pass with your stick and body.",
+        "Count passes out loud: 5+ in a row scores a point."
+      ],
+      "steps": [
+        "Groups of 5-7. 4-5 passers around a small circle (20x20 ft, or a faceoff circle) and 1-2 defenders in the middle.",
+        "Progression 1: pass around the circle with no defender.",
+        "Progression 2: one puck, follow your pass. Then two pucks, follow your pass.",
+        "Progression 3: one puck and one defender. If the defender intercepts, they swap with the passer.",
+        "Progression 4: two defenders, one puck. Rotate defenders every 30-60 seconds; 5+ passes in a row scores a point."
+      ],
+      "excalidrawUrl": "https://excalidraw.com/#json=1iQYrQZ1I5S0RjrQhcTch,13-N7oyKVGGFOjJQSDirxg",
+      "related": []
+    },
+    {
+      "slug": "zone-entry-delay",
+      "title": "Zone Entries: Delay",
+      "subtitle": "Carry in wide, delay on the wall, then attack (top) or hit a catcher streaking to the slot (bottom).",
+      "blurb": "Two delay variations of the zone entry. Delay: carry in wide, stop and curl back up the wall to buy time, then attack the net. Delay, low-to-slot (dynamic): carry in and delay, then hit a catcher streaking to the net for a catch-and-shoot from the slot. The other two variations in this progression match Low-to-High: Give-and-Go and Low-to-High: D-to-D. Can also be run in the neutral zone or on small ice.",
+      "diagramAlt": "Half-ice diagram of Zone Entries: Delay. Top: a forward carries wide over the blue line, curls back up the wall to delay, then cuts to the slot and shoots. Bottom: a forward carries wide and curls to delay while a catcher skates in from the neutral zone and streaks to the net; the carrier passes to the catcher, who shoots from the slot.",
+      "tags": ["zone-entry", "half-ice", "passing", "shooting"],
+      "coachingPoints": [
+        "Carry in wide with speed to push the D back.",
+        "Delay: stop and curl hard with the puck on your forehand, protecting it from the D.",
+        "Head up during the curl: look for the attack lane or the late player.",
+        "Catcher: time your streak so you hit the slot with speed, stick on the ice.",
+        "Pass to the stick in the slot; catch and shoot quickly."
+      ],
+      "steps": [
+        "Lines of forwards with pucks at the boards in the neutral zone. For the low-to-slot variation, a catcher line waits in the middle.",
+        "Delay (top): carry in wide over the blue line.",
+        "Stop and curl back up the wall to delay.",
+        "Attack: cut to the slot and shoot.",
+        "Delay, low-to-slot (bottom): carry in wide and delay the same way. The catcher streaks to the net; the carrier passes to the slot and the catcher shoots.",
+        "The other two variations in this progression (delay, low-to-high to the slot; delay, low-to-high to the D) match Low-to-High: Give-and-Go and Low-to-High: D-to-D."
+      ],
+      "related": ["low-to-high-give-and-go", "low-to-high-d-to-d", "low-to-high-shot"],
+      "excalidrawUrl": "https://excalidraw.com/#json=TJzl0IijD_CzkKYm4eW1D,6A0X16BgbiGJhEK0to_aoQ"
     }
   ]
 }
