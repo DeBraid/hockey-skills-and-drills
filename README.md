@@ -294,6 +294,30 @@ A simple pivot drill. Players skate a figure-8 around the two end-zone circles: 
 
 [Note](drills/figure-8-pivots.md) · [Drill page](drills/figure-8-pivots/) · [Animation](media/figure-8-pivots/figure-8-pivots-anim.html) · [PNG](media/figure-8-pivots/figure-8-pivots.png) · [Excalidraw](media/figure-8-pivots/figure-8-pivots.excalidraw)
 
+### [Full-Ice Figure-8 Shooting](drills/full-ice-figure-8-shot.md)
+
+A full-ice skating drill with a puck and a shot. Each player carries up the wall, swings through centre ice, curls around the far circle and cuts to the net to shoot. Lines in opposite corners go at the same time, so the two paths make a figure-8 through the middle.
+
+**Tags:** `full-ice`, `skating`, `shooting`
+
+[Note](drills/full-ice-figure-8-shot.md) · [Drill page](drills/full-ice-figure-8-shot/) · [Animation](media/full-ice-figure-8-shot/full-ice-figure-8-shot-anim.html) · [PNG](media/full-ice-figure-8-shot/full-ice-figure-8-shot.png) · [Excalidraw](media/full-ice-figure-8-shot/full-ice-figure-8-shot.excalidraw)
+
+### [Two-Line 2-on-0 Flow](drills/two-line-2-on-0-flow.md)
+
+Partners pass back and forth in two lanes the whole length of the ice, then attack 2-on-0: the winger passes to the centre in the middle for the shot and drives the net. A pair from the other end goes at the same time on the other half of the ice, so everyone stays busy.
+
+**Tags:** `full-ice`, `passing`, `shooting`
+
+[Note](drills/two-line-2-on-0-flow.md) · [Drill page](drills/two-line-2-on-0-flow/) · [Animation](media/two-line-2-on-0-flow/two-line-2-on-0-flow-anim.html) · [PNG](media/two-line-2-on-0-flow/two-line-2-on-0-flow.png) · [Excalidraw](media/two-line-2-on-0-flow/two-line-2-on-0-flow.excalidraw)
+
+### [Breakout to 1-on-1](drills/breakout-to-1-on-1.md)
+
+A breakout pass that turns into a full-length 1-on-1. The D skates the puck out of the corner and passes to the forward on the wall, then pivots and skates backward. The forward carries up the ice and tries to beat the D for a shot on the far goalie.
+
+**Tags:** `full-ice`, `breakout`, `passing`, `defence`, `shooting`
+
+[Note](drills/breakout-to-1-on-1.md) · [Drill page](drills/breakout-to-1-on-1/) · [Animation](media/breakout-to-1-on-1/breakout-to-1-on-1-anim.html) · [PNG](media/breakout-to-1-on-1/breakout-to-1-on-1.png) · [Excalidraw](media/breakout-to-1-on-1/breakout-to-1-on-1.excalidraw)
+
 
 ## Add a drill
 
