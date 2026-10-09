@@ -702,6 +702,27 @@ main {
   font-weight: 600;
 }
 
+.site-footer .footer-links {
+  font-size: 0.9rem;
+}
+
+.site-footer .footer-links a {
+  font-weight: 500;
+}
+
+.legal-page h2 {
+  margin-top: 1.75rem;
+  font-size: 1.2rem;
+}
+
+.legal-page ul {
+  padding-left: 1.25rem;
+}
+
+.legal-page li {
+  margin: 0.4rem 0;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

@@ -210,6 +210,7 @@ def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: s
   <footer class="site-footer">
     <div class="wrap">
       <p>Hockey Skills &amp; Drills</p>
+      <p class="footer-links"><a href="{prefix}privacy/">Privacy</a> · <a href="{prefix}terms/">Terms</a></p>
     </div>
   </footer>
   <script src="{prefix}js/site.js"></script>
@@ -592,6 +593,108 @@ def write_account() -> None:
     (out / "index.html").write_text(page_shell(title, "../", body, page="account"), encoding="utf-8")
 
 
+CONTACT_EMAIL = "de.braid@gmail.com"
+LEGAL_EFFECTIVE = "October 9, 2026"
+
+PRIVACY_BODY = f"""  <main id="content" class="wrap-read legal-page">
+    <header class="drill-head">
+      <p class="kicker">Hockey Skills &amp; Drills</p>
+      <h1>Privacy policy</h1>
+      <p class="lede">Effective {LEGAL_EFFECTIVE}. This page explains what the site collects, why, and how to delete it.</p>
+    </header>
+
+    <h2>Who runs this site</h2>
+    <p>Hockey Skills &amp; Drills (hockey.derekbraid.com) is a free drill library run by Derek Braid in Ontario, Canada. Questions: <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>.</p>
+
+    <h2>You can use the site without an account</h2>
+    <p>Browsing drills and building a practice plan do not need an account. A plan you build without signing in stays in your browser's local storage. Share links contain the drill list, times, and plan title, but not your notes.</p>
+
+    <h2>If you sign in</h2>
+    <p>You can sign in with Google or, when it is turned on, with a sign-in link sent to your email. When you sign in we store:</p>
+    <ul>
+      <li>Your name, email address, and profile photo link from Google (or just your email address if you use an email link).</li>
+      <li>The account link Google returns at sign-in, including its sign-in tokens. We do not use them to access anything else in your Google account.</li>
+      <li>A session record and a secure sign-in cookie so you stay signed in, for up to 30 days.</li>
+      <li>The practice plans you save: titles, drills, times, and notes. Saved plans are visible only to you.</li>
+    </ul>
+
+    <h2>Google user data</h2>
+    <p>We ask Google only for your basic profile (name, email address, and profile photo) and use it only to sign you in and show who is signed in. We do not use it for ads, do not sell it, and do not share it with anyone except the service providers below that run the site. Hockey Skills &amp; Drills' use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+    <h2>Usage statistics</h2>
+    <ul>
+      <li><strong>Vercel Web Analytics</strong> counts page views in aggregate (pages, referring sites, country, device type). It sets no cookies.</li>
+      <li><strong>Our own event log</strong> counts actions like viewing a drill, adding a drill to a plan, saving, sharing, or printing a plan, and signing in. Each event has a random ID kept in your browser's local storage, and your account ID if you are signed in. We do not use cookies for this, and the log does not store your email, IP address, or browser details.</li>
+    </ul>
+
+    <h2>Security and abuse limits</h2>
+    <p>To stop abuse, the site counts sign-in emails and plan changes. Those counters store a one-way hash of your IP address, email address, or account ID, not the value itself, and are cleared after about a day.</p>
+
+    <h2>Cookies and browser storage</h2>
+    <p>The only cookies are the ones needed for sign-in (session, security check, and return page). The site keeps your unsaved plan and the random analytics ID in your browser's local storage. Clearing your browser data removes them.</p>
+
+    <h2>Who processes data for us</h2>
+    <ul>
+      <li><strong>Vercel</strong> hosts the site and runs the sign-in and plan features. Like any web host, it handles IP addresses to serve pages.</li>
+      <li><strong>Neon</strong> hosts the Postgres database that holds accounts, saved plans, and the event log.</li>
+      <li><strong>Google</strong> handles Google sign-in.</li>
+      <li><strong>Resend</strong> will send email sign-in links once email sign-in is turned on. It receives only your email address and the link.</li>
+    </ul>
+    <p>These providers may store data outside Canada, including in the United States.</p>
+
+    <h2>What we never do</h2>
+    <p>No ads, no selling or renting your data, and no sharing it for marketing.</p>
+
+    <h2>Delete your account</h2>
+    <p>Sign in, open <a href="../account/">My plans</a>, and tap <strong>Delete account and saved plans</strong>. That removes your profile, sign-in records, and every saved plan right away. Past usage events stay only as anonymous counts with your account ID removed. You can also email <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a> to ask for a copy or deletion of your data.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes, the new version will be posted here with a new effective date.</p>
+  </main>
+"""
+
+TERMS_BODY = f"""  <main id="content" class="wrap-read legal-page">
+    <header class="drill-head">
+      <p class="kicker">Hockey Skills &amp; Drills</p>
+      <h1>Terms of use</h1>
+      <p class="lede">Effective {LEGAL_EFFECTIVE}. By using the site you agree to these terms.</p>
+    </header>
+
+    <h2>A free coaching resource</h2>
+    <p>Hockey Skills &amp; Drills is a free drill library run by Derek Braid in Ontario, Canada. It is provided as is and may change or go offline at any time.</p>
+
+    <h2>Safety is the coach's job</h2>
+    <p>Drills are for general information only. Coaches are responsible for on-ice safety and supervision, and for choosing drills that suit their players' age, skill, and equipment. Follow your league's and Hockey Canada's safety rules.</p>
+
+    <h2>Accounts</h2>
+    <p>An account is optional and only saves your practice plans. Keep it to your own use. Accounts may be removed for abuse, such as attacking the site or using it to send spam. You can delete your account at any time from <a href="../account/">My plans</a>.</p>
+
+    <h2>Content</h2>
+    <p>The drills, diagrams, and animations are owned by Derek Braid. You may use them, print them, and share links to them for coaching your own teams. Please do not republish or sell them without permission.</p>
+
+    <h2>No warranty</h2>
+    <p>The site comes with no warranty of any kind. To the extent the law allows, Derek Braid is not liable for any injury, loss, or damage from using the site or its drills.</p>
+
+    <h2>Law</h2>
+    <p>These terms are governed by the laws of Ontario and the federal laws of Canada that apply there.</p>
+
+    <h2>Contact</h2>
+    <p><a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>. See also the <a href="../privacy/">privacy policy</a>.</p>
+  </main>
+"""
+
+
+def write_legal() -> None:
+    pages = (
+        ("privacy", "Privacy policy · Hockey Skills & Drills", PRIVACY_BODY),
+        ("terms", "Terms of use · Hockey Skills & Drills", TERMS_BODY),
+    )
+    for name, title, body in pages:
+        out = ROOT / name
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "index.html").write_text(page_shell(title, "../", body, page=name), encoding="utf-8")
+
+
 def local_targets(text: str) -> list[str]:
     targets = []
     for href, md in LINK_RE.findall(text):
@@ -608,6 +711,8 @@ def check_output(drills: list[dict]) -> None:
         ROOT / "README.md",
         ROOT / "plan" / "index.html",
         ROOT / "account" / "index.html",
+        ROOT / "privacy" / "index.html",
+        ROOT / "terms" / "index.html",
     ]
     for drill in drills:
         files.append(ROOT / "drills" / f"{drill['slug']}.md")
@@ -704,6 +809,8 @@ def check_output(drills: list[dict]) -> None:
         ROOT / "index.html",
         ROOT / "plan" / "index.html",
         ROOT / "account" / "index.html",
+        ROOT / "privacy" / "index.html",
+        ROOT / "terms" / "index.html",
     ]
     html_pages.extend(ROOT / "drills" / drill["slug"] / "index.html" for drill in drills)
     for html_path in html_pages:
@@ -714,6 +821,10 @@ def check_output(drills: list[dict]) -> None:
             raise SystemExit(f"{html_path.relative_to(ROOT)} is missing the Vercel Web Analytics script")
         if "/admin" in text:
             raise SystemExit(f"{html_path.relative_to(ROOT)} should not link the admin page")
+        if 'privacy/">Privacy</a>' not in text or 'terms/">Terms</a>' not in text:
+            raise SystemExit(f"{html_path.relative_to(ROOT)} is missing the Privacy and Terms footer links")
+        if "Fork or star" in text or "github.com" in text.lower():
+            raise SystemExit(f"{html_path.relative_to(ROOT)} should not link GitHub or offer edits")
 
 
 def publish_site() -> None:
@@ -727,7 +838,7 @@ def publish_site() -> None:
         if source.is_file():
             shutil.copy2(source, SITE / name)
     shutil.copy2(ROOT / "index.html", SITE / "index.html")
-    for name in ("plan", "account"):
+    for name in ("plan", "account", "privacy", "terms"):
         shutil.copytree(ROOT / name, SITE / name)
     drills = SITE / "drills"
     drills.mkdir()
@@ -762,6 +873,8 @@ def publish_site() -> None:
         SITE / "index.html",
         SITE / "plan" / "index.html",
         SITE / "account" / "index.html",
+        SITE / "privacy" / "index.html",
+        SITE / "terms" / "index.html",
         SITE / "js" / "site.js",
         SITE / "css" / "styles.css",
         SITE / "media" / "fonts" / "Virgil.woff2",
@@ -784,6 +897,7 @@ def main() -> None:
     write_readme(data["drills"], labels)
     write_plan(data, labels)
     write_account()
+    write_legal()
     check_output(data["drills"])
     publish_site()
     print(f"Built {len(data['drills'])} drills")
