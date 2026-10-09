@@ -9,7 +9,8 @@
     { "id": "defence", "label": "Defence" },
     { "id": "skating", "label": "Skating" },
     { "id": "breakout", "label": "Breakout" },
-    { "id": "small-area-game", "label": "Small-area game" }
+    { "id": "small-area-game", "label": "Small-area game" },
+    { "id": "stickhandling", "label": "Stickhandling" }
   ],
   "drills": [
     {
@@ -246,33 +247,36 @@
     {
       "slug": "crossover-circles",
       "title": "Crossover Circles Race",
-      "subtitle": "Lines on the dots near the blue line. Race into the zone, around the circle, take a long pass from your line, shoot. First goal wins.",
-      "blurb": "A skating race on the two end-zone faceoff circles. Each line stands on a neutral-zone faceoff dot near the blue line. One skater from each line races into the zone, around the circle with crossovers, takes a long pass from the next player on the blue-line dot, then curls in and shoots. First goal wins. For the pivot version, see Crossover Circles: Pivot Race.",
-      "diagramAlt": "Half-ice diagram of the Crossover Circles Race. A line stands on each neutral-zone faceoff dot near the blue line with pucks. One skater from each line skates into the zone, around the outside of the end-zone faceoff circle with crossovers, swings toward the middle, takes a long pass from the next player on the blue-line dot, curls in and shoots on the goalie. Both circles race at the same time.",
+      "subtitle": "Race around your circle with crossovers, then race to the one puck. Winner attacks, loser plays D. 1-on-1, shoot.",
+      "blurb": "A skating race on the two end-zone faceoff circles. Each line stands on a neutral-zone faceoff dot near the blue line, and there is ONE puck in the middle of the ice, halfway between the blue line and the tops of the circles. One skater from each line races into the zone and around their circle with crossovers, then exits the circle and races to the puck. The first one there attacks; the loser plays D. 1-on-1 to the net and shoot. For the pivot version, see Crossover Circles: Pivot Race.",
+      "diagramAlt": "Half-ice diagram of the Crossover Circles Race. A line stands on each neutral-zone faceoff dot near the blue line, and one puck lies in the middle of the ice halfway between the blue line and the tops of the circles. One skater from each line skates into the zone and all the way around the outside of their end-zone faceoff circle with crossovers. Both exit the circle and race to the puck. The winner picks it up and attacks the net; the other racer skates in and defends, skating backwards (dotted arrow). The attacker shoots on the goalie.",
       "tags": [
         "skating",
-        "passing",
+        "defence",
         "shooting"
       ],
       "excalidrawUrl": null,
       "coachingPoints": [
         "Knees bent and chest up. Push with the outside leg and cross the inside leg over.",
         "Lean into the circle and keep your stick on the ice.",
-        "Passer on the blue-line dot: a hard, flat pass ahead of the skater's stick.",
-        "Race, but catch the pass cleanly before you shoot.",
+        "Exit the circle at full speed and race to the puck.",
+        "Win the race? Protect the puck and attack the net.",
+        "Lose the race? You're the D. Get between the attacker and the net.",
         "Switch directions every round so both crossovers get work."
       ],
       "steps": [
-        "Split into two lines, one standing on each neutral-zone faceoff dot near the blue line with pucks.",
-        "Race! The front skater on each line skates into the zone and around their faceoff circle with crossovers.",
-        "Swing toward the middle and take a long pass from the next player on the blue-line dot.",
-        "Curl in and shoot. First goal wins.",
-        "The passer goes next and the shooter goes to the back of the line. Next round, go the other way.",
+        "Split into two lines, one standing on each neutral-zone faceoff dot near the blue line. The coach puts ONE puck in the middle of the ice, halfway between the blue line and the tops of the circles.",
+        "Race! The front skater on each line skates into the zone and all the way around their faceoff circle with crossovers.",
+        "Exit the circle and race to the puck.",
+        "The first one there picks it up and attacks. The other racer plays D.",
+        "1-on-1 to the net. Shoot!",
+        "Both racers go to the back of their line. The coach puts a new puck down. Next round, go the other way.",
         "Variation (step 2): see Crossover Circles: Pivot Race. One lap around the circle with a pivot at every cone, then race to one loose puck."
       ],
       "related": [
         "crossover-circles-pivots",
-        "figure-8-pivots"
+        "figure-8-pivots",
+        "tight-turns-dots"
       ]
     },
     {
@@ -1038,6 +1042,263 @@
         "d-to-wall-breakout",
         "one-up-one-down",
         "olympic-breakout-pass"
+      ]
+    },
+    {
+      "slug": "stickhandling-obstacle-course",
+      "title": "Stickhandling Obstacle Course",
+      "skillGroup": "Stickhandling",
+      "subtitle": "Weave the cones, pull the puck through the gate, puck under the stick, then shoot.",
+      "blurb": "A puck-control course in one zone. Skaters weave a line of cones, pull the puck through a two-cone gate, slide the puck under a raised stick and step over it, then curl into the slot and shoot. The next skater goes when the one ahead reaches the gate.",
+      "diagramAlt": "Zone diagram of the Stickhandling Obstacle Course. One line with pucks stands at the blue line near the bottom boards. The skater weaves through four cones along the bottom, turns up through a two-cone gate near the goal line, carries left between two cones where a stick is laid across, then curls into the slot and shoots on the goalie.",
+      "tags": [
+        "skating",
+        "stickhandling",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Soft hands: cup the puck, don't slap at it.",
+        "Eyes up between the cones. Feel the puck, don't stare at it.",
+        "Gate: pull the puck across your body, then push it through.",
+        "Stick: slide the puck under, step over, pick it up on the other side.",
+        "Finish strong: shoot in stride to score."
+      ],
+      "steps": [
+        "One line at the blue line with pucks. Set up 4 cones in a line, a 2-cone gate, and a stick resting across two cones.",
+        "Weave through the cones with the puck.",
+        "Pull the puck through the gate.",
+        "Slide the puck under the stick and step over it.",
+        "Curl into the slot and shoot. Go to the back of the line.",
+        "The next skater goes when the one ahead reaches the gate."
+      ],
+      "related": [
+        "cone-weave",
+        "cone-relay-with-pucks",
+        "sharks-and-minnows"
+      ]
+    },
+    {
+      "slug": "tight-turns-dots",
+      "title": "Tight Turns Around the Dots",
+      "skillGroup": "Skating",
+      "subtitle": "Skate the length of the ice and tight-turn all the way around 5 faceoff dots. No pucks first, then with pucks.",
+      "blurb": "A full-ice edge drill. Skaters start in the corner and skate the length of the ice, doing a full tight turn around five faceoff dots in a zig-zag: an end-zone dot, a neutral-zone dot, centre ice, the other neutral-zone dot, and the far end-zone dot. Run it without pucks first, then with pucks.",
+      "diagramAlt": "Full-ice diagram of Tight Turns Around the Dots. A line starts in the bottom-left corner. The skater does a full tight turn around a cone on the bottom-left end-zone dot, the top-left neutral-zone dot, the centre dot, the bottom-right neutral-zone dot and the top-right end-zone dot, then sprints to the far goal line.",
+      "tags": [
+        "full-ice",
+        "skating"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Knees bent, inside knee deep, lean into the turn.",
+        "Inside edge on the outside foot, outside edge on the inside foot.",
+        "Head and stick lead you around the dot.",
+        "Push out of the turn with crossovers.",
+        "With pucks: keep the puck on the inside of the turn, close to your feet."
+      ],
+      "steps": [
+        "Put a cone on 5 faceoff dots. One line starts in the corner.",
+        "Skate to dot 1 and tight-turn all the way around it.",
+        "Skate to dot 2 and tight-turn.",
+        "Tight-turn at centre ice (dot 3), then dot 4.",
+        "Tight-turn at dot 5 and sprint to the far goal line. Come back down the boards.",
+        "The next skater goes when the one ahead reaches dot 2. Then do it again with pucks."
+      ],
+      "related": [
+        "figure-8-pivots",
+        "cone-weave",
+        "crossover-circles"
+      ]
+    },
+    {
+      "slug": "explosive-starts-race",
+      "title": "Explosive Starts Race",
+      "skillGroup": "Skating",
+      "subtitle": "Race a partner from the goal line to the blue line. V-start first, then crossover start.",
+      "blurb": "A quick race for first-step speed. Two lines stand on the goal line. A pair races to the blue line using a V-start, then glides back along the boards. Next round the pair uses a crossover start, standing sideways and crossing over on the first step.",
+      "diagramAlt": "Zone diagram of the Explosive Starts Race. Two lines stand on the goal line, one on each side of the net. The front player of each line sprints straight to the blue line. Then they glide back along the boards to the back of their line.",
+      "tags": [
+        "skating"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "V-start: heels together, toes out, short quick steps.",
+        "Stay low and drive your knees forward.",
+        "Crossover start: stand sideways, first step crosses over toward where you're going.",
+        "Arms pump forward and back, not side to side.",
+        "Race to the line, don't coast."
+      ],
+      "steps": [
+        "Two lines on the goal line, one on each side of the net.",
+        "Round 1: V-start. The front pair races to the blue line.",
+        "Glide back along the boards to the back of your line.",
+        "Round 2: crossover start. Stand sideways and cross over on your first step.",
+        "Switch lines so you race from both sides."
+      ],
+      "related": [
+        "stops-and-starts",
+        "crossover-circles",
+        "backward-c-cuts"
+      ]
+    },
+    {
+      "slug": "backward-c-cuts",
+      "title": "Backward C-Cuts",
+      "skillGroup": "Skating",
+      "subtitle": "Waves skate backwards with C-cuts from the goal line to the far blue line. Variation: forwards to red, pivot, backwards.",
+      "blurb": "A full-ice backwards skating drill in waves. Four lanes start on the goal line and skate backwards with C-cuts to the far blue line, then glide back along the boards. Variation: skate forwards to the red line, pivot, then skate backwards to the far blue line.",
+      "diagramAlt": "Full-ice diagram of Backward C-Cuts. Four lanes of skaters start on the left goal line. Each skates backwards (dotted arrows) in a straight lane to the far blue line.",
+      "tags": [
+        "full-ice",
+        "skating"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Sit low like you're in a chair. Chest up, eyes up.",
+        "Push out in a C shape and pull your skate back under you.",
+        "Switch feet each push. Keep your shoulders square.",
+        "Stick on the ice in front of you.",
+        "Pivot: turn your hips, not just your shoulders, and keep your feet moving."
+      ],
+      "steps": [
+        "4 lanes on the goal line.",
+        "Skate backwards with C-cuts to the far blue line.",
+        "Glide back along the boards.",
+        "Variation: forwards to the red line, pivot, then backwards to the far blue line."
+      ],
+      "related": [
+        "figure-8-pivots",
+        "crossover-circles-pivots",
+        "lateral-step-overs"
+      ]
+    },
+    {
+      "slug": "triangle-passing-on-the-move",
+      "title": "Triangle Passing on the Move",
+      "skillGroup": "Passing",
+      "subtitle": "Groups of 3 skate up the ice in a triangle: middle to wing, across to the far wing, back to the middle, shoot.",
+      "blurb": "A three-player passing rush. Three lines start at centre ice. The middle player passes to a wing, the wing passes across to the far wing, and the far wing passes back to the middle player driving the net, who shoots. Everyone switches lines.",
+      "diagramAlt": "Half-ice diagram of Triangle Passing on the Move. Three lines start at centre ice: one middle, one on each wing. All three skate into the zone. The middle player passes to the bottom wing, the bottom wing passes across to the top wing, and the top wing passes to the middle player driving the net, who shoots on the goalie.",
+      "tags": [
+        "half-ice",
+        "passing",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Keep the triangle: wings wide, middle trailing a little.",
+        "Pass ahead of your teammate's stick so they don't slow down.",
+        "Stick on the ice, ready for the pass.",
+        "Middle player: drive the net hard after your pass.",
+        "Call for the puck."
+      ],
+      "steps": [
+        "Three lines at centre ice: middle (with pucks), left wing, right wing.",
+        "All three go. The middle passes to a wing.",
+        "That wing passes across to the far wing.",
+        "The far wing passes to the middle player driving the net.",
+        "The middle player shoots.",
+        "Switch lines and skate back to centre."
+      ],
+      "related": [
+        "four-lane-warmup",
+        "two-on-zero-wide-and-middle",
+        "rondo-passing"
+      ]
+    },
+    {
+      "slug": "backhand-shooting",
+      "title": "Backhand Shooting",
+      "skillGroup": "Shooting",
+      "subtitle": "Backhands only: one from the slot, then drive the net and backhand it to the far post.",
+      "blurb": "A backhand-only shooting drill. One line comes into the slot and takes a backhand shot. The other line drives the net from the wing and puts a backhand on the far post. Switch lines after each shot.",
+      "diagramAlt": "Zone diagram of Backhand Shooting. Two lines at the blue line with pucks. The top line carries into the slot and shoots a backhand. The bottom line carries wide along the boards, cuts to the net and shoots a backhand to the far post.",
+      "tags": [
+        "half-ice",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Puck on the backhand side, near your back foot.",
+        "Sweep it forward and roll your wrists to lift it.",
+        "Follow through high toward the target.",
+        "Driving the net: protect the puck with your body, aim far post.",
+        "Follow your shot for the rebound."
+      ],
+      "steps": [
+        "Two lines at the blue line with pucks.",
+        "Slot line: carry into the slot and shoot a backhand.",
+        "Wing line: drive the net from the wing and backhand it to the far post.",
+        "Switch lines after each shot so you drive from both sides."
+      ],
+      "related": [
+        "give-and-go-shot",
+        "rebounds-in-tight",
+        "tip-and-dig-shooting"
+      ]
+    },
+    {
+      "slug": "puck-protection-circle",
+      "title": "Puck Protection in the Circle",
+      "skillGroup": "Stickhandling",
+      "subtitle": "1-on-1 inside a faceoff circle. Protect the puck for 10 seconds with your body. The D tries to knock it out.",
+      "blurb": "A 1-on-1 puck protection battle in both end-zone circles. The puck carrier must stay inside the circle and keep the puck for 10 seconds, using their body and edges. The defender tries to knock the puck out of the circle. Then switch roles and the next pair goes.",
+      "diagramAlt": "Zone diagram of Puck Protection in the Circle. A puck carrier and a defender are in each end-zone faceoff circle, with lines waiting at the blue line. The carrier skates around the inside of the circle with the puck, turning their back to the defender, while the defender chases.",
+      "tags": [
+        "small-area-game",
+        "defence",
+        "stickhandling"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Body between the D and the puck.",
+        "Puck on the far side, away from the D's stick.",
+        "Knees bent, wide stance, keep your feet moving.",
+        "Use tight turns to spin away.",
+        "D: stick on the puck, stay on the inside."
+      ],
+      "steps": [
+        "A pair in each faceoff circle: a puck carrier and a defender. Lines wait at the blue line.",
+        "Whistle: protect the puck inside the circle.",
+        "Turn your back to the D and keep the puck away.",
+        "After 10 seconds, switch roles. Then the next pair goes."
+      ],
+      "related": [
+        "sharks-and-minnows",
+        "defend-the-cone",
+        "three-v-three-circle-game"
+      ]
+    },
+    {
+      "slug": "sharks-and-minnows",
+      "title": "Sharks and Minnows",
+      "skillGroup": "Games",
+      "subtitle": "Minnows with pucks try to cross the zone. Sharks knock pucks away. Lose your puck and you become a shark.",
+      "blurb": "A fun stickhandling game. Minnows with pucks start on the blue line and try to cross the zone to the goal line. Sharks in the middle knock pucks away. Lose your puck and you become a shark. Go back and forth until one minnow is left.",
+      "diagramAlt": "Zone diagram of Sharks and Minnows. Four minnows with pucks start on the blue line. Two sharks wait in the middle. The minnows carry across toward the goal line. One shark knocks a minnow's puck away, and that minnow skates into the middle to become a shark.",
+      "tags": [
+        "small-area-game",
+        "stickhandling"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Head up: see the sharks before they reach you.",
+        "Protect the puck: body between the shark and the puck.",
+        "Change speed and direction to get past.",
+        "Sharks: stick on the ice, take away space.",
+        "Keep it fair: stick on puck, no slashing."
+      ],
+      "steps": [
+        "Minnows with pucks line up on the blue line. Start with 2 sharks in the middle.",
+        "Go! Minnows try to cross to the goal line.",
+        "Sharks knock pucks away. If you lose your puck, you become a shark.",
+        "Cross back. Keep going until one minnow is left."
+      ],
+      "related": [
+        "puck-protection-circle",
+        "stickhandling-obstacle-course",
+        "rondo-passing"
       ]
     }
   ]

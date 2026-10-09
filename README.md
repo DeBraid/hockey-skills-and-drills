@@ -96,9 +96,9 @@ Full-ice warm-up. Cones split the ice into four lanes and one line starts in the
 
 ### [Crossover Circles Race](drills/crossover-circles.md)
 
-A skating race on the two end-zone faceoff circles. Each line stands on a neutral-zone faceoff dot near the blue line. One skater from each line races into the zone, around the circle with crossovers, takes a long pass from the next player on the blue-line dot, then curls in and shoots. First goal wins. For the pivot version, see Crossover Circles: Pivot Race.
+A skating race on the two end-zone faceoff circles. Each line stands on a neutral-zone faceoff dot near the blue line, and there is ONE puck in the middle of the ice, halfway between the blue line and the tops of the circles. One skater from each line races into the zone and around their circle with crossovers, then exits the circle and races to the puck. The first one there attacks; the loser plays D. 1-on-1 to the net and shoot. For the pivot version, see Crossover Circles: Pivot Race.
 
-**Tags:** `skating`, `passing`, `shooting`
+**Tags:** `skating`, `defence`, `shooting`
 
 [Note](drills/crossover-circles.md) · [Drill page](drills/crossover-circles/) · [Animation](media/crossover-circles/crossover-circles-anim.html) · [PNG](media/crossover-circles/crossover-circles.png) · [Excalidraw](media/crossover-circles/crossover-circles.excalidraw)
 
@@ -333,6 +333,70 @@ A breakout pass that turns into a full-length 1-on-1. The D skates the puck out 
 **Tags:** `full-ice`, `breakout`, `passing`, `defence`, `shooting`
 
 [Note](drills/breakout-to-1-on-1.md) · [Drill page](drills/breakout-to-1-on-1/) · [Animation](media/breakout-to-1-on-1/breakout-to-1-on-1-anim.html) · [PNG](media/breakout-to-1-on-1/breakout-to-1-on-1.png) · [Excalidraw](media/breakout-to-1-on-1/breakout-to-1-on-1.excalidraw)
+
+### [Stickhandling Obstacle Course](drills/stickhandling-obstacle-course.md)
+
+A puck-control course in one zone. Skaters weave a line of cones, pull the puck through a two-cone gate, slide the puck under a raised stick and step over it, then curl into the slot and shoot. The next skater goes when the one ahead reaches the gate.
+
+**Tags:** `skating`, `stickhandling`, `shooting`
+
+[Note](drills/stickhandling-obstacle-course.md) · [Drill page](drills/stickhandling-obstacle-course/) · [Animation](media/stickhandling-obstacle-course/stickhandling-obstacle-course-anim.html) · [PNG](media/stickhandling-obstacle-course/stickhandling-obstacle-course.png) · [Excalidraw](media/stickhandling-obstacle-course/stickhandling-obstacle-course.excalidraw)
+
+### [Tight Turns Around the Dots](drills/tight-turns-dots.md)
+
+A full-ice edge drill. Skaters start in the corner and skate the length of the ice, doing a full tight turn around five faceoff dots in a zig-zag: an end-zone dot, a neutral-zone dot, centre ice, the other neutral-zone dot, and the far end-zone dot. Run it without pucks first, then with pucks.
+
+**Tags:** `full-ice`, `skating`
+
+[Note](drills/tight-turns-dots.md) · [Drill page](drills/tight-turns-dots/) · [Animation](media/tight-turns-dots/tight-turns-dots-anim.html) · [PNG](media/tight-turns-dots/tight-turns-dots.png) · [Excalidraw](media/tight-turns-dots/tight-turns-dots.excalidraw)
+
+### [Explosive Starts Race](drills/explosive-starts-race.md)
+
+A quick race for first-step speed. Two lines stand on the goal line. A pair races to the blue line using a V-start, then glides back along the boards. Next round the pair uses a crossover start, standing sideways and crossing over on the first step.
+
+**Tags:** `skating`
+
+[Note](drills/explosive-starts-race.md) · [Drill page](drills/explosive-starts-race/) · [Animation](media/explosive-starts-race/explosive-starts-race-anim.html) · [PNG](media/explosive-starts-race/explosive-starts-race.png) · [Excalidraw](media/explosive-starts-race/explosive-starts-race.excalidraw)
+
+### [Backward C-Cuts](drills/backward-c-cuts.md)
+
+A full-ice backwards skating drill in waves. Four lanes start on the goal line and skate backwards with C-cuts to the far blue line, then glide back along the boards. Variation: skate forwards to the red line, pivot, then skate backwards to the far blue line.
+
+**Tags:** `full-ice`, `skating`
+
+[Note](drills/backward-c-cuts.md) · [Drill page](drills/backward-c-cuts/) · [Animation](media/backward-c-cuts/backward-c-cuts-anim.html) · [PNG](media/backward-c-cuts/backward-c-cuts.png) · [Excalidraw](media/backward-c-cuts/backward-c-cuts.excalidraw)
+
+### [Triangle Passing on the Move](drills/triangle-passing-on-the-move.md)
+
+A three-player passing rush. Three lines start at centre ice. The middle player passes to a wing, the wing passes across to the far wing, and the far wing passes back to the middle player driving the net, who shoots. Everyone switches lines.
+
+**Tags:** `half-ice`, `passing`, `shooting`
+
+[Note](drills/triangle-passing-on-the-move.md) · [Drill page](drills/triangle-passing-on-the-move/) · [Animation](media/triangle-passing-on-the-move/triangle-passing-on-the-move-anim.html) · [PNG](media/triangle-passing-on-the-move/triangle-passing-on-the-move.png) · [Excalidraw](media/triangle-passing-on-the-move/triangle-passing-on-the-move.excalidraw)
+
+### [Backhand Shooting](drills/backhand-shooting.md)
+
+A backhand-only shooting drill. One line comes into the slot and takes a backhand shot. The other line drives the net from the wing and puts a backhand on the far post. Switch lines after each shot.
+
+**Tags:** `half-ice`, `shooting`
+
+[Note](drills/backhand-shooting.md) · [Drill page](drills/backhand-shooting/) · [Animation](media/backhand-shooting/backhand-shooting-anim.html) · [PNG](media/backhand-shooting/backhand-shooting.png) · [Excalidraw](media/backhand-shooting/backhand-shooting.excalidraw)
+
+### [Puck Protection in the Circle](drills/puck-protection-circle.md)
+
+A 1-on-1 puck protection battle in both end-zone circles. The puck carrier must stay inside the circle and keep the puck for 10 seconds, using their body and edges. The defender tries to knock the puck out of the circle. Then switch roles and the next pair goes.
+
+**Tags:** `small-area-game`, `defence`, `stickhandling`
+
+[Note](drills/puck-protection-circle.md) · [Drill page](drills/puck-protection-circle/) · [Animation](media/puck-protection-circle/puck-protection-circle-anim.html) · [PNG](media/puck-protection-circle/puck-protection-circle.png) · [Excalidraw](media/puck-protection-circle/puck-protection-circle.excalidraw)
+
+### [Sharks and Minnows](drills/sharks-and-minnows.md)
+
+A fun stickhandling game. Minnows with pucks start on the blue line and try to cross the zone to the goal line. Sharks in the middle knock pucks away. Lose your puck and you become a shark. Go back and forth until one minnow is left.
+
+**Tags:** `small-area-game`, `stickhandling`
+
+[Note](drills/sharks-and-minnows.md) · [Drill page](drills/sharks-and-minnows/) · [Animation](media/sharks-and-minnows/sharks-and-minnows-anim.html) · [PNG](media/sharks-and-minnows/sharks-and-minnows.png) · [Excalidraw](media/sharks-and-minnows/sharks-and-minnows.excalidraw)
 
 
 ## Add a drill
