@@ -11,7 +11,7 @@ export type ClientEventName = (typeof CLIENT_EVENTS)[number]
 export type EventName = ClientEventName | (typeof SERVER_EVENTS)[number]
 
 export const MAX_EVENT_BODY = 2048
-const PAGES = new Set(["home", "drill", "plan", "account", "other"])
+const PAGES = new Set(["home", "drill", "plan", "account", "privacy", "terms", "other"])
 const ANON_RE = /^[A-Za-z0-9_-]{16,64}$/
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
