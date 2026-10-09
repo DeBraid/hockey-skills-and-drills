@@ -23,7 +23,7 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 1. A pair in each faceoff circle: a puck carrier and a defender. Lines wait at the blue line.
 2. Whistle: protect the puck inside the circle.
 3. Turn your back to the D and keep the puck away.
-4. After 10 seconds, switch roles. Then the next pair goes.
+4. After 10 seconds, the carrier leaves the puck on the faceoff dot. Switch roles: both go to the back of the other line, and the next pair goes.
 
 Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.
 
