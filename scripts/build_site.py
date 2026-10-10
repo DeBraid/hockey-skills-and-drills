@@ -170,8 +170,18 @@ def plan_button(slug: str, title: str) -> str:
 
 # Vercel Web Analytics: cookieless page views, served from the same origin.
 # Enabled per project in Vercel; the script is a no-op 404 on other hosts.
-ANALYTICS_SNIPPET = """  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
-  <script defer src="/_vercel/insights/script.js"></script>"""
+# Skipped in browsers marked hsd-exclude-stats (set by js/site.js once the
+# site admin signs in there), so the admin's own visits are not counted.
+ANALYTICS_SNIPPET = """  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    (function () {
+      try { if (localStorage.getItem("hsd-exclude-stats") === "1") return; } catch (error) {}
+      var s = document.createElement("script");
+      s.defer = true;
+      s.src = "/_vercel/insights/script.js";
+      document.head.appendChild(s);
+    })();
+  </script>"""
 
 
 def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: str = "") -> str:
@@ -817,7 +827,7 @@ def check_output(drills: list[dict]) -> None:
         text = html_path.read_text(encoding="utf-8")
         if "index.html" in text:
             raise SystemExit(f"{html_path.relative_to(ROOT)} still links index.html")
-        if 'src="/_vercel/insights/script.js"' not in text:
+        if 's.src = "/_vercel/insights/script.js"' not in text:
             raise SystemExit(f"{html_path.relative_to(ROOT)} is missing the Vercel Web Analytics script")
         if "/admin" in text:
             raise SystemExit(f"{html_path.relative_to(ROOT)} should not link the admin page")

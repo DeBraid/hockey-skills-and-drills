@@ -9,8 +9,16 @@
   <title>2v2 Hard Rim · Hockey Skills &amp; Drills</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../../css/styles.css">
-  <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
-  <script defer src="/_vercel/insights/script.js"></script>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    (function () {
+      try { if (localStorage.getItem("hsd-exclude-stats") === "1") return; } catch (error) {}
+      var s = document.createElement("script");
+      s.defer = true;
+      s.src = "/_vercel/insights/script.js";
+      document.head.appendChild(s);
+    })();
+  </script>
 </head>
 <body data-page="drill" data-drill="two-v-two-hard-rim">
   <a class="skip" href="#content">Skip to content</a>
