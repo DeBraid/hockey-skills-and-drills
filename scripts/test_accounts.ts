@@ -661,8 +661,41 @@ async function main(): Promise<void> {
     assert.match(adminHtml, /<meta name="robots" content="noindex, nofollow">/)
     assert.match(adminHtml, /Site stats/)
     assert.match(adminHtml, /Last 7 days/)
-    assert.match(adminHtml, /Cone weave/)
     assert.match(adminHtml, /coach-b@example\.com/)
+    assert.match(adminHtml, /Include my activity/)
+    // The cone-weave view came from a browser later seen signed in as the admin,
+    // so it is hidden by default, and the admin is left out of the coach list.
+    assert.doesNotMatch(adminHtml, /Cone weave/)
+    assert.equal(adminHtml.split("coach-a@example.com").length - 1, 1)
+
+    // Admin session: flagged at insert, and told (only itself) it is an admin.
+    const adminSession = await api(origin, coachA, "GET", "/api/auth/session")
+    assert.equal(adminSession.data.user.admin, true)
+    const coachBSession = await api(origin, coachB, "GET", "/api/auth/session")
+    assert.equal(coachBSession.data.user.admin, undefined)
+    assert.doesNotMatch(JSON.stringify(coachBSession.data), /coach-a|other@example/)
+    const adminAnon = "adminbrowser000000000000"
+    assert.equal(
+      (await beacon({ name: "drill_view", anon: adminAnon, drill: "full-ice-figure-8-shot" }, { origin, cookie: coachA.header() })).status,
+      204
+    )
+    const flagged = await getPool().query("SELECT props, user_id FROM events WHERE anon_id = $1", [adminAnon])
+    assert.equal(flagged.rows[0].props.admin, true)
+    // Same browser later signed out: still hidden.
+    assert.equal((await beacon({ name: "drill_view", anon: adminAnon, drill: "defend-the-cone" })).status, 204)
+    // A real coach's browser and a box test beacon.
+    assert.equal((await beacon({ name: "drill_view", anon: "realcoach0000000000000", drill: "puck-protection-race" })).status, 204)
+    assert.equal((await beacon({ name: "drill_view", anon: "boxcheck00000000000000", drill: "box-test-drill" })).status, 204)
+    const hidden = await (await adminGet(coachA)).text()
+    assert.match(hidden, /Puck protection race/)
+    assert.doesNotMatch(hidden, /Full ice figure 8 shot|Defend the cone|Box test drill|Cone weave/)
+    const included = await (await adminGet(coachA, "/admin/?include_admin=1")).text()
+    assert.match(included, /Including your activity/)
+    assert.match(included, /Full ice figure 8 shot/)
+    assert.match(included, /Defend the cone/)
+    assert.match(included, /Cone weave/)
+    assert.doesNotMatch(included, /Box test drill/)
+    assert.match(included, /coach-a@example\.com <span class="tag">admin<\/span>/)
     assert.match(adminHtml, /vercel\.com\/debraids-projects\/hockey-skills-and-drills\/analytics/)
     assert.doesNotMatch(adminHtml, /<script/i)
     assert.equal((await fetch(`${origin}/admin`, { method: "POST", headers: { cookie: coachA.header() } })).status, 404)
@@ -734,6 +767,28 @@ async function main(): Promise<void> {
     assert.ok(signedOutCalls.some((url) => url.endsWith("/hockey-skills-and-drills/api/event")))
     assert.equal(absentCalls.some((url) => url.includes("/api/event")), false)
     signedOut.window.close()
+
+    const adminCalls: string[] = []
+    const adminView = await page(
+      fs.readFileSync(path.join(root, "index.html"), "utf8"),
+      `${origin}/index.html`,
+      { id: "123e4567-e89b-42d3-a456-426614174000", name: "Derek", email: "derek@example.com", image: "", admin: true },
+      adminCalls
+    )
+    await waitFor(() => adminView.window.localStorage.getItem("hsd-exclude-stats") === "1")
+    assert.equal(adminCalls.some((url) => url.includes("/api/event")), false)
+    adminView.window.close()
+    const markedCalls: string[] = []
+    const marked = await page(
+      fs.readFileSync(path.join(root, "index.html"), "utf8"),
+      `${origin}/index.html`,
+      null,
+      markedCalls,
+      { "hsd-exclude-stats": "1" }
+    )
+    assert.equal(markedCalls.some((url) => url.includes("/api/event")), false)
+    assert.equal(marked.window.document.querySelector('script[src*="_vercel/insights"]'), null)
+    marked.window.close()
 
     const user = { id: "123e4567-e89b-42d3-a456-426614174000", name: "Derek", email: "derek@example.com", image: "" }
     const signedInCalls: string[] = []

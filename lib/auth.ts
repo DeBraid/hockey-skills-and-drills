@@ -4,6 +4,7 @@ import Resend from "@auth/core/providers/resend"
 import NeonAdapter from "@auth/neon-adapter"
 import { resolvePublicUrl, type PublicUrl } from "./base-path.js"
 import { getPool } from "./db.js"
+import { isAdminEmail } from "./admins.js"
 import { logEvent } from "./events.js"
 import { clientIp, json } from "./http.js"
 import { consumeLimit } from "./rate-limit.js"
@@ -143,6 +144,9 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
             name: source?.name ?? null,
             email: source?.email ?? null,
             image: source?.image ?? null,
+            // Only true for the signed-in admin's own session, so their browser
+            // can stop sending usage beacons. The admin list is never exposed.
+            ...(isAdminEmail(source?.email) ? { admin: true } : {}),
           },
           expires: expires instanceof Date ? expires.toISOString() : String(expires ?? ""),
         }
@@ -156,7 +160,11 @@ function authConfigFor(publicUrl: PublicUrl): AuthConfig {
         await logEvent({
           name: "sign_in",
           userId: user?.id ? String(user.id) : null,
-          props: { provider: account?.provider === "google" ? "google" : "email", new: Boolean(isNewUser) },
+          props: {
+            provider: account?.provider === "google" ? "google" : "email",
+            new: Boolean(isNewUser),
+            ...(isAdminEmail(user?.email) ? { admin: true } : {}),
+          },
         })
       },
     },

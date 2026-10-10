@@ -1,6 +1,7 @@
 import { deleteUserAccount, DELETE_CONFIRM } from "./account.js"
 import { accountsReady, devMagicLinkEnabled, emailReady, googleReady, handleAuth, peekMagicLink, readSession } from "./auth.js"
 import { resolvePublicUrl, routedUrl } from "./base-path.js"
+import { isAdminEmail } from "./admins.js"
 import { logEvent, MAX_EVENT_BODY, parseClientEvent, recordEvent } from "./events.js"
 import { clientIp, json } from "./http.js"
 import { createPlan, deletePlan, getPlan, isUuid, listPlans, PlanInputError, updatePlan } from "./plans.js"
@@ -35,7 +36,7 @@ export async function handlePlansCollection(request: Request): Promise<Response>
       const blocked = await mutationGuard(request, user.id)
       if (blocked) return blocked
       const plan = await createPlan(user.id, await readBody(request))
-      await logEvent({ name: "plan_create", userId: user.id, planId: plan.id, props: { drills: plan.items.length } })
+      await logEvent({ name: "plan_create", userId: user.id, planId: plan.id, props: { drills: plan.items.length, ...adminFlag(user) } })
       return json({ plan }, 201)
     }
     return json({ error: "Method not allowed." }, 405)
@@ -62,13 +63,13 @@ export async function handlePlanItem(request: Request): Promise<Response> {
     if (request.method === "PATCH") {
       const plan = await updatePlan(user.id, id, await readBody(request))
       if (!plan) return json({ error: "Plan not found." }, 404)
-      await logEvent({ name: "plan_save", userId: user.id, planId: plan.id, props: { drills: plan.items.length } })
+      await logEvent({ name: "plan_save", userId: user.id, planId: plan.id, props: { drills: plan.items.length, ...adminFlag(user) } })
       return json({ plan })
     }
     if (request.method === "DELETE") {
       const removed = await deletePlan(user.id, id)
       if (!removed) return json({ error: "Plan not found." }, 404)
-      await logEvent({ name: "plan_delete", userId: user.id, planId: id })
+      await logEvent({ name: "plan_delete", userId: user.id, planId: id, props: adminFlag(user) })
       return json({ ok: true })
     }
     return json({ error: "Method not allowed." }, 405)
@@ -118,7 +119,10 @@ export async function handleEvent(request: Request): Promise<Response> {
     if (!allowed) return empty(429)
     if (hasSessionCookie(request)) {
       const user = await requireUser(request)
-      if (user) event.userId = user.id
+      if (user) {
+        event.userId = user.id
+        if (isAdminEmail(user.email)) event.props = { ...event.props, admin: true }
+      }
     }
     await recordEvent(event)
     return empty(204)
@@ -129,6 +133,12 @@ export async function handleEvent(request: Request): Promise<Response> {
 }
 
 export { handleAuth }
+
+// Marks admin activity when it is logged, so it stays excluded even if the
+// admin's account or email changes later.
+function adminFlag(user: { email?: string }): { admin?: true } {
+  return isAdminEmail(user.email) ? { admin: true } : {}
+}
 
 function empty(status: number, extra?: Record<string, string>): Response {
   return new Response(null, { status, headers: { "cache-control": "no-store", ...extra } })

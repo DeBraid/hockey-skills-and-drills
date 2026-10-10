@@ -3,6 +3,7 @@
   var rootUrl = new URL("../", script.src);
   var STORAGE_KEY = "hsd-practice-plan";
   var ANON_KEY = "hsd-anon-id";
+  var EXCLUDE_KEY = "hsd-exclude-stats";
   var IMPORT_KEY = "hsd-import-offered";
   var accountState = { ready: false, enabled: false, google: false, email: false, user: null };
   var accountReady = [];
@@ -143,9 +144,27 @@
     return out;
   }
 
+  function statsExcluded(state) {
+    // The server marks only the admin's own session with user.admin. From then
+    // on this browser sends no usage beacons and skips Vercel Analytics.
+    if (state.user && state.user.admin === true) {
+      try {
+        localStorage.setItem(EXCLUDE_KEY, "1");
+      } catch (error) {
+        // Server-side filtering still hides this browser.
+      }
+      return true;
+    }
+    try {
+      return localStorage.getItem(EXCLUDE_KEY) === "1";
+    } catch (error) {
+      return false;
+    }
+  }
+
   function track(name, fields) {
     whenAccountReady(function (state) {
-      if (!state.enabled) return;
+      if (!state.enabled || statsExcluded(state)) return;
       var payload = { name: name, anon: anonId() };
       Object.keys(fields || {}).forEach(function (key) {
         payload[key] = fields[key];
