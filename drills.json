@@ -1301,6 +1301,266 @@
         "stickhandling-obstacle-course",
         "rondo-passing"
       ]
+    },
+    {
+      "slug": "edge-work-boards",
+      "title": "Edge Work Along the Boards",
+      "skillGroup": "Skating",
+      "subtitle": "Snake on your edges along the boards, C-cuts around the corner, then a one-foot glide to the dot.",
+      "blurb": "An edges drill using the boards as a guide. Skaters snake along the boards on inside and outside edges, use C-cuts around the corner, then glide on one foot from the goal line to the far faceoff dot. Switch sides so both feet get work.",
+      "diagramAlt": "Zone diagram of Edge Work Along the Boards. A line starts at the blue line by the top boards. The skater snakes along the boards on their edges, does C-cuts around the corner to the goal line, then glides on one foot across to the bottom faceoff dot.",
+      "tags": [
+        "skating"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Knees bent, weight over the skate you're on.",
+        "Snake: roll from inside edge to outside edge, don't step.",
+        "C-cuts: push out in a C and pull back under you, one foot at a time.",
+        "One-foot glide: arms out, hold it as long as you can.",
+        "Head up the whole way."
+      ],
+      "steps": [
+        "One line at the blue line beside the boards.",
+        "Snake along the boards on inside and outside edges.",
+        "C-cuts around the corner to the goal line.",
+        "One-foot glide to the far faceoff dot, then skate back up the middle.",
+        "Next skater goes when the one ahead reaches the corner. Switch sides next time."
+      ],
+      "related": [
+        "cone-weave",
+        "backward-c-cuts",
+        "tight-turns-dots"
+      ]
+    },
+    {
+      "slug": "shooting-in-stride",
+      "title": "Shooting in Stride",
+      "skillGroup": "Shooting",
+      "subtitle": "Take a pass on the move and shoot without stopping.",
+      "blurb": "A shooting drill for catching and shooting with your feet moving. Shooters start at the blue line and skate into the high slot. A passer in the corner leads them with a pass, and they shoot in stride without stopping. Shooters and passers switch lines.",
+      "diagramAlt": "Zone diagram of Shooting in Stride. Shooters line up at the top of the blue line, passers with pucks in the bottom corner. The shooter skates down into the high slot, the passer leads them with a pass, and the shooter shoots in stride on the goalie.",
+      "tags": [
+        "half-ice",
+        "passing",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Keep your feet moving. Don't stop to shoot.",
+        "Stick on the ice, ready for the pass.",
+        "Passer: lead the shooter, hit them in front of their body.",
+        "Catch and release quickly. Aim for a corner.",
+        "Follow your shot for a rebound."
+      ],
+      "steps": [
+        "Shooters at the blue line, passers with pucks in the corner.",
+        "The shooter skates into the high slot.",
+        "The passer leads them with a pass.",
+        "Shoot in stride without stopping.",
+        "Shooter goes to the passer line, passer goes to the shooter line."
+      ],
+      "related": [
+        "give-and-go-shot",
+        "backhand-shooting",
+        "three-lane-wave-shooting"
+      ]
+    },
+    {
+      "slug": "saucer-pass-over-stick",
+      "title": "Saucer Pass Over a Stick",
+      "skillGroup": "Passing",
+      "subtitle": "Partners pass back and forth, lifting the puck over a stick laid on the ice.",
+      "blurb": "A partner passing drill for the saucer pass. Partners stand about 20 feet apart with a stick laid flat on the ice between them. They pass back and forth, lifting the puck just over the stick so it lands flat. Forehand first, then backhand.",
+      "diagramAlt": "Zone diagram of Saucer Pass Over a Stick. Two pairs of partners each stand about 20 feet apart in front of a faceoff circle, with a stick on the ice between them. They pass back and forth over the stick.",
+      "tags": [
+        "passing"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Start with the puck at the heel of your blade.",
+        "Roll it to the toe and flick up a little.",
+        "Small lift: just over the stick, so it lands flat.",
+        "Catch it with a soft stick and cushion it.",
+        "Forehand first, then backhand."
+      ],
+      "steps": [
+        "Partners stand about 20 feet apart with a stick laid flat on the ice between them.",
+        "Saucer pass over the stick to your partner.",
+        "Catch it flat and saucer it back.",
+        "Do 10 forehand, then 10 backhand."
+      ],
+      "related": [
+        "stationary-partner-passing",
+        "rondo-passing",
+        "triangle-passing-on-the-move"
+      ]
+    },
+    {
+      "slug": "net-front-tips-screens",
+      "title": "Net-Front Tips and Screens",
+      "skillGroup": "Shooting",
+      "subtitle": "D shoots low from the point. F stands at the net front to tip it or screen the goalie.",
+      "blurb": "A net-front drill. A forward goes to the front of the net and gets a stick on the ice. A D at the point shoots low and on net. The forward tips the shot or screens the goalie, then looks for the rebound. Switch lines each rep.",
+      "diagramAlt": "Zone diagram of Net-Front Tips and Screens. A line of D stands at the blue line with pucks and a line of F on the bottom wall. The F skates to the front of the net. The D steps in and shoots low on net, and the F tips it or screens the goalie, then jumps on the rebound.",
+      "tags": [
+        "half-ice",
+        "shooting",
+        "defence"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "F: stick on the ice, blade facing the shooter.",
+        "Screen: stand between the shooter and the goalie's eyes.",
+        "Tip: soft hands, redirect the puck down.",
+        "D: shoot low and on net. Hard isn't as important as low.",
+        "Everyone: find the rebound."
+      ],
+      "steps": [
+        "D at the blue line with pucks, F on the wall.",
+        "The F skates to the front of the net.",
+        "The D steps in and shoots low on net.",
+        "The F tips it or screens the goalie, then goes for the rebound.",
+        "Switch lines."
+      ],
+      "related": [
+        "rebounds-in-tight",
+        "low-to-high-shot",
+        "two-v-two-point-shot"
+      ]
+    },
+    {
+      "slug": "nz-regroup-d-to-d",
+      "title": "Neutral-Zone Regroup: D to D to Swing",
+      "skillGroup": "Breakout",
+      "subtitle": "D passes across to D, the forward swings through the middle, takes the pass and attacks.",
+      "blurb": "A simple regroup in the neutral zone. Two D stand near centre ice. One D passes across to the other while a forward swings through the middle with speed. The D hits the swinging forward, who attacks and shoots.",
+      "diagramAlt": "Half-ice diagram of the Neutral-Zone Regroup. Two D lines stand near centre ice with pucks, and a forward line on the bottom wall at the blue line. The first D passes across to the second D. The forward curls back through the neutral zone, swings up the middle, takes a pass from the second D and attacks the net to shoot.",
+      "tags": [
+        "half-ice",
+        "passing",
+        "breakout",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "D: hard, flat pass across. Look up before you pass.",
+        "F: time your swing so you're moving up ice when the pass comes.",
+        "F: show your stick as a target.",
+        "Attack with speed and shoot.",
+        "Switch which D starts with the puck."
+      ],
+      "steps": [
+        "Two D lines near centre ice with pucks, a forward line on the wall at the blue line.",
+        "D passes across to the other D.",
+        "The forward swings back through the middle.",
+        "The D hits the forward with a pass.",
+        "The forward attacks and shoots."
+      ],
+      "related": [
+        "d-to-wall-breakout",
+        "two-line-2-on-0-flow",
+        "three-on-two-rush"
+      ]
+    },
+    {
+      "slug": "three-on-two-rush",
+      "title": "3-on-2 Rush",
+      "skillGroup": "Combo",
+      "subtitle": "Three forwards attack two D. Puck wide, middle drives the net, far wing goes back post.",
+      "blurb": "A simple 3-on-2. Three forwards start at centre ice and attack two D who skate backwards from the blue line. The puck goes wide, the middle forward drives the net, and the far wing goes to the back post. The puck carrier shoots for a rebound.",
+      "diagramAlt": "Half-ice diagram of the 3-on-2 Rush. Three forward lines start at centre ice and two D stand at the blue line. The middle forward carries in and passes to a wing. The wing carries wide, the middle forward drives the net, and the far wing goes to the back post. The D skate backwards, one on the puck and one at the net front. The wing shoots.",
+      "tags": [
+        "half-ice",
+        "passing",
+        "shooting",
+        "defence"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Forwards: spread out across the ice. Three lanes.",
+        "Middle: drive the net hard after you pass.",
+        "Far wing: go to the back post for the rebound.",
+        "D: one takes the puck carrier, one guards the front of the net.",
+        "Shoot to make a rebound."
+      ],
+      "steps": [
+        "Three forward lines at centre ice, two D at the blue line.",
+        "Go! The D skate backwards.",
+        "The middle passes the puck to a wing.",
+        "The middle drives the net, the far wing goes back post.",
+        "The wing shoots. Forwards switch lines."
+      ],
+      "related": [
+        "triangle-passing-on-the-move",
+        "olympic-breakout-pass",
+        "backcheck-2on1-to-2on2"
+      ]
+    },
+    {
+      "slug": "backcheck-2on1-to-2on2",
+      "title": "Backchecking: 2-on-1 to 2-on-2",
+      "skillGroup": "Combo",
+      "subtitle": "Two forwards attack one D. A backchecker starts late and hustles back to make it 2-on-2.",
+      "blurb": "A 2-on-1 that turns into a 2-on-2. Two forwards attack one D. A backchecker leaves a little later and hustles back to take away the forward without the puck. The puck carrier has no pass and must shoot.",
+      "diagramAlt": "Half-ice diagram of Backchecking: 2-on-1 to 2-on-2. Two forward lines start at centre ice, a backchecker line on the bottom boards and one D at the blue line. The forwards attack 2-on-1 while the D skates backwards. The backchecker leaves late, hustles through the middle and covers the forward without the puck. The puck carrier shoots.",
+      "tags": [
+        "half-ice",
+        "defence",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Backchecker: hustle! Skate hard through the middle.",
+        "Backchecker: stick on the forward without the puck.",
+        "D: take the puck carrier, stay between them and the net.",
+        "Forwards: attack fast before the backchecker arrives.",
+        "Shoot if the pass is gone."
+      ],
+      "steps": [
+        "Two forward lines at centre ice, a backchecker line on the boards, one D at the blue line.",
+        "The forwards attack 2-on-1 and the D skates backwards.",
+        "The backchecker leaves when the forwards cross the blue line and hustles back.",
+        "The backchecker covers the open forward. Now it's 2-on-2.",
+        "The puck carrier shoots. Rotate lines."
+      ],
+      "related": [
+        "mirror-angling-2v1",
+        "puck-race-1v1-to-2v1",
+        "three-on-two-rush"
+      ]
+    },
+    {
+      "slug": "goalie-warmup-sequence",
+      "title": "Goalie Warm-up Shooting Sequence",
+      "skillGroup": "Shooting",
+      "subtitle": "Shooters take turns in a set order: slot, left angle, right angle, then in tight. Shoot to warm up the goalie, not to beat him.",
+      "blurb": "A structured goalie warm-up. Shooters take one shot at a time from three spots in a set order: the slot, one angle, the other angle, then a shot in tight. Shots are low and on net so the goalie can find the puck and get moving.",
+      "diagramAlt": "Zone diagram of the Goalie Warm-up Shooting Sequence. Three shooting spots with pucks: the high slot (1), the bottom angle (2) and the top angle (3), with a waiting line at the blue line. Shot 1 comes from the slot, shot 2 and shot 3 from the angles, then shot 4 is a carry in tight from the slot.",
+      "tags": [
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "One shot at a time. Wait until the goalie is set.",
+        "Low and on net: help the goalie warm up.",
+        "Hit the spot you're told: low blocker, low glove, pads.",
+        "Goalie: follow the puck all the way in.",
+        "Rotate spots so everyone shoots from all three."
+      ],
+      "steps": [
+        "Three shooting spots with pucks: the slot, one angle, the other angle. A waiting line at the blue line.",
+        "Shot 1 from the slot, low.",
+        "Shot 2 from one angle, low to the far side.",
+        "Shot 3 from the other angle.",
+        "Shot 4: carry in tight from the slot and shoot, then the rebound.",
+        "Shooters rotate to the next spot."
+      ],
+      "related": [
+        "tip-and-dig-shooting",
+        "goalie-rebound-game",
+        "rebounds-in-tight"
+      ]
     }
   ]
 }
