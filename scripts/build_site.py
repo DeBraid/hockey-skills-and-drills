@@ -603,7 +603,7 @@ def write_account() -> None:
     (out / "index.html").write_text(page_shell(title, "../", body, page="account"), encoding="utf-8")
 
 
-CONTACT_EMAIL = "de.braid@gmail.com"
+CONTACT_EMAIL = "derekbraid@mail.grokbot.com"
 LEGAL_EFFECTIVE = "October 9, 2026"
 
 PRIVACY_BODY = f"""  <main id="content" class="wrap-read legal-page">
