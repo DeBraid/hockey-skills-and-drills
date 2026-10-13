@@ -398,6 +398,70 @@ A fun stickhandling game. Minnows with pucks start on the blue line and try to c
 
 [Note](drills/sharks-and-minnows.md) · [Drill page](drills/sharks-and-minnows/) · [Animation](media/sharks-and-minnows/sharks-and-minnows-anim.html) · [PNG](media/sharks-and-minnows/sharks-and-minnows.png) · [Excalidraw](media/sharks-and-minnows/sharks-and-minnows.excalidraw)
 
+### [Edge Work Along the Boards](drills/edge-work-boards.md)
+
+An edges drill using the boards as a guide. Skaters snake along the boards on inside and outside edges, use C-cuts around the corner, then glide on one foot from the goal line to the far faceoff dot. Switch sides so both feet get work.
+
+**Tags:** `skating`
+
+[Note](drills/edge-work-boards.md) · [Drill page](drills/edge-work-boards/) · [Animation](media/edge-work-boards/edge-work-boards-anim.html) · [PNG](media/edge-work-boards/edge-work-boards.png) · [Excalidraw](media/edge-work-boards/edge-work-boards.excalidraw)
+
+### [Shooting in Stride](drills/shooting-in-stride.md)
+
+A shooting drill for catching and shooting with your feet moving. Shooters start at the blue line and skate into the high slot. A passer in the corner leads them with a pass, and they shoot in stride without stopping. Shooters and passers switch lines.
+
+**Tags:** `half-ice`, `passing`, `shooting`
+
+[Note](drills/shooting-in-stride.md) · [Drill page](drills/shooting-in-stride/) · [Animation](media/shooting-in-stride/shooting-in-stride-anim.html) · [PNG](media/shooting-in-stride/shooting-in-stride.png) · [Excalidraw](media/shooting-in-stride/shooting-in-stride.excalidraw)
+
+### [Saucer Pass Over a Stick](drills/saucer-pass-over-stick.md)
+
+A partner passing drill for the saucer pass. Partners stand about 20 feet apart with a stick laid flat on the ice between them. They pass back and forth, lifting the puck just over the stick so it lands flat. Forehand first, then backhand.
+
+**Tags:** `passing`
+
+[Note](drills/saucer-pass-over-stick.md) · [Drill page](drills/saucer-pass-over-stick/) · [Animation](media/saucer-pass-over-stick/saucer-pass-over-stick-anim.html) · [PNG](media/saucer-pass-over-stick/saucer-pass-over-stick.png) · [Excalidraw](media/saucer-pass-over-stick/saucer-pass-over-stick.excalidraw)
+
+### [Net-Front Tips and Screens](drills/net-front-tips-screens.md)
+
+A net-front drill. A forward goes to the front of the net and gets a stick on the ice. A D at the point shoots low and on net. The forward tips the shot or screens the goalie, then looks for the rebound. Switch lines each rep.
+
+**Tags:** `half-ice`, `shooting`, `defence`
+
+[Note](drills/net-front-tips-screens.md) · [Drill page](drills/net-front-tips-screens/) · [Animation](media/net-front-tips-screens/net-front-tips-screens-anim.html) · [PNG](media/net-front-tips-screens/net-front-tips-screens.png) · [Excalidraw](media/net-front-tips-screens/net-front-tips-screens.excalidraw)
+
+### [Neutral-Zone Regroup: D to D to Swing](drills/nz-regroup-d-to-d.md)
+
+A simple regroup in the neutral zone. Two D stand near centre ice. One D passes across to the other while a forward swings through the middle with speed. The D hits the swinging forward, who attacks and shoots.
+
+**Tags:** `half-ice`, `passing`, `breakout`, `shooting`
+
+[Note](drills/nz-regroup-d-to-d.md) · [Drill page](drills/nz-regroup-d-to-d/) · [Animation](media/nz-regroup-d-to-d/nz-regroup-d-to-d-anim.html) · [PNG](media/nz-regroup-d-to-d/nz-regroup-d-to-d.png) · [Excalidraw](media/nz-regroup-d-to-d/nz-regroup-d-to-d.excalidraw)
+
+### [3-on-2 Rush](drills/three-on-two-rush.md)
+
+A simple 3-on-2. Three forwards start at centre ice and attack two D who skate backwards from the blue line. The puck goes wide, the middle forward drives the net, and the far wing goes to the back post. The puck carrier shoots for a rebound.
+
+**Tags:** `half-ice`, `passing`, `shooting`, `defence`
+
+[Note](drills/three-on-two-rush.md) · [Drill page](drills/three-on-two-rush/) · [Animation](media/three-on-two-rush/three-on-two-rush-anim.html) · [PNG](media/three-on-two-rush/three-on-two-rush.png) · [Excalidraw](media/three-on-two-rush/three-on-two-rush.excalidraw)
+
+### [Backchecking: 2-on-1 to 2-on-2](drills/backcheck-2on1-to-2on2.md)
+
+A 2-on-1 that turns into a 2-on-2. Two forwards attack one D. A backchecker leaves a little later and hustles back to take away the forward without the puck. The puck carrier has no pass and must shoot.
+
+**Tags:** `half-ice`, `defence`, `shooting`
+
+[Note](drills/backcheck-2on1-to-2on2.md) · [Drill page](drills/backcheck-2on1-to-2on2/) · [Animation](media/backcheck-2on1-to-2on2/backcheck-2on1-to-2on2-anim.html) · [PNG](media/backcheck-2on1-to-2on2/backcheck-2on1-to-2on2.png) · [Excalidraw](media/backcheck-2on1-to-2on2/backcheck-2on1-to-2on2.excalidraw)
+
+### [Goalie Warm-up Shooting Sequence](drills/goalie-warmup-sequence.md)
+
+A structured goalie warm-up. Shooters take one shot at a time from three spots in a set order: the slot, one angle, the other angle, then a shot in tight. Shots are low and on net so the goalie can find the puck and get moving.
+
+**Tags:** `shooting`
+
+[Note](drills/goalie-warmup-sequence.md) · [Drill page](drills/goalie-warmup-sequence/) · [Animation](media/goalie-warmup-sequence/goalie-warmup-sequence-anim.html) · [PNG](media/goalie-warmup-sequence/goalie-warmup-sequence.png) · [Excalidraw](media/goalie-warmup-sequence/goalie-warmup-sequence.excalidraw)
+
 
 ## Add a drill
 
