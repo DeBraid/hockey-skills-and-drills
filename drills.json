@@ -1561,6 +1561,40 @@
         "goalie-rebound-game",
         "rebounds-in-tight"
       ]
+    },
+    {
+      "slug": "circle-swing-double-shot",
+      "title": "Circle-Swing Pass and Drive",
+      "skillGroup": "Shooting",
+      "subtitle": "Twirl around the dot and pass to the red line. The receiver loops the centre cone and drives the net to score.",
+      "blurb": "A skating, passing and shooting drill. A player starts beside the goal-line cone, takes a puck and skates a full loop around the closest faceoff dot, then passes to a receiver on the red line. The receiver loops a cone at centre ice and drives the net to shoot and score. The passer skates to the red line to be the next receiver, and the receiver goes to the back of the line.",
+      "diagramAlt": "Half-ice diagram of the Circle-Swing Pass and Drive. Players line up behind the goal line beside the net, next to a cone on the goal line by the bottom boards. A player takes a puck, skates a full loop around the bottom faceoff dot and passes to a receiver on the red line. The receiver loops around a cone at centre ice, then drives the net through the middle and shoots.",
+      "tags": [
+        "half-ice",
+        "skating",
+        "passing",
+        "shooting"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Loop the dot tight with your head up and the puck in front of you.",
+        "Pass flat and hard to the receiver's stick.",
+        "Receiver: turn tight around the centre cone, then build speed.",
+        "Drive the net with the puck in front. Shoot low to score."
+      ],
+      "steps": [
+        "Players behind the goal line by the cone with pucks, a receiver on the red line and a cone at centre ice.",
+        "Take a puck and skate a full loop around the closest faceoff dot.",
+        "Pass to the receiver on the red line.",
+        "The receiver loops the centre cone.",
+        "The receiver drives the net and shoots to score.",
+        "The passer skates to the red line to be the next receiver. The receiver goes to the back of the line."
+      ],
+      "related": [
+        "crossover-circles",
+        "shooting-in-stride",
+        "full-ice-figure-8-shot"
+      ]
     }
   ]
 }
