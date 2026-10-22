@@ -462,6 +462,14 @@ A structured goalie warm-up. Shooters take one shot at a time from three spots i
 
 [Note](drills/goalie-warmup-sequence.md) · [Drill page](drills/goalie-warmup-sequence/) · [Animation](media/goalie-warmup-sequence/goalie-warmup-sequence-anim.html) · [PNG](media/goalie-warmup-sequence/goalie-warmup-sequence.png) · [Excalidraw](media/goalie-warmup-sequence/goalie-warmup-sequence.excalidraw)
 
+### [Circle-Swing Pass and Drive](drills/circle-swing-double-shot.md)
+
+A skating, passing and shooting drill. A player starts beside the goal-line cone, takes a puck and skates a full loop around the closest faceoff dot, then passes to a receiver on the red line. The receiver loops a cone at centre ice and drives the net to shoot and score. The passer skates to the red line to be the next receiver, and the receiver goes to the back of the line.
+
+**Tags:** `half-ice`, `skating`, `passing`, `shooting`
+
+[Note](drills/circle-swing-double-shot.md) · [Drill page](drills/circle-swing-double-shot/) · [Animation](media/circle-swing-double-shot/circle-swing-double-shot-anim.html) · [PNG](media/circle-swing-double-shot/circle-swing-double-shot.png) · [Excalidraw](media/circle-swing-double-shot/circle-swing-double-shot.excalidraw)
+
 
 ## Add a drill
 
