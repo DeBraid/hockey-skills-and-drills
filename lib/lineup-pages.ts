@@ -95,15 +95,13 @@ export function renderEditor(lineup: Lineup | null, players: Player[], viewer: A
     lineup: lineup ? { id: lineup.id, title: lineup.title, slots: lineup.slots, shareToken: lineup.shareToken } : null,
     players: players.map((p) => ({ id: p.id, label: playerLabel(p), active: p.active, goalie: p.goalie })),
   }
-  const zones = ["POOL", ...POSITIONS]
-    .map((pos) => {
-      const name = pos === "POOL" ? "Available" : POSITION_NAMES[pos as Position]
-      return `<section class="lu-zone lu-zone-${pos.toLowerCase()}" data-pos="${pos}" aria-label="${name}">
+  const zones = POSITIONS.map((pos) => {
+    const name = POSITION_NAMES[pos]
+    return `<section class="lu-zone lu-zone-${pos.toLowerCase()}" data-pos="${pos}" aria-label="${name}">
         <h2><span>${name}</span> <span class="lu-count" data-count="${pos}">0</span></h2>
         <ul class="lu-list" data-list="${pos}"></ul>
       </section>`
-    })
-    .join("\n")
+  }).join("\n")
   const body = `  <main id="content" class="wrap lu-page lu-editor">
     <p class="lu-back"><a href="/lineups/">← All lineups</a></p>
     <h1 class="lu-print-title" id="lu-print-title">${esc(title || "Lineup")}</h1>
@@ -113,25 +111,29 @@ export function renderEditor(lineup: Lineup | null, players: Player[], viewer: A
         <input id="lu-title" type="text" maxlength="80" placeholder="Sat Oct 25 vs Hawks" value="${esc(title)}" autocomplete="off">
       </label>
       <div class="lu-actions">
-        <button class="btn primary" type="button" id="lu-save">Save</button>
         <button class="btn" type="button" data-print>Print</button>
-        <button class="btn danger" type="button" id="lu-delete"${lineup ? "" : " hidden"}>Delete</button>
+        <button class="btn danger" type="button" id="lu-delete"${lineup ? "" : " disabled"}>Delete</button>
+        <span class="lu-save-state" id="lu-save-state" aria-live="polite">${lineup ? "Saved" : ""}</span>
       </div>
-      <div class="lu-share" id="lu-share"${lineup ? "" : " hidden"}>
+      <div class="lu-share" id="lu-share">
         <p class="muted">Share link: read-only, no sign-in. Anyone with the link can see this lineup.</p>
         <div class="lu-actions">
-          <button class="btn" type="button" id="lu-copy">Copy share link</button>
-          <button class="btn" type="button" id="lu-regen">Regenerate link</button>
-          <button class="btn" type="button" id="lu-unshare">Turn off link</button>
+          <button class="btn" type="button" id="lu-copy"${lineup ? "" : " disabled"}>Copy share link</button>
+          <button class="btn" type="button" id="lu-regen"${lineup ? "" : " disabled"}>Regenerate link</button>
+          <button class="btn" type="button" id="lu-unshare"${lineup ? "" : " disabled"}>Turn off link</button>
         </div>
         <input class="lu-link" id="lu-link" type="text" readonly hidden>
       </div>
       <p class="lu-status" id="lu-status" role="status"></p>
-      <p class="lu-hint">Drag a player into a column, or tap a player and then tap a column. Goalies can move to Out and back. Unsaved changes stay on this page until you press Save.</p>
+      <p class="lu-hint">Drag a player into a column, or tap a player and then tap a column. Drag back to Players to un-place. Goalies can move to Out and back. Changes save automatically.</p>
     </div>
     <section class="lu-goalies lu-zone-goalies" data-pos="GOALIES" aria-label="Goalies">
       <h2>Goalies</h2>
       <ul class="lu-list lu-inline" data-list="GOALIES"></ul>
+    </section>
+    <section class="lu-pool" data-pos="POOL" aria-label="Players not placed">
+      <h2><span>Players</span> <span class="lu-count" data-count="POOL">0</span></h2>
+      <ul class="lu-list lu-inline" data-list="POOL"></ul>
     </section>
     <div class="lu-board">
 ${zones}

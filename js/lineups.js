@@ -21,7 +21,11 @@
       body: body ? JSON.stringify(body) : undefined
     }).then(function (response) {
       return response.json().catch(function () { return {}; }).then(function (data) {
-        if (!response.ok) throw new Error((data && data.error) || "Something went wrong. Try again.");
+        if (!response.ok) {
+          var error = new Error((data && data.error) || "Something went wrong. Try again.");
+          error.status = response.status;
+          throw error;
+        }
         return data;
       });
     });
@@ -121,7 +125,7 @@
       if (!ids.length) {
         var none = document.createElement("li");
         none.className = "lu-none";
-        none.textContent = pos === "POOL" ? "Everyone is placed" : pos === "GOALIES" ? "No goalie in net" : "Drop here";
+        none.textContent = pos === "POOL" ? "Everyone is placed. Drag a player here to un-place them." : pos === "GOALIES" ? "No goalie in net" : "Drop here";
         ul.appendChild(none);
       }
       var count = document.querySelector('[data-count="' + pos + '"]');
@@ -152,10 +156,70 @@
     render();
   }
 
-  function markDirty() {
-    dirty = true;
-    status("Unsaved changes");
+  // ---------- auto-save (serialized: one request at a time, latest state wins) ----------
+  var saveState = document.getElementById("lu-save-state");
+  var saving = false;
+  var queued = false;
+  var failed = false;
+  var timer = null;
+  var retryDelay = 2000;
+
+  function showSave(text, isError) {
+    saveState.textContent = text;
+    saveState.classList.toggle("error", Boolean(isError));
   }
+
+  function markDirty(delay) {
+    dirty = true;
+    clearTimeout(timer);
+    timer = setTimeout(saveNow, typeof delay === "number" ? delay : 0);
+  }
+
+  function saveNow() {
+    clearTimeout(timer);
+    timer = null;
+    if (!dirty) return;
+    if (saving) { queued = true; return; }
+    saving = true;
+    queued = false;
+    dirty = false;
+    showSave("Saving…");
+    var body = { title: titleInput.value.trim(), slots: slots };
+    var request = lineup.id ? api("PATCH", "/api/lineups/" + lineup.id, body) : api("POST", "/api/lineups", body);
+    request
+      .then(function (result) {
+        var isNew = !lineup.id;
+        lineup.id = result.lineup.id;
+        lineup.shareToken = result.lineup.shareToken;
+        failed = false;
+        retryDelay = 2000;
+        if (isNew) {
+          history.replaceState(null, "", "/lineups/" + lineup.id + "/");
+          ["lu-delete", "lu-copy", "lu-regen", "lu-unshare"].forEach(function (id) {
+            document.getElementById(id).disabled = false;
+          });
+        }
+        saving = false;
+        if (dirty || queued) { saveNow(); return; }
+        showSave("Saved");
+      })
+      .catch(function (error) {
+        saving = false;
+        dirty = true;
+        failed = true;
+        // A rejected change (bad input) will not succeed on retry; show why instead.
+        if (error.status && error.status >= 400 && error.status < 500 && error.status !== 429) {
+          showSave("Couldn't save", true);
+          status(error.message, true);
+          return;
+        }
+        showSave("Couldn't save — retrying", true);
+        timer = setTimeout(saveNow, retryDelay);
+        retryDelay = Math.min(retryDelay * 2, 30000);
+      });
+  }
+
+  function savePending() { return dirty || saving || failed; }
 
   function zoneOf(el) {
     var zone = el && el.closest ? el.closest("[data-pos]") : null;
@@ -265,48 +329,26 @@
       titleInput.value = gameSelect.value;
       printTitle.textContent = titleInput.value.trim() || "Lineup";
       if (!gameSelect.value) titleInput.focus();
-      markDirty();
+      markDirty(800);
     });
   }
 
   titleInput.addEventListener("input", function () {
     printTitle.textContent = titleInput.value.trim() || "Lineup";
-    markDirty();
+    markDirty(800);
   });
+  titleInput.addEventListener("blur", function () { if (dirty) saveNow(); });
 
   window.addEventListener("beforeunload", function (event) {
-    if (!dirty) return;
+    if (!savePending()) return;
     event.preventDefault();
     event.returnValue = "";
-  });
-
-  var saveBtn = document.getElementById("lu-save");
-  saveBtn.addEventListener("click", function () {
-    var body = { title: titleInput.value.trim(), slots: slots };
-    saveBtn.disabled = true;
-    status("Saving…");
-    var request = lineup.id ? api("PATCH", "/api/lineups/" + lineup.id, body) : api("POST", "/api/lineups", body);
-    request
-      .then(function (result) {
-        var isNew = !lineup.id;
-        lineup.id = result.lineup.id;
-        lineup.shareToken = result.lineup.shareToken;
-        dirty = false;
-        if (isNew) {
-          history.replaceState(null, "", "/lineups/" + lineup.id + "/");
-          document.getElementById("lu-delete").hidden = false;
-          document.getElementById("lu-share").hidden = false;
-        }
-        status("Saved" + (lineup.shareToken ? ". The share link shows this version." : "."));
-      })
-      .catch(function (error) { status(error.message, true); })
-      .then(function () { saveBtn.disabled = false; });
   });
 
   document.getElementById("lu-delete").addEventListener("click", function () {
     if (!lineup.id || !confirm("Delete this lineup? Its share link will stop working.")) return;
     api("DELETE", "/api/lineups/" + lineup.id)
-      .then(function () { dirty = false; location.href = "/lineups/"; })
+      .then(function () { clearTimeout(timer); dirty = false; failed = false; location.href = "/lineups/"; })
       .catch(function (error) { status(error.message, true); });
   });
 
@@ -316,7 +358,7 @@
     var url = shareUrl(token);
     linkInput.value = url;
     linkInput.hidden = false;
-    var done = function () { status(verb + (dirty ? " Save first so the link shows your latest changes." : "")); };
+    var done = function () { status(verb); };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(done, function () {
         linkInput.select();
