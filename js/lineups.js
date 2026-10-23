@@ -259,6 +259,16 @@
   });
   document.querySelectorAll("[data-pos] h2").forEach(function (h) { h.setAttribute("tabindex", "0"); });
 
+  var gameSelect = document.getElementById("lu-game");
+  if (gameSelect) {
+    gameSelect.addEventListener("change", function () {
+      titleInput.value = gameSelect.value;
+      printTitle.textContent = titleInput.value.trim() || "Lineup";
+      if (!gameSelect.value) titleInput.focus();
+      markDirty();
+    });
+  }
+
   titleInput.addEventListener("input", function () {
     printTitle.textContent = titleInput.value.trim() || "Lineup";
     markDirty();

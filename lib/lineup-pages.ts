@@ -1,4 +1,5 @@
 import type { AccountUser } from "./auth.js"
+import type { Game } from "./schedule.js"
 import { playerLabel, POSITIONS, type Lineup, type LineupSummary, type Player, type Position, type SharedLineup } from "./lineups.js"
 
 // Server-rendered HTML for the private lineup pages. These pages load no
@@ -80,7 +81,16 @@ ${rows || `<li class="empty">No players yet.</li>`}
   return shell("Roster · Lineups", body, true)
 }
 
-export function renderEditor(lineup: Lineup | null, players: Player[], viewer: AccountUser): string {
+export function renderEditor(lineup: Lineup | null, players: Player[], viewer: AccountUser, games: Game[] = []): string {
+  const title = lineup ? lineup.title : games[0]?.label || ""
+  const gamePicker = !lineup && games.length
+    ? `<label class="lu-title-label" for="lu-game">Game from the team schedule
+        <select id="lu-game">
+          ${games.map((g, i) => `<option value="${esc(g.label)}"${i === 0 ? " selected" : ""}>${esc(g.label)}</option>`).join("")}
+          <option value="">Other (type a name)</option>
+        </select>
+      </label>`
+    : ""
   const data = {
     lineup: lineup ? { id: lineup.id, title: lineup.title, slots: lineup.slots, shareToken: lineup.shareToken } : null,
     players: players.map((p) => ({ id: p.id, label: playerLabel(p), active: p.active, goalie: p.goalie })),
@@ -96,10 +106,11 @@ export function renderEditor(lineup: Lineup | null, players: Player[], viewer: A
     .join("\n")
   const body = `  <main id="content" class="wrap lu-page lu-editor">
     <p class="lu-back"><a href="/lineups/">← All lineups</a></p>
-    <h1 class="lu-print-title" id="lu-print-title">${esc(lineup?.title || "Lineup")}</h1>
+    <h1 class="lu-print-title" id="lu-print-title">${esc(title || "Lineup")}</h1>
     <div class="lu-tools">
+      ${gamePicker}
       <label class="lu-title-label">Lineup name
-        <input id="lu-title" type="text" maxlength="80" placeholder="Sat Oct 25 vs Hawks" value="${esc(lineup?.title || "")}" autocomplete="off">
+        <input id="lu-title" type="text" maxlength="80" placeholder="Sat Oct 25 vs Hawks" value="${esc(title)}" autocomplete="off">
       </label>
       <div class="lu-actions">
         <button class="btn primary" type="button" id="lu-save">Save</button>
