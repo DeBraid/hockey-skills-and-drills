@@ -18,6 +18,7 @@ import {
 } from "./lineups.js"
 import { renderEditor, renderList, renderMessage, renderRoster, renderShared } from "./lineup-pages.js"
 import { consumeLimit } from "./rate-limit.js"
+import { upcomingGames } from "./schedule.js"
 import { originAllowed } from "./routes.js"
 
 // Single serverless function for every lineup page and API (vercel.json rewrites
@@ -85,7 +86,7 @@ export async function handleLineups(request: Request): Promise<Response> {
       case "edit": {
         if (write) return notFound()
         const players = await listPlayers(true)
-        if (id === "new") return html(renderEditor(null, players, admin))
+        if (id === "new") return html(renderEditor(null, players, admin, await upcomingGames()))
         if (!ID_RE.test(id)) return notFound()
         const lineup = await getLineup(id)
         if (!lineup) return notFound()
