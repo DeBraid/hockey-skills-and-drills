@@ -470,6 +470,14 @@ A skating, passing and shooting drill. A player starts beside the goal-line cone
 
 [Note](drills/circle-swing-double-shot.md) · [Drill page](drills/circle-swing-double-shot/) · [Animation](media/circle-swing-double-shot/circle-swing-double-shot-anim.html) · [PNG](media/circle-swing-double-shot/circle-swing-double-shot.png) · [Excalidraw](media/circle-swing-double-shot/circle-swing-double-shot.excalidraw)
 
+### [Backward Transition Passing](drills/backward-transition-passing.md)
+
+A backward-skating and passing drill run in both end-zone circles at once. Players skate forward to a cone, pivot, and skate backward around the outside of the circle. A coach toward the blue line passes twice, and each time the player one-touches it straight back while still skating backward. No net or shots needed, so it works well as a warm-up for everyone, not just D.
+
+**Tags:** `half-ice`, `skating`, `passing`, `defence`
+
+[Note](drills/backward-transition-passing.md) · [Drill page](drills/backward-transition-passing/) · [Animation](media/backward-transition-passing/backward-transition-passing-anim.html) · [PNG](media/backward-transition-passing/backward-transition-passing.png) · [Excalidraw](media/backward-transition-passing/backward-transition-passing.excalidraw)
+
 
 ## Add a drill
 

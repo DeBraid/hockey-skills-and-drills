@@ -1595,6 +1595,43 @@
         "shooting-in-stride",
         "full-ice-figure-8-shot"
       ]
+    },
+    {
+      "slug": "backward-transition-passing",
+      "title": "Backward Transition Passing",
+      "skillGroup": "Skating",
+      "subtitle": "Skate forward, pivot to backward, and one-touch passes with the coach while skating backward around the circle.",
+      "blurb": "A backward-skating and passing drill run in both end-zone circles at once. Players skate forward to a cone, pivot, and skate backward around the outside of the circle. A coach toward the blue line passes twice, and each time the player one-touches it straight back while still skating backward. No net or shots needed, so it works well as a warm-up for everyone, not just D.",
+      "diagramAlt": "Zone diagram of Backward Transition Passing, run in both faceoff circles. In each circle a line waits at the faceoff dot and a coach with pucks stands toward the blue line. The player skates forward to a cone wide by the boards, pivots and skates backward down the boards, one-touches a pass back to the coach, skates backward around the bottom of the circle and up the inside, one-touches a second pass back, and finishes at a cone by the slot.",
+      "tags": [
+        "half-ice",
+        "skating",
+        "passing",
+        "defence"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Head up. Watch the coach, not your skates.",
+        "Knees bent and a wide stance when you skate backward.",
+        "Stick on the ice as a target for the pass.",
+        "Soft hands on the one-touch. Just redirect it back.",
+        "Quick, tight pivots. Don't drift wide."
+      ],
+      "steps": [
+        "Run it in both circles at once. A line at the faceoff dot (cone on the dot), a coach with pucks toward the blue line, one cone wide by the boards and one inside by the slot.",
+        "Skate forward to the wide cone.",
+        "Pivot and skate backward down the boards toward the blue line.",
+        "The coach passes. One-touch it straight back.",
+        "Keep skating backward around the bottom of the circle and up the inside.",
+        "Second pass from the coach. One-touch it back.",
+        "Finish at the inside cone and go back to the line.",
+        "Variation, Escapes: keep the first pass. Pivot forward toward the boards for a stride or two, pivot back to backward, carry around the bottom of the circle and pass to the coach. Take the second pass up the inside, escape toward the middle, pass it back and return."
+      ],
+      "related": [
+        "backward-c-cuts",
+        "crossover-circles-pivots",
+        "stationary-partner-passing"
+      ]
     }
   ]
 }
