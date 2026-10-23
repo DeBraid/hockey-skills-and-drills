@@ -49,6 +49,82 @@
       "destination": "/api/event"
     },
     {
+      "source": "/lineups",
+      "destination": "/api/lineups?__lu=list"
+    },
+    {
+      "source": "/lineups/",
+      "destination": "/api/lineups?__lu=list"
+    },
+    {
+      "source": "/lineups/roster",
+      "destination": "/api/lineups?__lu=roster"
+    },
+    {
+      "source": "/lineups/roster/",
+      "destination": "/api/lineups?__lu=roster"
+    },
+    {
+      "source": "/lineups/v/:token",
+      "destination": "/api/lineups?__lu=view&__t=:token"
+    },
+    {
+      "source": "/lineups/v/:token/",
+      "destination": "/api/lineups?__lu=view&__t=:token"
+    },
+    {
+      "source": "/lineups/:id",
+      "destination": "/api/lineups?__lu=edit&__id=:id"
+    },
+    {
+      "source": "/lineups/:id/",
+      "destination": "/api/lineups?__lu=edit&__id=:id"
+    },
+    {
+      "source": "/api/lineups/v/:token",
+      "destination": "/api/lineups?__lu=api-view&__t=:token"
+    },
+    {
+      "source": "/api/lineups/v/:token/",
+      "destination": "/api/lineups?__lu=api-view&__t=:token"
+    },
+    {
+      "source": "/api/lineups/roster/:id",
+      "destination": "/api/lineups?__lu=api-player&__id=:id"
+    },
+    {
+      "source": "/api/lineups/roster/:id/",
+      "destination": "/api/lineups?__lu=api-player&__id=:id"
+    },
+    {
+      "source": "/api/lineups/roster",
+      "destination": "/api/lineups?__lu=api-roster"
+    },
+    {
+      "source": "/api/lineups/roster/",
+      "destination": "/api/lineups?__lu=api-roster"
+    },
+    {
+      "source": "/api/lineups/:id/share",
+      "destination": "/api/lineups?__lu=api-share&__id=:id"
+    },
+    {
+      "source": "/api/lineups/:id/share/",
+      "destination": "/api/lineups?__lu=api-share&__id=:id"
+    },
+    {
+      "source": "/api/lineups/:id",
+      "destination": "/api/lineups?__lu=api-item&__id=:id"
+    },
+    {
+      "source": "/api/lineups/:id/",
+      "destination": "/api/lineups?__lu=api-item&__id=:id"
+    },
+    {
+      "source": "/api/lineups/",
+      "destination": "/api/lineups?__lu=api-collection"
+    },
+    {
       "source": "/admin",
       "destination": "/api/admin"
     },
@@ -81,11 +157,26 @@
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.googleusercontent.com; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
         },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        }
       ]
     }
   ]

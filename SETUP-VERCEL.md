@@ -127,6 +127,7 @@ You do not need `AUTH_URL`. Leaving it unset lets both `hockey.derekbraid.com` a
 ### Usage stats
 
 - **Vercel Web Analytics** (page views, referrers, devices) is on in **Analytics** for this project. Every page loads `/_vercel/insights/script.js`. It sets no cookies.
+- **Lineups (private)**: `db/migrations/004_lineups.sql` adds `players` and `lineups` tables. Run `npm run migrate` (or paste the file in the Neon SQL editor) once. The roster is entered on `/lineups/roster/` and lives only in the database, never in this repo. Store number, first name, and last initial only. `/lineups/`, the editor, the roster, and every lineup API answer 404 unless the visitor is signed in with an `ADMIN_EMAILS` address. The only public page is a lineup's optional read-only share link (`/lineups/v/<token>/`, 32-character random token, noindex, no-store). **Regenerate link** replaces the token and the old link stops working.
 - **Event log**: `db/migrations/003_events.sql` adds an `events` table. Run `npm run migrate` (or paste the file in the Neon SQL editor) once. Pages send `page_view`, `drill_view`, `drill_add_to_plan`, `plan_share`, and `plan_print` to `POST /api/event`. The server logs `sign_in`, `plan_create`, `plan_save`, and `plan_delete` itself. Rows hold a random browser ID and the account ID, never an email, IP address, or device details.
 - **Dashboard**: sign in, then open `/admin`. Anyone not listed in `ADMIN_EMAILS` gets a 404. Nothing on the public site links to it.
 

@@ -1,0 +1,324 @@
+/* Private lineup pages: editor, list, roster, and the read-only share view.
+   No analytics or beacons. Contains no roster data; the server embeds it
+   only in pages for signed-in admins. */
+(function () {
+  "use strict";
+
+  var POSITIONS = ["LW", "C", "RW", "LD", "RD", "OUT"];
+  var statusEl = document.getElementById("lu-status");
+
+  function status(text, isError) {
+    if (!statusEl) return;
+    statusEl.textContent = text || "";
+    statusEl.classList.toggle("error", Boolean(isError));
+  }
+
+  function api(method, url, body) {
+    return fetch(url, {
+      method: method,
+      credentials: "same-origin",
+      headers: body ? { "content-type": "application/json" } : {},
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (response) {
+      return response.json().catch(function () { return {}; }).then(function (data) {
+        if (!response.ok) throw new Error((data && data.error) || "Something went wrong. Try again.");
+        return data;
+      });
+    });
+  }
+
+  document.querySelectorAll("[data-print]").forEach(function (button) {
+    button.addEventListener("click", function () { window.print(); });
+  });
+
+  // ---------- list page ----------
+  document.querySelectorAll("[data-duplicate]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      button.disabled = true;
+      api("POST", "/api/lineups", { copyFrom: button.getAttribute("data-duplicate") })
+        .then(function (data) { location.href = "/lineups/" + data.lineup.id + "/"; })
+        .catch(function (error) { button.disabled = false; status(error.message, true); });
+    });
+  });
+
+  // ---------- roster page ----------
+  var addForm = document.getElementById("lu-add");
+  if (addForm) {
+    addForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var form = new FormData(addForm);
+      api("POST", "/api/lineups/roster", {
+        number: Number(form.get("number")),
+        firstName: String(form.get("firstName") || ""),
+        lastInitial: String(form.get("lastInitial") || ""),
+        goalie: form.get("goalie") === "on"
+      })
+        .then(function () { location.reload(); })
+        .catch(function (error) { status(error.message, true); });
+    });
+  }
+  document.querySelectorAll("[data-remove-player]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      if (!confirm("Remove " + button.getAttribute("data-label") + " from the roster?")) return;
+      api("DELETE", "/api/lineups/roster/" + button.getAttribute("data-remove-player"))
+        .then(function () { location.reload(); })
+        .catch(function (error) { status(error.message, true); });
+    });
+  });
+
+  // ---------- editor ----------
+  var dataEl = document.getElementById("lu-data");
+  if (!dataEl) return;
+  var data = JSON.parse(dataEl.textContent || "{}");
+  var players = {};
+  (data.players || []).forEach(function (p) { players[p.id] = p; });
+  var lineup = data.lineup || { id: null, title: "", slots: {}, shareToken: null };
+  var slots = {};
+  POSITIONS.forEach(function (pos) {
+    slots[pos] = ((lineup.slots && lineup.slots[pos]) || []).filter(function (id) { return players[id]; });
+  });
+  var selected = null;
+  var dirty = false;
+  var titleInput = document.getElementById("lu-title");
+  var printTitle = document.getElementById("lu-print-title");
+
+  function poolIds() {
+    var placed = {};
+    POSITIONS.forEach(function (pos) { slots[pos].forEach(function (id) { placed[id] = true; }); });
+    return (data.players || []).filter(function (p) { return p.active && !placed[p.id]; }).map(function (p) { return p.id; });
+  }
+
+  function listFor(pos) { return pos === "POOL" ? null : slots[pos]; }
+
+  function render() {
+    ["POOL"].concat(POSITIONS).forEach(function (pos) {
+      var ul = document.querySelector('[data-list="' + pos + '"]');
+      var ids = pos === "POOL" ? poolIds() : slots[pos];
+      ul.textContent = "";
+      ids.forEach(function (id) {
+        var li = document.createElement("li");
+        li.className = "lu-chip" + (id === selected ? " selected" : "") + (players[id].active ? "" : " inactive");
+        li.textContent = players[id].label;
+        li.setAttribute("data-id", id);
+        li.setAttribute("role", "button");
+        li.setAttribute("tabindex", "0");
+        li.setAttribute("aria-pressed", id === selected ? "true" : "false");
+        ul.appendChild(li);
+      });
+      if (!ids.length) {
+        var none = document.createElement("li");
+        none.className = "lu-none";
+        none.textContent = pos === "POOL" ? "Everyone is placed" : "Drop here";
+        ul.appendChild(none);
+      }
+      var count = document.querySelector('[data-count="' + pos + '"]');
+      if (count) count.textContent = String(ids.length);
+    });
+    document.body.classList.toggle("lu-selecting", Boolean(selected));
+  }
+
+  function move(id, pos, beforeId) {
+    POSITIONS.forEach(function (p) {
+      var i = slots[p].indexOf(id);
+      if (i !== -1) slots[p].splice(i, 1);
+    });
+    var target = listFor(pos);
+    if (target) {
+      var at = beforeId ? target.indexOf(beforeId) : -1;
+      if (at === -1) target.push(id);
+      else target.splice(at, 0, id);
+    }
+    selected = null;
+    markDirty();
+    render();
+  }
+
+  function markDirty() {
+    dirty = true;
+    status("Unsaved changes");
+  }
+
+  function zoneOf(el) {
+    var zone = el && el.closest ? el.closest("[data-pos]") : null;
+    return zone ? zone.getAttribute("data-pos") : null;
+  }
+
+  // Tap: select a player, then tap a column (or a player in it) to move there.
+  function tap(target) {
+    var chip = target.closest(".lu-chip");
+    var pos = zoneOf(target);
+    if (chip && chip.hasAttribute("data-id")) {
+      var id = chip.getAttribute("data-id");
+      if (selected === id) { selected = null; render(); return; }
+      if (selected) { move(selected, pos, id); return; }
+      selected = id;
+      render();
+      return;
+    }
+    if (selected && pos) move(selected, pos, null);
+  }
+
+  // Pointer drag (mouse, touch, pen).
+  var drag = null;
+  var board = document.querySelector(".lu-board");
+
+  board.addEventListener("pointerdown", function (event) {
+    if (event.button !== 0 && event.pointerType === "mouse") return;
+    var chip = event.target.closest(".lu-chip[data-id]");
+    drag = { id: chip ? chip.getAttribute("data-id") : null, chip: chip, x: event.clientX, y: event.clientY, active: false, ghost: null, pointer: event.pointerId };
+    if (chip) {
+      try { chip.setPointerCapture(event.pointerId); } catch (e) {}
+    }
+  });
+
+  board.addEventListener("pointermove", function (event) {
+    if (!drag || !drag.id || drag.pointer !== event.pointerId) return;
+    if (!drag.active) {
+      if (Math.abs(event.clientX - drag.x) + Math.abs(event.clientY - drag.y) < 8) return;
+      drag.active = true;
+      var rect = drag.chip.getBoundingClientRect();
+      drag.dx = event.clientX - rect.left;
+      drag.dy = event.clientY - rect.top;
+      drag.ghost = drag.chip.cloneNode(true);
+      drag.ghost.className = "lu-chip lu-ghost";
+      drag.ghost.style.width = rect.width + "px";
+      document.body.appendChild(drag.ghost);
+      drag.chip.classList.add("lu-dragging");
+    }
+    event.preventDefault();
+    drag.ghost.style.left = event.clientX - drag.dx + "px";
+    drag.ghost.style.top = event.clientY - drag.dy + "px";
+    var over = document.elementFromPoint(event.clientX, event.clientY);
+    document.querySelectorAll(".lu-zone.over").forEach(function (z) { z.classList.remove("over"); });
+    var zone = over && over.closest(".lu-zone[data-pos]");
+    if (zone) zone.classList.add("over");
+    if (event.clientY < 70) window.scrollBy(0, -14);
+    else if (event.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
+  });
+
+  function endDrag(event, cancelled) {
+    if (!drag || drag.pointer !== event.pointerId) return;
+    var current = drag;
+    drag = null;
+    document.querySelectorAll(".lu-zone.over").forEach(function (z) { z.classList.remove("over"); });
+    if (current.ghost) current.ghost.remove();
+    if (current.chip) current.chip.classList.remove("lu-dragging");
+    if (cancelled) return;
+    if (!current.active) { tap(event.target.closest ? event.target : current.chip); return; }
+    var over = document.elementFromPoint(event.clientX, event.clientY);
+    var pos = zoneOf(over);
+    if (!pos) return;
+    var before = over.closest(".lu-chip[data-id]");
+    var beforeId = before && before.getAttribute("data-id") !== current.id ? before.getAttribute("data-id") : null;
+    move(current.id, pos, beforeId);
+  }
+
+  board.addEventListener("pointerup", function (event) {
+    if (drag && drag.chip && !drag.active) {
+      // Captured pointer: event.target is the chip; tap uses it directly.
+      var chip = drag.chip;
+      drag = null;
+      tap(chip);
+      return;
+    }
+    if (drag && !drag.id) {
+      drag = null;
+      tap(event.target);
+      return;
+    }
+    endDrag(event, false);
+  });
+  board.addEventListener("pointercancel", function (event) { endDrag(event, true); });
+
+  board.addEventListener("keydown", function (event) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    var el = event.target.closest(".lu-chip[data-id], .lu-zone h2");
+    if (!el) return;
+    event.preventDefault();
+    tap(el);
+  });
+  document.querySelectorAll(".lu-zone h2").forEach(function (h) { h.setAttribute("tabindex", "0"); });
+
+  titleInput.addEventListener("input", function () {
+    printTitle.textContent = titleInput.value.trim() || "Lineup";
+    markDirty();
+  });
+
+  window.addEventListener("beforeunload", function (event) {
+    if (!dirty) return;
+    event.preventDefault();
+    event.returnValue = "";
+  });
+
+  var saveBtn = document.getElementById("lu-save");
+  saveBtn.addEventListener("click", function () {
+    var body = { title: titleInput.value.trim(), slots: slots };
+    saveBtn.disabled = true;
+    status("Saving…");
+    var request = lineup.id ? api("PATCH", "/api/lineups/" + lineup.id, body) : api("POST", "/api/lineups", body);
+    request
+      .then(function (result) {
+        var isNew = !lineup.id;
+        lineup.id = result.lineup.id;
+        lineup.shareToken = result.lineup.shareToken;
+        dirty = false;
+        if (isNew) {
+          history.replaceState(null, "", "/lineups/" + lineup.id + "/");
+          document.getElementById("lu-delete").hidden = false;
+          document.getElementById("lu-share").hidden = false;
+        }
+        status("Saved" + (lineup.shareToken ? ". The share link shows this version." : "."));
+      })
+      .catch(function (error) { status(error.message, true); })
+      .then(function () { saveBtn.disabled = false; });
+  });
+
+  document.getElementById("lu-delete").addEventListener("click", function () {
+    if (!lineup.id || !confirm("Delete this lineup? Its share link will stop working.")) return;
+    api("DELETE", "/api/lineups/" + lineup.id)
+      .then(function () { dirty = false; location.href = "/lineups/"; })
+      .catch(function (error) { status(error.message, true); });
+  });
+
+  var linkInput = document.getElementById("lu-link");
+  function shareUrl(token) { return location.origin + "/lineups/v/" + token + "/"; }
+  function showLink(token, verb) {
+    var url = shareUrl(token);
+    linkInput.value = url;
+    linkInput.hidden = false;
+    var done = function () { status(verb + (dirty ? " Save first so the link shows your latest changes." : "")); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done, function () {
+        linkInput.select();
+        status("Copy the link below.");
+      });
+    } else {
+      linkInput.select();
+      status("Copy the link below.");
+    }
+  }
+
+  document.getElementById("lu-copy").addEventListener("click", function () {
+    if (!lineup.id) return;
+    if (lineup.shareToken) { showLink(lineup.shareToken, "Link copied."); return; }
+    api("POST", "/api/lineups/" + lineup.id + "/share", {})
+      .then(function (result) { lineup.shareToken = result.shareToken; showLink(result.shareToken, "Link copied."); })
+      .catch(function (error) { status(error.message, true); });
+  });
+
+  document.getElementById("lu-regen").addEventListener("click", function () {
+    if (!lineup.id || !confirm("Make a new link? The old link will stop working.")) return;
+    api("POST", "/api/lineups/" + lineup.id + "/share", { regenerate: true })
+      .then(function (result) { lineup.shareToken = result.shareToken; showLink(result.shareToken, "New link copied. The old link no longer works."); })
+      .catch(function (error) { status(error.message, true); });
+  });
+
+  document.getElementById("lu-unshare").addEventListener("click", function () {
+    if (!lineup.id || !confirm("Turn off the share link? Anyone using it will see Not found.")) return;
+    api("DELETE", "/api/lineups/" + lineup.id + "/share")
+      .then(function () { lineup.shareToken = null; linkInput.hidden = true; linkInput.value = ""; status("Share link turned off."); })
+      .catch(function (error) { status(error.message, true); });
+  });
+
+  render();
+})();

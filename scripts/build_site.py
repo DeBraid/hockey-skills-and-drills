@@ -886,6 +886,8 @@ def publish_site() -> None:
         SITE / "privacy" / "index.html",
         SITE / "terms" / "index.html",
         SITE / "js" / "site.js",
+        SITE / "js" / "lineups.js",
+        SITE / "css" / "lineups.css",
         SITE / "css" / "styles.css",
         SITE / "media" / "fonts" / "Virgil.woff2",
         SITE / "media" / "cone-weave" / "cone-weave-anim.html",
