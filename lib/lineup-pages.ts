@@ -146,7 +146,10 @@ ${zones}
 
 export function renderShared(lineup: SharedLineup): string {
   const zones = POSITIONS.map((pos) => {
-    const items = lineup.slots[pos].map((label) => `<li class="lu-chip">${esc(label)}</li>`).join("")
+    const prefix = pos === "LW" || pos === "C" || pos === "RW" ? "L" : pos === "LD" || pos === "RD" ? "P" : ""
+    const items = lineup.slots[pos]
+      .map((label, i) => `<li class="lu-chip">${prefix ? `<span class="lu-line">${prefix}${i + 1}</span> ` : ""}${esc(label)}</li>`)
+      .join("")
     return `<section class="lu-zone lu-zone-${pos.toLowerCase()}" aria-label="${POSITION_NAMES[pos]}">
         <h2><span>${POSITION_NAMES[pos]}</span> <span class="lu-count">${lineup.slots[pos].length}</span></h2>
         <ul class="lu-list">${items || `<li class="lu-none">—</li>`}</ul>
