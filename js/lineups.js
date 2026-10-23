@@ -85,19 +85,32 @@
   function poolIds() {
     var placed = {};
     POSITIONS.forEach(function (pos) { slots[pos].forEach(function (id) { placed[id] = true; }); });
-    return (data.players || []).filter(function (p) { return p.active && !placed[p.id]; }).map(function (p) { return p.id; });
+    return (data.players || []).filter(function (p) { return p.active && !p.goalie && !placed[p.id]; }).map(function (p) { return p.id; });
   }
 
-  function listFor(pos) { return pos === "POOL" ? null : slots[pos]; }
+  function goalieIds() {
+    var out = {};
+    slots.OUT.forEach(function (id) { out[id] = true; });
+    return (data.players || []).filter(function (p) { return p.active && p.goalie && !out[p.id]; }).map(function (p) { return p.id; });
+  }
+
+  // Goalies move only between Goalies and Out; skaters never go to Goalies.
+  function allowed(id, pos) {
+    var goalie = players[id] && players[id].goalie;
+    if (goalie) return pos === "GOALIES" || pos === "OUT";
+    return pos !== "GOALIES";
+  }
+
+  function listFor(pos) { return pos === "POOL" || pos === "GOALIES" ? null : slots[pos]; }
 
   function render() {
-    ["POOL"].concat(POSITIONS).forEach(function (pos) {
+    ["POOL", "GOALIES"].concat(POSITIONS).forEach(function (pos) {
       var ul = document.querySelector('[data-list="' + pos + '"]');
-      var ids = pos === "POOL" ? poolIds() : slots[pos];
+      var ids = pos === "POOL" ? poolIds() : pos === "GOALIES" ? goalieIds() : slots[pos];
       ul.textContent = "";
       ids.forEach(function (id) {
         var li = document.createElement("li");
-        li.className = "lu-chip" + (id === selected ? " selected" : "") + (players[id].active ? "" : " inactive");
+        li.className = "lu-chip" + (players[id].goalie ? " lu-goalie" : "") + (id === selected ? " selected" : "") + (players[id].active ? "" : " inactive");
         li.textContent = players[id].label;
         li.setAttribute("data-id", id);
         li.setAttribute("role", "button");
@@ -108,7 +121,7 @@
       if (!ids.length) {
         var none = document.createElement("li");
         none.className = "lu-none";
-        none.textContent = pos === "POOL" ? "Everyone is placed" : "Drop here";
+        none.textContent = pos === "POOL" ? "Everyone is placed" : pos === "GOALIES" ? "No goalie in net" : "Drop here";
         ul.appendChild(none);
       }
       var count = document.querySelector('[data-count="' + pos + '"]');
@@ -118,6 +131,12 @@
   }
 
   function move(id, pos, beforeId) {
+    if (!allowed(id, pos)) {
+      selected = null;
+      render();
+      status(players[id].goalie ? "Goalies can only go to Out." : "Only goalies go in the Goalies spot.", true);
+      return;
+    }
     POSITIONS.forEach(function (p) {
       var i = slots[p].indexOf(id);
       if (i !== -1) slots[p].splice(i, 1);
@@ -160,10 +179,11 @@
 
   // Pointer drag (mouse, touch, pen).
   var drag = null;
-  var board = document.querySelector(".lu-board");
+  var board = document.querySelector(".lu-editor");
 
   board.addEventListener("pointerdown", function (event) {
     if (event.button !== 0 && event.pointerType === "mouse") return;
+    if (!event.target.closest("[data-pos]")) return;
     var chip = event.target.closest(".lu-chip[data-id]");
     drag = { id: chip ? chip.getAttribute("data-id") : null, chip: chip, x: event.clientX, y: event.clientY, active: false, ghost: null, pointer: event.pointerId };
     if (chip) {
@@ -189,8 +209,8 @@
     drag.ghost.style.left = event.clientX - drag.dx + "px";
     drag.ghost.style.top = event.clientY - drag.dy + "px";
     var over = document.elementFromPoint(event.clientX, event.clientY);
-    document.querySelectorAll(".lu-zone.over").forEach(function (z) { z.classList.remove("over"); });
-    var zone = over && over.closest(".lu-zone[data-pos]");
+    document.querySelectorAll("[data-pos].over").forEach(function (z) { z.classList.remove("over"); });
+    var zone = over && over.closest("[data-pos]");
     if (zone) zone.classList.add("over");
     if (event.clientY < 70) window.scrollBy(0, -14);
     else if (event.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
@@ -200,7 +220,7 @@
     if (!drag || drag.pointer !== event.pointerId) return;
     var current = drag;
     drag = null;
-    document.querySelectorAll(".lu-zone.over").forEach(function (z) { z.classList.remove("over"); });
+    document.querySelectorAll("[data-pos].over").forEach(function (z) { z.classList.remove("over"); });
     if (current.ghost) current.ghost.remove();
     if (current.chip) current.chip.classList.remove("lu-dragging");
     if (cancelled) return;
@@ -232,12 +252,12 @@
 
   board.addEventListener("keydown", function (event) {
     if (event.key !== "Enter" && event.key !== " ") return;
-    var el = event.target.closest(".lu-chip[data-id], .lu-zone h2");
+    var el = event.target.closest(".lu-chip[data-id], [data-pos] h2");
     if (!el) return;
     event.preventDefault();
     tap(el);
   });
-  document.querySelectorAll(".lu-zone h2").forEach(function (h) { h.setAttribute("tabindex", "0"); });
+  document.querySelectorAll("[data-pos] h2").forEach(function (h) { h.setAttribute("tabindex", "0"); });
 
   titleInput.addEventListener("input", function () {
     printTitle.textContent = titleInput.value.trim() || "Lineup";

@@ -81,10 +81,9 @@ ${rows || `<li class="empty">No players yet.</li>`}
 }
 
 export function renderEditor(lineup: Lineup | null, players: Player[], viewer: AccountUser): string {
-  const goalies = players.filter((p) => p.goalie && p.active)
   const data = {
     lineup: lineup ? { id: lineup.id, title: lineup.title, slots: lineup.slots, shareToken: lineup.shareToken } : null,
-    players: players.filter((p) => !p.goalie).map((p) => ({ id: p.id, label: playerLabel(p), active: p.active })),
+    players: players.map((p) => ({ id: p.id, label: playerLabel(p), active: p.active, goalie: p.goalie })),
   }
   const zones = ["POOL", ...POSITIONS]
     .map((pos) => {
@@ -117,9 +116,12 @@ export function renderEditor(lineup: Lineup | null, players: Player[], viewer: A
         <input class="lu-link" id="lu-link" type="text" readonly hidden>
       </div>
       <p class="lu-status" id="lu-status" role="status"></p>
-      <p class="lu-hint">Drag a player into a column, or tap a player and then tap a column. Unsaved changes stay on this page until you press Save.</p>
+      <p class="lu-hint">Drag a player into a column, or tap a player and then tap a column. Goalies can move to Out and back. Unsaved changes stay on this page until you press Save.</p>
     </div>
-    ${goaliesBlock(goalies.map(playerLabel))}
+    <section class="lu-goalies lu-zone-goalies" data-pos="GOALIES" aria-label="Goalies">
+      <h2>Goalies</h2>
+      <ul class="lu-list lu-inline" data-list="GOALIES"></ul>
+    </section>
     <div class="lu-board">
 ${zones}
     </div>
