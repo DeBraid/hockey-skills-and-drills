@@ -27,6 +27,9 @@
 
 .lu-goalies { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 0.75rem; margin: 0.5rem 0 0.75rem; }
 .lu-goalies h2 { margin: 0; font-size: 1rem; }
+.lu-zone-goalies { padding: 0.35rem 0.5rem; border: 1px solid transparent; border-radius: 12px; }
+.lu-zone-goalies.over { border-color: var(--blue); background: var(--chip); }
+.lu-selecting .lu-zone-goalies h2 { background: var(--chip); border-radius: 8px; padding: 0.2rem 0.35rem; cursor: pointer; }
 
 .lu-board {
   display: grid;
@@ -55,7 +58,8 @@
 .lu-zone-pool { grid-column: 1 / -1; background: var(--ice); }
 .lu-zone-out { border-style: dashed; }
 .lu-zone-out h2 span:first-child { color: var(--red); }
-.lu-zone.over { border-color: var(--blue); background: var(--chip); }
+.lu-zone.over,
+.lu-zone-goalies.over { border-color: var(--blue); background: var(--chip); }
 .lu-selecting .lu-zone h2 { background: var(--chip); }
 .lu-selecting .lu-zone-pool h2 { background: transparent; }
 

@@ -227,7 +227,11 @@ export async function getSharedLineup(token: string): Promise<SharedLineup | nul
       return player ? [playerLabel(player)] : []
     })
   }
-  const goalies = [...byId.values()].filter((p) => p.goalie && p.active).sort((a, b) => a.number - b.number).map(playerLabel)
+  const out = new Set(slots.OUT)
+  const goalies = [...byId.values()]
+    .filter((p) => p.goalie && p.active && !out.has(p.id))
+    .sort((a, b) => a.number - b.number)
+    .map(playerLabel)
   return { title: String(row.title ?? ""), updatedAt: toIso(row.updated_at), goalies, slots: labels }
 }
 
@@ -249,8 +253,14 @@ async function cleanSlots(value: unknown): Promise<Slots> {
     }
   }
   if (seen.size) {
-    const found = await getPool().query(`SELECT id FROM players WHERE id = ANY($1::uuid[]) AND NOT goalie`, [[...seen]])
+    const found = await getPool().query(`SELECT id, goalie FROM players WHERE id = ANY($1::uuid[])`, [[...seen]])
     if (found.rowCount !== seen.size) throw new LineupInputError("A player in the lineup was not found.")
+    // Goalies stay in net unless marked Out; they never go in a skater column.
+    const goalies = new Set(found.rows.filter((r) => r.goalie).map((r) => String(r.id)))
+    for (const position of POSITIONS) {
+      if (position === "OUT") continue
+      if (slots[position].some((id) => goalies.has(id))) throw new LineupInputError("Goalies can only be moved to Out.")
+    }
   }
   return slots
 }
