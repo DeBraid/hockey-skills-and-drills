@@ -171,7 +171,7 @@ async function mutationGuard(request: Request, userId: string): Promise<Response
   }
 }
 
-function originAllowed(request: Request): boolean {
+export function originAllowed(request: Request): boolean {
   const header = request.headers.get("origin")
   if (!header) return false
   try {
