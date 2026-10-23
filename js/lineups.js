@@ -112,10 +112,18 @@
       var ul = document.querySelector('[data-list="' + pos + '"]');
       var ids = pos === "POOL" ? poolIds() : pos === "GOALIES" ? goalieIds() : slots[pos];
       ul.textContent = "";
-      ids.forEach(function (id) {
+      ids.forEach(function (id, index) {
         var li = document.createElement("li");
         li.className = "lu-chip" + (players[id].goalie ? " lu-goalie" : "") + (id === selected ? " selected" : "") + (players[id].active ? "" : " inactive");
-        li.textContent = players[id].label;
+        var prefix = linePrefix(pos);
+        if (prefix) {
+          var tag = document.createElement("span");
+          tag.className = "lu-line";
+          tag.textContent = prefix + (index + 1);
+          li.appendChild(tag);
+          li.appendChild(document.createTextNode(" "));
+        }
+        li.appendChild(document.createTextNode(players[id].label));
         li.setAttribute("data-id", id);
         li.setAttribute("role", "button");
         li.setAttribute("tabindex", "0");
@@ -134,6 +142,13 @@
     document.body.classList.toggle("lu-selecting", Boolean(selected));
   }
 
+  // Row labels so coaches read lines across: forwards L1, L2, L3; defence pairs P1, P2, P3.
+  function linePrefix(pos) {
+    if (pos === "LW" || pos === "C" || pos === "RW") return "L";
+    if (pos === "LD" || pos === "RD") return "P";
+    return "";
+  }
+
   function move(id, pos, beforeId) {
     if (!allowed(id, pos)) {
       selected = null;
@@ -147,7 +162,7 @@
     });
     var target = listFor(pos);
     if (target) {
-      var at = beforeId ? target.indexOf(beforeId) : -1;
+      var at = beforeId && beforeId !== id ? target.indexOf(beforeId) : -1;
       if (at === -1) target.push(id);
       else target.splice(at, 0, id);
     }
@@ -241,6 +256,53 @@
     if (selected && pos) move(selected, pos, null);
   }
 
+  // Where a drag would land: the zone under the pointer and the player to insert before
+  // (null = end of the list). Uses chip midpoints, so dropping in a gap or on a chip works.
+  function dropTarget(x, y, dragId) {
+    var over = document.elementFromPoint(x, y);
+    var zone = over && over.closest("[data-pos]");
+    if (!zone) return null;
+    var pos = zone.getAttribute("data-pos");
+    var list = zone.querySelector("[data-list]");
+    var chips = Array.prototype.filter.call(list.querySelectorAll(".lu-chip[data-id]"), function (c) {
+      return c.getAttribute("data-id") !== dragId;
+    });
+    var before = null;
+    if (pos !== "POOL" && pos !== "GOALIES") {
+      for (var i = 0; i < chips.length; i++) {
+        var r = chips[i].getBoundingClientRect();
+        if (y < r.top + r.height / 2) { before = chips[i]; break; }
+      }
+    }
+    return { zone: zone, pos: pos, list: list, chips: chips, before: before, beforeId: before ? before.getAttribute("data-id") : null };
+  }
+
+  var marker = document.createElement("div");
+  marker.className = "lu-drop-marker";
+  marker.hidden = true;
+  document.body.appendChild(marker);
+
+  function showDrop(target) {
+    document.querySelectorAll("[data-pos].over").forEach(function (z) { z.classList.remove("over"); });
+    marker.hidden = true;
+    if (!target) return;
+    target.zone.classList.add("over");
+    if (target.pos === "POOL" || target.pos === "GOALIES") return;
+    var listRect = target.list.getBoundingClientRect();
+    var y;
+    if (target.before) {
+      y = target.before.getBoundingClientRect().top - 3;
+    } else if (target.chips.length) {
+      y = target.chips[target.chips.length - 1].getBoundingClientRect().bottom + 3;
+    } else {
+      y = listRect.top + 2;
+    }
+    marker.style.left = listRect.left + "px";
+    marker.style.width = listRect.width + "px";
+    marker.style.top = y - 2 + "px";
+    marker.hidden = false;
+  }
+
   // Pointer drag (mouse, touch, pen).
   var drag = null;
   var board = document.querySelector(".lu-editor");
@@ -272,10 +334,7 @@
     event.preventDefault();
     drag.ghost.style.left = event.clientX - drag.dx + "px";
     drag.ghost.style.top = event.clientY - drag.dy + "px";
-    var over = document.elementFromPoint(event.clientX, event.clientY);
-    document.querySelectorAll("[data-pos].over").forEach(function (z) { z.classList.remove("over"); });
-    var zone = over && over.closest("[data-pos]");
-    if (zone) zone.classList.add("over");
+    showDrop(dropTarget(event.clientX, event.clientY, drag.id));
     if (event.clientY < 70) window.scrollBy(0, -14);
     else if (event.clientY > window.innerHeight - 70) window.scrollBy(0, 14);
   });
@@ -284,17 +343,14 @@
     if (!drag || drag.pointer !== event.pointerId) return;
     var current = drag;
     drag = null;
-    document.querySelectorAll("[data-pos].over").forEach(function (z) { z.classList.remove("over"); });
+    showDrop(null);
     if (current.ghost) current.ghost.remove();
     if (current.chip) current.chip.classList.remove("lu-dragging");
     if (cancelled) return;
     if (!current.active) { tap(event.target.closest ? event.target : current.chip); return; }
-    var over = document.elementFromPoint(event.clientX, event.clientY);
-    var pos = zoneOf(over);
-    if (!pos) return;
-    var before = over.closest(".lu-chip[data-id]");
-    var beforeId = before && before.getAttribute("data-id") !== current.id ? before.getAttribute("data-id") : null;
-    move(current.id, pos, beforeId);
+    var target = dropTarget(event.clientX, event.clientY, current.id);
+    if (!target) return;
+    move(current.id, target.pos, target.beforeId);
   }
 
   board.addEventListener("pointerup", function (event) {
