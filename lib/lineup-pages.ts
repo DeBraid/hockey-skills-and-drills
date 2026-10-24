@@ -185,7 +185,7 @@ export function renderEditor(team: Team, lineup: Lineup | null, players: Player[
 ${zones}
     </div>
     <section class="lu-post lu-noprint" aria-labelledby="lu-post-h">
-      <h2 id="lu-post-h">After the game <span class="muted">· private, never on the share link</span></h2>
+      <h2 id="lu-post-h">After the game <span class="muted">· also shown on the share link</span></h2>
       <fieldset class="lu-stars">
         <legend>Three stars</legend>
         ${[1, 2, 3].map((n) => `<label class="lu-star-row"><span class="lu-star-label"><b aria-hidden="true">${"★".repeat(n)}</b> ${n === 1 ? "1st star · player of the game" : n === 2 ? "2nd star" : "3rd star"}</span>
@@ -219,8 +219,23 @@ export function renderShared(lineup: SharedLineup): string {
     <div class="lu-board">
 ${zones}
     </div>
+    ${postGameBlock(lineup)}
   </main>`
   return shell(`${lineup.title || "Lineup"}`, body, false)
+}
+
+// Read-only notes and three stars on the share view; nothing renders when unset.
+function postGameBlock(lineup: SharedLineup): string {
+  const picks = lineup.stars
+    .map((label, i) => (label ? `<li class="lu-star-row"><b aria-label="${["1st", "2nd", "3rd"][i]} star">${"★".repeat(i + 1)}</b> ${esc(label)}${i === 0 ? ` <span class="muted">· player of the game</span>` : ""}</li>` : ""))
+    .filter(Boolean)
+  const notes = lineup.notes.trim()
+  if (!picks.length && !notes) return ""
+  return `<section class="lu-post lu-post-view" aria-labelledby="lu-post-h">
+      <h2 id="lu-post-h">After the game</h2>
+      ${picks.length ? `<h3>Three stars</h3><ol class="lu-star-list">${picks.join("")}</ol>` : ""}
+      ${notes ? `<h3>Coach's notes</h3><div class="lu-notes-view">${esc(notes)}</div>` : ""}
+    </section>`
 }
 
 function goaliesBlock(labels: string[]): string {
