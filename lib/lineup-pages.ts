@@ -1,6 +1,6 @@
 import type { AccountUser } from "./auth.js"
 import type { Game } from "./schedule.js"
-import { playerLabel, POSITIONS, type Lineup, type LineupSummary, type Player, type Position, type SharedLineup } from "./lineups.js"
+import { playerLabel, POSITIONS, type Lineup, type LineupSummary, type Player, type Position, type SharedLineup, type Team } from "./lineups.js"
 
 // Server-rendered HTML for the private lineup pages. These pages load no
 // analytics and no usage beacons, and send no referrer, so share tokens and
@@ -21,54 +21,76 @@ export function renderMessage(message: string): string {
   return shell("Lineups", `<main id="content" class="wrap lu-page"><p>${esc(message)}</p></main>`, true)
 }
 
-export function renderList(lineups: LineupSummary[], viewer: AccountUser): string {
+export function renderTeams(teams: Team[], viewer: AccountUser): string {
+  const rows = teams
+    .map((t) => `<li class="lu-item"><a class="lu-item-link" href="/lineups/team/${esc(t.id)}/"><strong>${esc(t.name)}</strong>
+        <span class="muted">Lineups and roster</span></a>
+        <a class="btn" href="/lineups/team/${esc(t.id)}/roster/">Roster</a></li>`)
+    .join("\n")
+  const body = `  <main id="content" class="wrap-read lu-page">
+    <header class="drill-head">
+      <p class="kicker">Private · only you can see this</p>
+      <h1>Lineups</h1>
+      <p class="lede">Pick a team. Signed in as ${esc(viewer.email)}.</p>
+    </header>
+    <ul class="lu-items">
+${rows || `<li class="empty">No teams yet.</li>`}
+    </ul>
+  </main>`
+  return shell("Lineups", body, true)
+}
+
+export function renderList(team: Team, lineups: LineupSummary[], viewer: AccountUser): string {
+  const base = `/lineups/team/${esc(team.id)}`
   const rows = lineups.length
     ? lineups
         .map(
           (l) => `<li class="lu-item">
-        <a class="lu-item-link" href="/lineups/${esc(l.id)}/"><strong>${esc(l.title || "Untitled lineup")}</strong>
+        <a class="lu-item-link" href="${base}/${esc(l.id)}/"><strong>${esc(l.title || "Untitled lineup")}</strong>
         <span class="muted">${l.placed} placed · ${l.out} out${l.shared ? " · link on" : ""} · ${when(l.updatedAt)}</span></a>
         <button class="btn" type="button" data-duplicate="${esc(l.id)}">Duplicate</button>
       </li>`
         )
         .join("\n")
     : `<li class="empty">No lineups yet. Start one with New lineup.</li>`
-  const body = `  <main id="content" class="wrap-read lu-page">
+  const body = `  <main id="content" class="wrap-read lu-page" data-team="${esc(team.id)}">
+    <p class="lu-back"><a href="/lineups/">← All teams</a></p>
     <header class="drill-head">
       <p class="kicker">Private · only you can see this</p>
-      <h1>Lineups</h1>
+      <h1>${esc(team.name)} lineups</h1>
       <p class="lede">Build a lineup for each game. Signed in as ${esc(viewer.email)}.</p>
     </header>
     <div class="lu-actions">
-      <a class="btn primary" href="/lineups/new/">New lineup</a>
-      <a class="btn" href="/lineups/roster/">Roster</a>
+      <a class="btn primary" href="${base}/new/">New lineup</a>
+      <a class="btn" href="${base}/roster/">Roster</a>
     </div>
     <p class="lu-status" id="lu-status" role="status"></p>
     <ul class="lu-items">
 ${rows}
     </ul>
   </main>`
-  return shell("Lineups", body, true)
+  return shell(`${team.name} · Lineups`, body, true, team)
 }
 
-export function renderRoster(players: Player[], viewer: AccountUser): string {
+export function renderRoster(team: Team, players: Player[], viewer: AccountUser): string {
+  const base = `/lineups/team/${esc(team.id)}`
   const rows = players
     .map(
       (p) => `<li class="lu-item"><span><strong>${esc(playerLabel(p))}</strong>${p.goalie ? ` <span class="lu-tag">G</span>` : ""}</span>
         <button class="btn danger" type="button" data-remove-player="${esc(p.id)}" data-label="${esc(playerLabel(p))}">Remove</button></li>`
     )
     .join("\n")
-  const body = `  <main id="content" class="wrap-read lu-page">
-    <p class="lu-back"><a href="/lineups/">← All lineups</a></p>
+  const body = `  <main id="content" class="wrap-read lu-page" data-team="${esc(team.id)}">
+    <p class="lu-back"><a href="${base}/">← ${esc(team.name)} lineups</a></p>
     <header class="drill-head">
       <p class="kicker">Private · only you can see this</p>
-      <h1>Roster</h1>
-      <p class="lede">Number, first name, and last initial only. Never enter full last names. Removing a player keeps them in lineups you already saved.</p>
+      <h1>${esc(team.name)} roster</h1>
+      <p class="lede">Number, first name, and last initial only. Never enter full last names. Tick Goalie for goalies; they stay in net and can only move to Out. Removing a player keeps them in lineups you already saved.</p>
     </header>
     <form class="lu-add" id="lu-add" autocomplete="off">
       <label>Number <input name="number" type="number" min="0" max="99" inputmode="numeric" required></label>
       <label>First name <input name="firstName" type="text" maxlength="24" required></label>
-      <label>Last initial <input name="lastInitial" type="text" maxlength="3" pattern="[A-Za-z]{0,3}"></label>
+      <label>Last initial <input name="lastInitial" type="text" maxlength="1" pattern="[A-Za-z]?"></label>
       <label class="lu-check"><input name="goalie" type="checkbox"> Goalie</label>
       <button class="btn primary" type="submit">Add player</button>
     </form>
@@ -78,10 +100,10 @@ ${rows || `<li class="empty">No players yet.</li>`}
     </ul>
     <p class="muted">Signed in as ${esc(viewer.email)}.</p>
   </main>`
-  return shell("Roster · Lineups", body, true)
+  return shell(`Roster · ${team.name}`, body, true, team)
 }
 
-export function renderEditor(lineup: Lineup | null, players: Player[], viewer: AccountUser, games: Game[] = []): string {
+export function renderEditor(team: Team, lineup: Lineup | null, players: Player[], viewer: AccountUser, games: Game[] = []): string {
   const title = lineup ? lineup.title : games[0]?.label || ""
   const gamePicker = !lineup && games.length
     ? `<label class="lu-title-label" for="lu-game">Game from the team schedule
@@ -102,8 +124,8 @@ export function renderEditor(lineup: Lineup | null, players: Player[], viewer: A
         <ul class="lu-list" data-list="${pos}"></ul>
       </section>`
   }).join("\n")
-  const body = `  <main id="content" class="wrap lu-page lu-editor">
-    <p class="lu-back"><a href="/lineups/">← All lineups</a></p>
+  const body = `  <main id="content" class="wrap lu-page lu-editor" data-team="${esc(team.id)}">
+    <p class="lu-back"><a href="/lineups/team/${esc(team.id)}/">← ${esc(team.name)} lineups</a></p>
     <h1 class="lu-print-title" id="lu-print-title">${esc(title || "Lineup")}</h1>
     <div class="lu-tools">
       ${gamePicker}
@@ -141,7 +163,7 @@ ${zones}
     <p class="muted lu-noprint">Signed in as ${esc(viewer.email)}.</p>
     <script type="application/json" id="lu-data">${safeJson(data)}</script>
   </main>`
-  return shell(`${lineup?.title || "New lineup"} · Lineups`, body, true)
+  return shell(`${lineup?.title || "New lineup"} · ${team.name}`, body, true, team)
 }
 
 export function renderShared(lineup: SharedLineup): string {
@@ -171,9 +193,11 @@ function goaliesBlock(labels: string[]): string {
   return `<section class="lu-goalies" aria-label="Goalies"><h2>Goalies</h2><ul class="lu-list lu-inline">${chips || `<li class="lu-none">—</li>`}</ul></section>`
 }
 
-function shell(title: string, body: string, admin: boolean): string {
+function shell(title: string, body: string, admin: boolean, team?: Team): string {
   const nav = admin
-    ? `<nav class="header-actions" aria-label="Lineups"><a class="plan-nav" href="/lineups/">Lineups</a><a class="plan-nav" href="/lineups/roster/">Roster</a></nav>`
+    ? `<nav class="header-actions" aria-label="Lineups"><a class="plan-nav" href="/lineups/">Teams</a>${
+        team ? `<a class="plan-nav" href="/lineups/team/${esc(team.id)}/roster/">Roster</a>` : ""
+      }</nav>`
     : ""
   const brand = admin ? `<a class="brand" href="/">` : `<span class="brand">`
   const brandEnd = admin ? `</a>` : `</span>`

@@ -17,7 +17,30 @@ const MAX_LINEUPS = 300
 const MAX_PLAYERS = 60
 const TOKEN_RE = /^[A-Za-z0-9_-]{32,64}$/
 const NAME_RE = /^[\p{L}][\p{L} .'-]{0,23}$/u
-const INITIAL_RE = /^[A-Za-z]{0,3}$/
+const INITIAL_RE = /^[A-Z]?$/
+
+export interface Team {
+  id: string
+  name: string
+  scheduleUrl: string | null
+}
+
+const TEAM_RE = /^[a-z0-9-]{1,32}$/
+
+export async function listTeams(): Promise<Team[]> {
+  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams ORDER BY sort, name`)
+  return result.rows.map(toTeam)
+}
+
+export async function getTeam(id: string): Promise<Team | null> {
+  if (!TEAM_RE.test(id)) return null
+  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams WHERE id = $1`, [id])
+  return result.rows[0] ? toTeam(result.rows[0]) : null
+}
+
+function toTeam(row: Record<string, unknown>): Team {
+  return { id: String(row.id), name: String(row.name ?? ""), scheduleUrl: row.schedule_url ? String(row.schedule_url) : null }
+}
 
 export interface Player {
   id: string
@@ -30,6 +53,7 @@ export interface Player {
 
 export interface Lineup {
   id: string
+  teamId: string
   title: string
   slots: Slots
   shareToken: string | null
@@ -67,48 +91,50 @@ export function emptySlots(): Slots {
 
 // ---------- players ----------
 
-export async function listPlayers(includeInactive = false): Promise<Player[]> {
+export async function listPlayers(teamId: string, includeInactive = false): Promise<Player[]> {
   const result = await getPool().query(
     `SELECT id, number, first_name, last_initial, goalie, active
      FROM players
-     ${includeInactive ? "" : "WHERE active"}
-     ORDER BY goalie, number, first_name`
+     WHERE team_id = $1 ${includeInactive ? "" : "AND active"}
+     ORDER BY goalie, number, first_name`,
+    [teamId]
   )
   return result.rows.map(toPlayer)
 }
 
-export async function addPlayer(input: unknown): Promise<Player> {
+export async function addPlayer(teamId: string, input: unknown): Promise<Player> {
   const body = asObject(input, "Could not read that player.")
   const number = cleanNumber(body.number)
   const firstName = cleanName(body.firstName)
   const lastInitial = cleanInitial(body.lastInitial)
   const goalie = body.goalie === true
   const pool = getPool()
-  const count = await pool.query(`SELECT count(*)::int AS n FROM players WHERE active`)
+  const count = await pool.query(`SELECT count(*)::int AS n FROM players WHERE active AND team_id = $1`, [teamId])
   if (Number(count.rows[0]?.n || 0) >= MAX_PLAYERS) throw new LineupInputError("The roster is full.")
-  const taken = await pool.query(`SELECT 1 FROM players WHERE active AND number = $1`, [number])
+  const taken = await pool.query(`SELECT 1 FROM players WHERE active AND team_id = $2 AND number = $1`, [number, teamId])
   if (taken.rowCount) throw new LineupInputError(`Number ${number} is already on the roster.`)
   const result = await pool.query(
-    `INSERT INTO players (number, first_name, last_initial, goalie)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO players (number, first_name, last_initial, goalie, team_id)
+     VALUES ($1, $2, $3, $4, $5)
      RETURNING id, number, first_name, last_initial, goalie, active`,
-    [number, firstName, lastInitial, goalie]
+    [number, firstName, lastInitial, goalie, teamId]
   )
   return toPlayer(result.rows[0])
 }
 
 // Removing a player keeps the row (inactive) so saved lineups still show them.
-export async function removePlayer(id: string): Promise<boolean> {
+export async function removePlayer(teamId: string, id: string): Promise<boolean> {
   if (!isUuid(id)) return false
-  const result = await getPool().query(`UPDATE players SET active = false WHERE id = $1 AND active`, [id])
+  const result = await getPool().query(`UPDATE players SET active = false WHERE id = $1 AND team_id = $2 AND active`, [id, teamId])
   return (result.rowCount ?? 0) > 0
 }
 
 // ---------- lineups ----------
 
-export async function listLineups(): Promise<LineupSummary[]> {
+export async function listLineups(teamId: string): Promise<LineupSummary[]> {
   const result = await getPool().query(
-    `SELECT id, title, slots, share_token, updated_at FROM lineups ORDER BY updated_at DESC, id DESC`
+    `SELECT id, title, slots, share_token, updated_at FROM lineups WHERE team_id = $1 ORDER BY updated_at DESC, id DESC`,
+    [teamId]
   )
   return result.rows.map((row) => {
     const slots = parseSlots(row.slots)
@@ -127,13 +153,13 @@ export async function listLineups(): Promise<LineupSummary[]> {
 export async function getLineup(id: string): Promise<Lineup | null> {
   if (!isUuid(id)) return null
   const result = await getPool().query(
-    `SELECT id, title, slots, share_token, created_at, updated_at FROM lineups WHERE id = $1`,
+    `SELECT id, team_id, title, slots, share_token, created_at, updated_at FROM lineups WHERE id = $1`,
     [id]
   )
   return result.rows[0] ? toLineup(result.rows[0]) : null
 }
 
-export async function createLineup(input: unknown): Promise<Lineup> {
+export async function createLineup(teamId: string, input: unknown): Promise<Lineup> {
   const body = asObject(input, "Could not read that lineup.")
   const pool = getPool()
   const count = await pool.query(`SELECT count(*)::int AS n FROM lineups`)
@@ -144,16 +170,16 @@ export async function createLineup(input: unknown): Promise<Lineup> {
   let slots = emptySlots()
   if (typeof body.copyFrom === "string" && body.copyFrom) {
     const source = await getLineup(body.copyFrom)
-    if (!source) throw new LineupInputError("The lineup to copy was not found.")
+    if (!source || source.teamId !== teamId) throw new LineupInputError("The lineup to copy was not found.")
     slots = source.slots
     if (!title) title = `${source.title || "Lineup"} (copy)`.slice(0, MAX_TITLE)
   } else if (body.slots !== undefined) {
-    slots = await cleanSlots(body.slots)
+    slots = await cleanSlots(body.slots, teamId)
   }
   const result = await pool.query(
-    `INSERT INTO lineups (title, slots) VALUES ($1, $2::jsonb)
-     RETURNING id, title, slots, share_token, created_at, updated_at`,
-    [title, JSON.stringify(slots)]
+    `INSERT INTO lineups (title, slots, team_id) VALUES ($1, $2::jsonb, $3)
+     RETURNING id, team_id, title, slots, share_token, created_at, updated_at`,
+    [title, JSON.stringify(slots), teamId]
   )
   return toLineup(result.rows[0])
 }
@@ -164,10 +190,10 @@ export async function updateLineup(id: string, input: unknown): Promise<Lineup |
   const current = await getLineup(id)
   if (!current) return null
   const title = Object.prototype.hasOwnProperty.call(body, "title") ? cleanTitle(body.title) : current.title
-  const slots = Object.prototype.hasOwnProperty.call(body, "slots") ? await cleanSlots(body.slots) : current.slots
+  const slots = Object.prototype.hasOwnProperty.call(body, "slots") ? await cleanSlots(body.slots, current.teamId) : current.slots
   const result = await getPool().query(
     `UPDATE lineups SET title = $2, slots = $3::jsonb WHERE id = $1
-     RETURNING id, title, slots, share_token, created_at, updated_at`,
+     RETURNING id, team_id, title, slots, share_token, created_at, updated_at`,
     [id, title, JSON.stringify(slots)]
   )
   return result.rows[0] ? toLineup(result.rows[0]) : null
@@ -209,15 +235,15 @@ export interface SharedLineup {
 export async function getSharedLineup(token: string): Promise<SharedLineup | null> {
   if (!isShareToken(token)) return null
   const pool = getPool()
-  const result = await pool.query(`SELECT title, slots, updated_at FROM lineups WHERE share_token = $1`, [token])
+  const result = await pool.query(`SELECT title, slots, updated_at, team_id FROM lineups WHERE share_token = $1`, [token])
   const row = result.rows[0]
   if (!row) return null
   const slots = parseSlots(row.slots)
   const ids = POSITIONS.flatMap((p) => slots[p])
   const players = await pool.query(
     `SELECT id, number, first_name, last_initial, goalie, active FROM players
-     WHERE id = ANY($1::uuid[]) OR (goalie AND active)`,
-    [ids]
+     WHERE id = ANY($1::uuid[]) OR (goalie AND active AND team_id = $2)`,
+    [ids, String(row.team_id)]
   )
   const byId = new Map(players.rows.map((r) => [String(r.id), toPlayer(r)]))
   const labels = {} as Record<Position, string[]>
@@ -237,7 +263,7 @@ export async function getSharedLineup(token: string): Promise<SharedLineup | nul
 
 // ---------- validation ----------
 
-async function cleanSlots(value: unknown): Promise<Slots> {
+async function cleanSlots(value: unknown, teamId: string): Promise<Slots> {
   const body = asObject(value, "Could not read the lineup columns.")
   const slots = emptySlots()
   const seen = new Set<string>()
@@ -253,7 +279,7 @@ async function cleanSlots(value: unknown): Promise<Slots> {
     }
   }
   if (seen.size) {
-    const found = await getPool().query(`SELECT id, goalie FROM players WHERE id = ANY($1::uuid[])`, [[...seen]])
+    const found = await getPool().query(`SELECT id, goalie FROM players WHERE id = ANY($1::uuid[]) AND team_id = $2`, [[...seen], teamId])
     if (found.rowCount !== seen.size) throw new LineupInputError("A player in the lineup was not found.")
     // Goalies stay in net unless marked Out; they never go in a skater column.
     const goalies = new Set(found.rows.filter((r) => r.goalie).map((r) => String(r.id)))
@@ -286,8 +312,8 @@ function cleanName(value: unknown): string {
 }
 
 function cleanInitial(value: unknown): string {
-  const initial = typeof value === "string" ? value.trim().replace(/\./g, "").toUpperCase() : ""
-  if (!INITIAL_RE.test(initial)) throw new LineupInputError("Last initial: up to 3 letters, no full last names.")
+  const initial = typeof value === "string" ? value.trim().replace(/\./g, "").slice(0, 1).toUpperCase() : ""
+  if (!INITIAL_RE.test(initial)) throw new LineupInputError("Last initial: one letter only, no full last names.")
   return initial
 }
 
@@ -321,6 +347,7 @@ function toPlayer(row: Record<string, unknown>): Player {
 function toLineup(row: Record<string, unknown>): Lineup {
   return {
     id: String(row.id),
+    teamId: String(row.team_id ?? "stars"),
     title: String(row.title ?? ""),
     slots: parseSlots(row.slots),
     shareToken: row.share_token ? String(row.share_token) : null,

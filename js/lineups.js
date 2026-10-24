@@ -6,6 +6,10 @@
 
   var POSITIONS = ["LW", "C", "RW", "LD", "RD", "OUT"];
   var statusEl = document.getElementById("lu-status");
+  var mainEl = document.getElementById("content");
+  var TEAM = (mainEl && mainEl.getAttribute("data-team")) || "stars";
+  var PAGE = "/lineups/team/" + TEAM + "/";
+  var API = "/api/lineups/team/" + TEAM;
 
   function status(text, isError) {
     if (!statusEl) return;
@@ -39,8 +43,8 @@
   document.querySelectorAll("[data-duplicate]").forEach(function (button) {
     button.addEventListener("click", function () {
       button.disabled = true;
-      api("POST", "/api/lineups", { copyFrom: button.getAttribute("data-duplicate") })
-        .then(function (data) { location.href = "/lineups/" + data.lineup.id + "/"; })
+      api("POST", API, { copyFrom: button.getAttribute("data-duplicate") })
+        .then(function (data) { location.href = PAGE + data.lineup.id + "/"; })
         .catch(function (error) { button.disabled = false; status(error.message, true); });
     });
   });
@@ -51,10 +55,10 @@
     addForm.addEventListener("submit", function (event) {
       event.preventDefault();
       var form = new FormData(addForm);
-      api("POST", "/api/lineups/roster", {
+      api("POST", API + "/roster", {
         number: Number(form.get("number")),
         firstName: String(form.get("firstName") || ""),
-        lastInitial: String(form.get("lastInitial") || ""),
+        lastInitial: String(form.get("lastInitial") || "").trim().replace(/\./g, "").slice(0, 1).toUpperCase(),
         goalie: form.get("goalie") === "on"
       })
         .then(function () { location.reload(); })
@@ -64,7 +68,7 @@
   document.querySelectorAll("[data-remove-player]").forEach(function (button) {
     button.addEventListener("click", function () {
       if (!confirm("Remove " + button.getAttribute("data-label") + " from the roster?")) return;
-      api("DELETE", "/api/lineups/roster/" + button.getAttribute("data-remove-player"))
+      api("DELETE", API + "/roster/" + button.getAttribute("data-remove-player"))
         .then(function () { location.reload(); })
         .catch(function (error) { status(error.message, true); });
     });
@@ -200,7 +204,7 @@
     dirty = false;
     showSave("Saving…");
     var body = { title: titleInput.value.trim(), slots: slots };
-    var request = lineup.id ? api("PATCH", "/api/lineups/" + lineup.id, body) : api("POST", "/api/lineups", body);
+    var request = lineup.id ? api("PATCH", "/api/lineups/" + lineup.id, body) : api("POST", API, body);
     request
       .then(function (result) {
         var isNew = !lineup.id;
@@ -209,7 +213,7 @@
         failed = false;
         retryDelay = 2000;
         if (isNew) {
-          history.replaceState(null, "", "/lineups/" + lineup.id + "/");
+          history.replaceState(null, "", PAGE + lineup.id + "/");
           ["lu-delete", "lu-copy", "lu-regen", "lu-unshare"].forEach(function (id) {
             document.getElementById(id).disabled = false;
           });
@@ -404,7 +408,7 @@
   document.getElementById("lu-delete").addEventListener("click", function () {
     if (!lineup.id || !confirm("Delete this lineup? Its share link will stop working.")) return;
     api("DELETE", "/api/lineups/" + lineup.id)
-      .then(function () { clearTimeout(timer); dirty = false; failed = false; location.href = "/lineups/"; })
+      .then(function () { clearTimeout(timer); dirty = false; failed = false; location.href = PAGE; })
       .catch(function (error) { status(error.message, true); });
   });
 
