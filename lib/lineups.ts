@@ -49,6 +49,7 @@ export interface Player {
   lastInitial: string
   goalie: boolean
   active: boolean
+  preferred: string
 }
 
 export interface Lineup {
@@ -93,7 +94,7 @@ export function emptySlots(): Slots {
 
 export async function listPlayers(teamId: string, includeInactive = false): Promise<Player[]> {
   const result = await getPool().query(
-    `SELECT id, number, first_name, last_initial, goalie, active
+    `SELECT id, number, first_name, last_initial, goalie, active, preferred_positions
      FROM players
      WHERE team_id = $1 ${includeInactive ? "" : "AND active"}
      ORDER BY goalie, number, first_name`,
@@ -116,10 +117,24 @@ export async function addPlayer(teamId: string, input: unknown): Promise<Player>
   const result = await pool.query(
     `INSERT INTO players (number, first_name, last_initial, goalie, team_id)
      VALUES ($1, $2, $3, $4, $5)
-     RETURNING id, number, first_name, last_initial, goalie, active`,
+     RETURNING id, number, first_name, last_initial, goalie, active, preferred_positions`,
     [number, firstName, lastInitial, goalie, teamId]
   )
   return toPlayer(result.rows[0])
+}
+
+// Preferred positions: short codes only (C, W, D, G, F), e.g. "C/W". Empty clears it.
+export async function setPreferred(teamId: string, id: string, input: unknown): Promise<boolean> {
+  if (!isUuid(id)) return false
+  const body = asObject(input, "Could not read that update.")
+  const raw = typeof body.preferred === "string" ? body.preferred.toUpperCase() : ""
+  const codes = raw.split(/[^A-Z]+/).filter(Boolean)
+  if (codes.some((c) => !["C", "W", "D", "G", "F", "LW", "RW", "LD", "RD"].includes(c)) || codes.length > 3) {
+    throw new LineupInputError("Preferred positions: use C, W, D, G, or F, like C/W.")
+  }
+  const value = codes.length ? codes.join("/") : null
+  const result = await getPool().query(`UPDATE players SET preferred_positions = $3 WHERE id = $1 AND team_id = $2`, [id, teamId, value])
+  return (result.rowCount ?? 0) > 0
 }
 
 // Removing a player keeps the row (inactive) so saved lineups still show them.
@@ -341,6 +356,7 @@ function toPlayer(row: Record<string, unknown>): Player {
     lastInitial: String(row.last_initial ?? ""),
     goalie: Boolean(row.goalie),
     active: Boolean(row.active),
+    preferred: String(row.preferred_positions ?? ""),
   }
 }
 

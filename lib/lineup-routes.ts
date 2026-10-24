@@ -17,6 +17,7 @@ import {
   listPlayers,
   removePlayer,
   updateLineup,
+  setPreferred,
 } from "./lineups.js"
 import { renderEditor, renderList, renderMessage, renderRoster, renderShared, renderRosters, renderTeams } from "./lineup-pages.js"
 import { consumeLimit } from "./rate-limit.js"
@@ -158,6 +159,9 @@ export async function handleLineups(request: Request): Promise<Response> {
         if (method === "POST") return json({ player: await addPlayer(team.id, await readBody(request)) }, 201)
         return json({ error: "Method not allowed." }, 405)
       case "api-player":
+        if (method === "PATCH") {
+          return (await setPreferred(team.id, id, await readBody(request))) ? json({ ok: true }) : json({ error: "Player not found." }, 404)
+        }
         if (method === "DELETE") {
           return (await removePlayer(team.id, id)) ? json({ ok: true }) : json({ error: "Player not found." }, 404)
         }
