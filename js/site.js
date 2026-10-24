@@ -290,6 +290,7 @@
   initPlanPage();
   initAccountPage();
   initAccounts();
+  initMobileMenu();
   trackPageView();
 
   function initPlanPage() {
@@ -1090,6 +1091,84 @@
       renderAccountSlot();
       accountReady.forEach(function (fn) { fn(accountState); });
       accountReady = [];
+    });
+  }
+
+
+  // Mobile menu: Drills, Plans, and (admin only, after a server check) Lineups.
+  function initMobileMenu() {
+    var inner = document.querySelector(".site-header .header-inner");
+    if (!inner || inner.querySelector(".menu-btn")) return;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "menu-btn";
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-controls", "site-menu");
+    btn.setAttribute("aria-label", "Menu");
+    btn.innerHTML = '<span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>';
+    var panel = document.createElement("nav");
+    panel.id = "site-menu";
+    panel.className = "menu-panel";
+    panel.setAttribute("aria-label", "Menu");
+    panel.hidden = true;
+    var list = document.createElement("ul");
+    panel.appendChild(list);
+    var foot = document.createElement("div");
+    foot.className = "menu-foot";
+    panel.appendChild(foot);
+    function item(label, href, before) {
+      var li = document.createElement("li");
+      var a = document.createElement("a");
+      a.href = href;
+      a.textContent = label;
+      li.appendChild(a);
+      if (before) list.insertBefore(li, before); else list.appendChild(li);
+      return li;
+    }
+    item("Drills", new URL("./", rootUrl).href);
+    item("Plans", new URL("plan/", rootUrl).href);
+    inner.appendChild(btn);
+    inner.appendChild(panel);
+    function setOpen(open) {
+      panel.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setOpen(panel.hidden);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !panel.hidden) { setOpen(false); btn.focus(); }
+    });
+    document.addEventListener("click", function (e) {
+      if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) setOpen(false);
+    });
+    whenAccountReady(function (state) {
+      if (!state.enabled) return;
+      var a = document.createElement(state.user ? "button" : "a");
+      a.className = "menu-auth";
+      if (state.user) {
+        a.type = "button";
+        a.textContent = "Sign out";
+        a.addEventListener("click", function () {
+          var home = new URL("./", rootUrl).href;
+          authPost("signout", { callbackUrl: home }).then(function () {
+            window.location.href = home;
+          }, function () { window.location.href = new URL("account/", rootUrl).href; });
+        });
+      } else {
+        a.href = new URL("account/", rootUrl).href;
+        a.textContent = "Sign in";
+      }
+      foot.appendChild(a);
+      if (!state.user) return;
+      // Server-side ADMIN_EMAILS gate: 200 only for the admin, 404 for everyone else. HEAD, so no data.
+      fetch(new URL("lineups/", rootUrl).href, { method: "HEAD", credentials: "same-origin" }).then(function (res) {
+        if (!res.ok) return;
+        item("Lineups", new URL("lineups/", rootUrl).href);
+        item("Rosters", new URL("lineups/rosters/", rootUrl).href);
+        item("Admin", new URL("admin/", rootUrl).href);
+      }).catch(function () {});
     });
   }
 

@@ -18,7 +18,7 @@ import {
   removePlayer,
   updateLineup,
 } from "./lineups.js"
-import { renderEditor, renderList, renderMessage, renderRoster, renderShared, renderTeams } from "./lineup-pages.js"
+import { renderEditor, renderList, renderMessage, renderRoster, renderShared, renderRosters, renderTeams } from "./lineup-pages.js"
 import { consumeLimit } from "./rate-limit.js"
 import { upcomingGames } from "./schedule.js"
 import { originAllowed } from "./routes.js"
@@ -38,6 +38,7 @@ type Route =
   | "teams"
   | "list"
   | "edit"
+  | "rosters"
   | "roster"
   | "view"
   | "api-collection"
@@ -51,6 +52,7 @@ const ROUTES = new Set<Route>([
   "teams",
   "list",
   "edit",
+  "rosters",
   "roster",
   "view",
   "api-collection",
@@ -92,6 +94,12 @@ export async function handleLineups(request: Request): Promise<Response> {
         return redirect(`/lineups/team/${old.teamId}/${id}/`)
       }
       return redirect(`/lineups/team/stars/${suffix}`)
+    }
+    if (route === "rosters") {
+      if (write) return notFound()
+      const teams = await listTeams()
+      const counts = await Promise.all(teams.map((t) => listPlayers(t.id).then((p) => p.length)))
+      return html(renderRosters(teams.map((t, i) => ({ team: t, count: counts[i] })), admin))
     }
     if (route === "teams") {
       if (write) return notFound()
