@@ -42,29 +42,6 @@ function toTeam(row: Record<string, unknown>): Team {
   return { id: String(row.id), name: String(row.name ?? ""), scheduleUrl: row.schedule_url ? String(row.schedule_url) : null }
 }
 
-export interface Team {
-  id: string
-  name: string
-  scheduleUrl: string | null
-}
-
-const TEAM_RE = /^[a-z0-9-]{1,32}$/
-
-export async function listTeams(): Promise<Team[]> {
-  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams ORDER BY sort, name`)
-  return result.rows.map(toTeam)
-}
-
-export async function getTeam(id: string): Promise<Team | null> {
-  if (!TEAM_RE.test(id)) return null
-  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams WHERE id = $1`, [id])
-  return result.rows[0] ? toTeam(result.rows[0]) : null
-}
-
-function toTeam(row: Record<string, unknown>): Team {
-  return { id: String(row.id), name: String(row.name ?? ""), scheduleUrl: row.schedule_url ? String(row.schedule_url) : null }
-}
-
 export interface Player {
   id: string
   number: number
