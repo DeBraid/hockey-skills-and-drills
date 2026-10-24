@@ -1,6 +1,6 @@
 (function () {
   var script = document.currentScript;
-  var rootUrl = new URL("../", script.src);
+  var rootUrl = new URL("../", (script && script.src) || (location.origin + "/js/site.js"));
   var STORAGE_KEY = "hsd-practice-plan";
   var ANON_KEY = "hsd-anon-id";
   var EXCLUDE_KEY = "hsd-exclude-stats";
@@ -287,11 +287,11 @@
     });
   }
 
-  initPlanPage();
-  initAccountPage();
-  initAccounts();
-  initMobileMenu();
-  trackPageView();
+  // Menu first, and each feature isolated, so one failure (e.g. storage
+  // blocked in an in-app browser) can never hide the phone menu.
+  [initMobileMenu, initPlanPage, initAccountPage, initAccounts, trackPageView].forEach(function (fn) {
+    try { fn(); } catch (error) { if (window.console) console.error(error); }
+  });
 
   function initPlanPage() {
     var catalogNode = document.getElementById("drill-catalog");

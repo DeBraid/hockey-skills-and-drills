@@ -9,6 +9,8 @@
 .muted { color: var(--muted); }
 
 .lu-title-label { display: grid; gap: 0.3rem; font-weight: 600; max-width: 32rem; }
+.lu-title-label > * { min-width: 0; max-width: 100%; }
+.lu-title-label select { width: 100%; text-overflow: ellipsis; }
 .lu-title-label input,
 .lu-title-label select,
 .lu-add input[type="text"],

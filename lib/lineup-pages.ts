@@ -211,6 +211,9 @@ function goaliesBlock(labels: string[]): string {
   return `<section class="lu-goalies" aria-label="Goalies"><h2>Goalies</h2><ul class="lu-list lu-inline">${chips || `<li class="lu-none">—</li>`}</ul></section>`
 }
 
+// Bust phone caches per deploy (Vercel sets the commit SHA at build/runtime).
+const ASSET_VERSION = (process.env.VERCEL_GIT_COMMIT_SHA || "dev").slice(0, 10)
+
 function shell(title: string, body: string, admin: boolean, team?: Team): string {
   const nav = admin
     ? `<nav class="header-actions" aria-label="Lineups"><a class="plan-nav" href="/lineups/">Teams</a>${
@@ -229,8 +232,8 @@ function shell(title: string, body: string, admin: boolean, team?: Team): string
   <meta name="color-scheme" content="light dark">
   <title>${esc(title)}</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/styles.css">
-  <link rel="stylesheet" href="/css/lineups.css">
+  <link rel="stylesheet" href="/css/styles.css?v=${ASSET_VERSION}">
+  <link rel="stylesheet" href="/css/lineups.css?v=${ASSET_VERSION}">
 </head>
 <body data-page="lineups">
   <a class="skip" href="#content">Skip to content</a>
@@ -247,7 +250,9 @@ function shell(title: string, body: string, admin: boolean, team?: Team): string
     </div>
   </header>
 ${body}
-  <script src="/js/lineups.js"></script>
+  <script src="/js/lineups.js?v=${ASSET_VERSION}"></script>${
+    admin ? `\n  <script src="/js/site.js?v=${ASSET_VERSION}"></script>` : ""
+  }
 </body>
 </html>
 `
