@@ -98,6 +98,8 @@
   var dirty = false;
   var titleInput = document.getElementById("lu-title");
   var printTitle = document.getElementById("lu-print-title");
+  var notesInput = document.getElementById("lu-notes");
+  var stars = [0, 1, 2].map(function (i) { var id = lineup.stars && lineup.stars[i]; return id && players[id] ? id : null; });
 
   function poolIds() {
     var placed = {};
@@ -220,7 +222,7 @@
     queued = false;
     dirty = false;
     showSave("Saving…");
-    var body = { title: titleInput.value.trim(), slots: slots };
+    var body = { title: titleInput.value.trim(), slots: slots, notes: notesInput ? notesInput.value : "", stars: stars };
     var request = lineup.id ? api("PATCH", "/api/lineups/" + lineup.id, body) : api("POST", API, body);
     request
       .then(function (result) {
@@ -415,6 +417,43 @@
     markDirty(800);
   });
   titleInput.addEventListener("blur", function () { if (dirty) saveNow(); });
+
+  // ---------- after the game: notes + three stars (private) ----------
+  if (notesInput) {
+    notesInput.addEventListener("input", function () { markDirty(1200); });
+    notesInput.addEventListener("blur", function () { if (dirty) saveNow(); });
+  }
+  var starSelects = Array.prototype.slice.call(document.querySelectorAll("select[data-star]"));
+  function renderStars() {
+    var roster = (data.players || []).filter(function (p) { return p.active || stars.indexOf(p.id) >= 0; });
+    starSelects.forEach(function (sel) {
+      var i = Number(sel.getAttribute("data-star"));
+      var taken = {};
+      stars.forEach(function (id, j) { if (id && j !== i) taken[id] = true; });
+      sel.innerHTML = "";
+      var none = document.createElement("option");
+      none.value = "";
+      none.textContent = "— None —";
+      sel.appendChild(none);
+      roster.forEach(function (p) {
+        if (taken[p.id]) return;
+        var o = document.createElement("option");
+        o.value = p.id;
+        o.textContent = p.label + (p.goalie ? " (G)" : "");
+        sel.appendChild(o);
+      });
+      sel.value = stars[i] || "";
+      sel.classList.toggle("set", Boolean(stars[i]));
+    });
+  }
+  starSelects.forEach(function (sel) {
+    sel.addEventListener("change", function () {
+      stars[Number(sel.getAttribute("data-star"))] = sel.value || null;
+      renderStars();
+      markDirty();
+    });
+  });
+  renderStars();
 
   window.addEventListener("beforeunload", function (event) {
     if (!savePending()) return;

@@ -169,3 +169,23 @@
 .lu-pref[data-pref]:not([data-pref=""]) { border-style: solid; background: var(--chip, #e8eefc); }
 .lu-pref-tag { font-size: 0.68em; font-weight: 600; padding: 0 0.3em; border-radius: 4px; background: var(--chip, #e8eefc); color: var(--chip-ink, #1e3a8a); white-space: nowrap; }
 @media print { .lu-pref-tag, .lu-pref { display: none; } }
+
+/* After the game: three stars + coach's notes (admin editor only, never printed) */
+.lu-post { margin: 1rem 0 0.75rem; padding: 0.75rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); max-width: 40rem; }
+.lu-post h2 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.lu-post h2 .muted { font-size: 0.8rem; font-weight: 400; }
+.lu-stars { border: 0; margin: 0 0 0.75rem; padding: 0; display: grid; gap: 0.5rem; }
+.lu-stars legend { font-weight: 600; margin-bottom: 0.35rem; padding: 0; }
+.lu-star-row { display: grid; gap: 0.25rem; }
+.lu-star-label { font-size: 0.9rem; }
+.lu-star-label b { color: #b8860b; letter-spacing: -0.05em; }
+.lu-star-row select { width: 100%; min-height: 44px; font: inherit; font-size: 16px; padding: 0.4rem 0.5rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: inherit; }
+.lu-star-row select.set { border-color: #b8860b; background: #fff9e6; }
+.lu-notes-label { display: grid; gap: 0.25rem; font-weight: 600; }
+.lu-notes-label textarea { width: 100%; box-sizing: border-box; min-height: 8rem; font: inherit; font-size: 16px; font-weight: 400; padding: 0.5rem; border: 1px solid var(--line); border-radius: 10px; resize: vertical; }
+@media (min-width: 760px) {
+  .lu-star-row { grid-template-columns: 15rem 1fr; align-items: center; }
+}
+.lu-stars-line { display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; font-size: 0.82rem; margin-top: 0.15rem; }
+.lu-star-sum b { color: #b8860b; font-weight: 400; }
+@media print { .lu-post { display: none !important; } }
