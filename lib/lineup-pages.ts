@@ -90,7 +90,7 @@ export function renderRoster(team: Team, players: Player[], viewer: AccountUser)
     <form class="lu-add" id="lu-add" autocomplete="off">
       <label>Number <input name="number" type="number" min="0" max="99" inputmode="numeric" required></label>
       <label>First name <input name="firstName" type="text" maxlength="24" required></label>
-      <label>Last initial <input name="lastInitial" type="text" maxlength="3" pattern="[A-Za-z]{0,3}"></label>
+      <label>Last initial <input name="lastInitial" type="text" maxlength="1" pattern="[A-Za-z]?"></label>
       <label class="lu-check"><input name="goalie" type="checkbox"> Goalie</label>
       <button class="btn primary" type="submit">Add player</button>
     </form>

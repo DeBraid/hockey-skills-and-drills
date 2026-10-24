@@ -17,7 +17,30 @@ const MAX_LINEUPS = 300
 const MAX_PLAYERS = 60
 const TOKEN_RE = /^[A-Za-z0-9_-]{32,64}$/
 const NAME_RE = /^[\p{L}][\p{L} .'-]{0,23}$/u
-const INITIAL_RE = /^[A-Za-z]{0,3}$/
+const INITIAL_RE = /^[A-Z]?$/
+
+export interface Team {
+  id: string
+  name: string
+  scheduleUrl: string | null
+}
+
+const TEAM_RE = /^[a-z0-9-]{1,32}$/
+
+export async function listTeams(): Promise<Team[]> {
+  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams ORDER BY sort, name`)
+  return result.rows.map(toTeam)
+}
+
+export async function getTeam(id: string): Promise<Team | null> {
+  if (!TEAM_RE.test(id)) return null
+  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams WHERE id = $1`, [id])
+  return result.rows[0] ? toTeam(result.rows[0]) : null
+}
+
+function toTeam(row: Record<string, unknown>): Team {
+  return { id: String(row.id), name: String(row.name ?? ""), scheduleUrl: row.schedule_url ? String(row.schedule_url) : null }
+}
 
 export interface Team {
   id: string
@@ -312,8 +335,8 @@ function cleanName(value: unknown): string {
 }
 
 function cleanInitial(value: unknown): string {
-  const initial = typeof value === "string" ? value.trim().replace(/\./g, "").toUpperCase() : ""
-  if (!INITIAL_RE.test(initial)) throw new LineupInputError("Last initial: up to 3 letters, no full last names.")
+  const initial = typeof value === "string" ? value.trim().replace(/\./g, "").slice(0, 1).toUpperCase() : ""
+  if (!INITIAL_RE.test(initial)) throw new LineupInputError("Last initial: one letter only, no full last names.")
   return initial
 }
 

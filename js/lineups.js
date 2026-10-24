@@ -58,7 +58,7 @@
       api("POST", API + "/roster", {
         number: Number(form.get("number")),
         firstName: String(form.get("firstName") || ""),
-        lastInitial: String(form.get("lastInitial") || ""),
+        lastInitial: String(form.get("lastInitial") || "").trim().replace(/\./g, "").slice(0, 1).toUpperCase(),
         goalie: form.get("goalie") === "on"
       })
         .then(function () { location.reload(); })
