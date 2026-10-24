@@ -50,11 +50,59 @@
     },
     {
       "source": "/lineups",
-      "destination": "/api/lineups?__lu=list"
+      "destination": "/api/lineups?__lu=teams"
     },
     {
       "source": "/lineups/",
-      "destination": "/api/lineups?__lu=list"
+      "destination": "/api/lineups?__lu=teams"
+    },
+    {
+      "source": "/lineups/team/:team",
+      "destination": "/api/lineups?__lu=list&__team=:team"
+    },
+    {
+      "source": "/lineups/team/:team/",
+      "destination": "/api/lineups?__lu=list&__team=:team"
+    },
+    {
+      "source": "/lineups/team/:team/roster",
+      "destination": "/api/lineups?__lu=roster&__team=:team"
+    },
+    {
+      "source": "/lineups/team/:team/roster/",
+      "destination": "/api/lineups?__lu=roster&__team=:team"
+    },
+    {
+      "source": "/lineups/team/:team/:id",
+      "destination": "/api/lineups?__lu=edit&__team=:team&__id=:id"
+    },
+    {
+      "source": "/lineups/team/:team/:id/",
+      "destination": "/api/lineups?__lu=edit&__team=:team&__id=:id"
+    },
+    {
+      "source": "/api/lineups/team/:team/roster/:id",
+      "destination": "/api/lineups?__lu=api-player&__team=:team&__id=:id"
+    },
+    {
+      "source": "/api/lineups/team/:team/roster/:id/",
+      "destination": "/api/lineups?__lu=api-player&__team=:team&__id=:id"
+    },
+    {
+      "source": "/api/lineups/team/:team/roster",
+      "destination": "/api/lineups?__lu=api-roster&__team=:team"
+    },
+    {
+      "source": "/api/lineups/team/:team/roster/",
+      "destination": "/api/lineups?__lu=api-roster&__team=:team"
+    },
+    {
+      "source": "/api/lineups/team/:team",
+      "destination": "/api/lineups?__lu=api-collection&__team=:team"
+    },
+    {
+      "source": "/api/lineups/team/:team/",
+      "destination": "/api/lineups?__lu=api-collection&__team=:team"
     },
     {
       "source": "/lineups/roster",

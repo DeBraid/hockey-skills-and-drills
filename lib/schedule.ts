@@ -14,31 +14,37 @@ export interface Game {
   label: string // e.g. "Fri Oct 23 6:15 PM vs Mustangs, Fleming Memorial Arena"
 }
 
-let cache: { at: number; url: string; events: Game[] } | null = null
+const caches = new Map<string, { at: number; events: Game[] }>()
 
-export function scheduleUrl(): string {
-  const raw = (process.env.LINEUPS_SCHEDULE_ICS_URL || "").trim().replace(/^webcal:\/\//i, "https://")
-  if (!raw) return DEFAULT_ICS_URL
+// Team schedule link (from the teams table); null means no schedule prefill.
+export function scheduleUrl(teamUrl?: string | null): string | null {
+  const raw = (teamUrl === undefined ? process.env.LINEUPS_SCHEDULE_ICS_URL || DEFAULT_ICS_URL : teamUrl || "")
+    .trim()
+    .replace(/^webcal:\/\//i, "https://")
+  if (!raw) return null
   try {
     const url = new URL(raw)
-    return url.protocol === "https:" ? url.href : DEFAULT_ICS_URL
+    return url.protocol === "https:" ? url.href : null
   } catch {
-    return DEFAULT_ICS_URL
+    return null
   }
 }
 
 // Never throws: any failure returns [] so the name is simply left blank.
-export async function upcomingGames(limit = 6, now = Date.now()): Promise<Game[]> {
+export async function upcomingGames(teamUrl?: string | null, limit = 6, now = Date.now()): Promise<Game[]> {
   try {
-    const url = scheduleUrl()
-    if (!cache || cache.url !== url || now - cache.at > CACHE_MS) {
+    const url = scheduleUrl(teamUrl)
+    if (!url) return []
+    let cache = caches.get(url)
+    if (!cache || now - cache.at > CACHE_MS) {
       const response = await fetch(url, {
         headers: { accept: "text/calendar", "user-agent": "hockey.derekbraid.com lineups" },
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       })
       if (!response.ok) throw new Error(`schedule feed ${response.status}`)
       const text = await response.text()
-      cache = { at: now, url, events: parseGames(text.slice(0, 2_000_000)) }
+      cache = { at: now, events: parseGames(text.slice(0, 2_000_000)) }
+      caches.set(url, cache)
     }
     const cutoff = now - 60 * 60 * 1000 // keep a game that started in the last hour
     return cache.events.filter((g) => Date.parse(g.start) >= cutoff).slice(0, limit)
