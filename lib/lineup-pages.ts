@@ -40,6 +40,24 @@ ${rows || `<li class="empty">No teams yet.</li>`}
   return shell("Lineups", body, true)
 }
 
+export function renderRosters(rows: { team: Team; count: number }[], viewer: AccountUser): string {
+  const items = rows
+    .map(({ team: t, count }) => `<li class="lu-item"><a class="lu-item-link" href="/lineups/team/${esc(t.id)}/roster/"><strong>${esc(t.name)}</strong>
+        <span class="muted">${count} player${count === 1 ? "" : "s"}</span></a></li>`)
+    .join("\n")
+  const body = `  <main id="content" class="wrap-read lu-page">
+    <header class="drill-head">
+      <p class="kicker">Private · only you can see this</p>
+      <h1>Rosters</h1>
+      <p class="lede">Pick a team roster. Signed in as ${esc(viewer.email)}.</p>
+    </header>
+    <ul class="lu-items">
+${items || `<li class="empty">No teams yet.</li>`}
+    </ul>
+  </main>`
+  return shell("Rosters", body, true)
+}
+
 export function renderList(team: Team, lineups: LineupSummary[], viewer: AccountUser): string {
   const base = `/lineups/team/${esc(team.id)}`
   const rows = lineups.length

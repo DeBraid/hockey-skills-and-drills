@@ -57,6 +57,14 @@
       "destination": "/api/lineups?__lu=teams"
     },
     {
+      "source": "/lineups/rosters",
+      "destination": "/api/lineups?__lu=rosters"
+    },
+    {
+      "source": "/lineups/rosters/",
+      "destination": "/api/lineups?__lu=rosters"
+    },
+    {
       "source": "/lineups/team/:team",
       "destination": "/api/lineups?__lu=list&__team=:team"
     },
