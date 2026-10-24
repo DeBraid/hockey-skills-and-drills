@@ -189,3 +189,12 @@
 .lu-stars-line { display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; font-size: 0.82rem; margin-top: 0.15rem; }
 .lu-star-sum b { color: #b8860b; font-weight: 400; }
 @media print { .lu-post { display: none !important; } }
+
+/* Share view: read-only notes and stars (shown in print too). */
+.lu-post-view h3 { margin: 0.6rem 0 0.3rem; font-size: 0.95rem; }
+.lu-star-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+.lu-star-row b { color: #b8860b; font-weight: 400; display: inline-block; min-width: 3.2em; }
+.lu-notes-view { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
+@media print { .lu-post.lu-post-view { display: block !important; border: 0; padding: 0; } }
+.lu-post-view .lu-star-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.4rem; }
+.lu-post-view .lu-star-row > * { display: inline; margin: 0; }

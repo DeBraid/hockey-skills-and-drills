@@ -253,20 +253,23 @@ export interface SharedLineup {
   updatedAt: string
   goalies: string[]
   slots: Record<Position, string[]>
+  notes: string
+  stars: string[]
 }
 
 // Public read by link token. Returns labels only (no ids, no roster beyond this lineup).
 export async function getSharedLineup(token: string): Promise<SharedLineup | null> {
   if (!isShareToken(token)) return null
   const pool = getPool()
-  const result = await pool.query(`SELECT title, slots, updated_at, team_id FROM lineups WHERE share_token = $1`, [token])
+  const result = await pool.query(`SELECT title, slots, notes, stars, updated_at, team_id FROM lineups WHERE share_token = $1`, [token])
   const row = result.rows[0]
   if (!row) return null
   const slots = parseSlots(row.slots)
-  const ids = POSITIONS.flatMap((p) => slots[p])
+  const starIds = parseStars(row.stars)
+  const ids = [...POSITIONS.flatMap((p) => slots[p]), ...starIds.filter((id): id is string => Boolean(id))]
   const players = await pool.query(
     `SELECT id, number, first_name, last_initial, goalie, active FROM players
-     WHERE id = ANY($1::uuid[]) OR (goalie AND active AND team_id = $2)`,
+     WHERE (id = ANY($1::uuid[]) AND team_id = $2) OR (goalie AND active AND team_id = $2)`,
     [ids, String(row.team_id)]
   )
   const byId = new Map(players.rows.map((r) => [String(r.id), toPlayer(r)]))
@@ -282,7 +285,19 @@ export async function getSharedLineup(token: string): Promise<SharedLineup | nul
     .filter((p) => p.goalie && p.active && !out.has(p.id))
     .sort((a, b) => a.number - b.number)
     .map(playerLabel)
-  return { title: String(row.title ?? ""), updatedAt: toIso(row.updated_at), goalies, slots: labels }
+  // Stars keep their rank: "" marks an empty pick so the 1st star stays 1st.
+  const stars = starIds.map((id) => {
+    const player = id ? byId.get(id) : undefined
+    return player ? playerLabel(player) : ""
+  })
+  return {
+    title: String(row.title ?? ""),
+    updatedAt: toIso(row.updated_at),
+    goalies,
+    slots: labels,
+    notes: String(row.notes ?? ""),
+    stars,
+  }
 }
 
 // ---------- validation ----------
