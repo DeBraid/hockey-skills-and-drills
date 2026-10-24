@@ -65,6 +65,15 @@
         .catch(function (error) { status(error.message, true); });
     });
   }
+  document.querySelectorAll("[data-pref-player]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var next = prompt("Preferred positions (C, W, D, G), e.g. C/W. Leave blank to clear.", button.getAttribute("data-pref") || "");
+      if (next === null) return;
+      api("PATCH", API + "/roster/" + button.getAttribute("data-pref-player"), { preferred: next })
+        .then(function () { location.reload(); })
+        .catch(function (error) { status(error.message, true); });
+    });
+  });
   document.querySelectorAll("[data-remove-player]").forEach(function (button) {
     button.addEventListener("click", function () {
       if (!confirm("Remove " + button.getAttribute("data-label") + " from the roster?")) return;
@@ -128,6 +137,14 @@
           li.appendChild(document.createTextNode(" "));
         }
         li.appendChild(document.createTextNode(players[id].label));
+        if (players[id].pref && !players[id].goalie) {
+          var pref = document.createElement("span");
+          pref.className = "lu-pref-tag";
+          pref.textContent = players[id].pref;
+          pref.title = "Prefers " + players[id].pref;
+          li.appendChild(document.createTextNode(" "));
+          li.appendChild(pref);
+        }
         li.setAttribute("data-id", id);
         li.setAttribute("role", "button");
         li.setAttribute("tabindex", "0");

@@ -163,3 +163,9 @@
   .lu-zone-out { grid-column: 1 / -1 !important; }
   .lu-zone .lu-line { display: inline-block; }
 }
+
+/* Preferred positions (from the families' form) */
+.lu-pref { margin-left: 0.4rem; font: inherit; font-size: 0.75rem; padding: 0.2rem 0.55rem; min-height: 28px; border-radius: 999px; border: 1px dashed var(--blue, #1d4ed8); background: transparent; color: var(--blue, #1d4ed8); cursor: pointer; white-space: nowrap; }
+.lu-pref[data-pref]:not([data-pref=""]) { border-style: solid; background: var(--chip, #e8eefc); }
+.lu-pref-tag { font-size: 0.68em; font-weight: 600; padding: 0 0.3em; border-radius: 4px; background: var(--chip, #e8eefc); color: var(--chip-ink, #1e3a8a); white-space: nowrap; }
+@media print { .lu-pref-tag, .lu-pref { display: none; } }

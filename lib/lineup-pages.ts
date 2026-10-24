@@ -94,7 +94,8 @@ export function renderRoster(team: Team, players: Player[], viewer: AccountUser)
   const base = `/lineups/team/${esc(team.id)}`
   const rows = players
     .map(
-      (p) => `<li class="lu-item"><span><strong>${esc(playerLabel(p))}</strong>${p.goalie ? ` <span class="lu-tag">G</span>` : ""}</span>
+      (p) => `<li class="lu-item"><span><strong>${esc(playerLabel(p))}</strong>${p.goalie ? ` <span class="lu-tag">G</span>` : ""}
+          <button class="lu-pref" type="button" data-pref-player="${esc(p.id)}" data-pref="${esc(p.preferred)}" aria-label="Preferred positions for ${esc(playerLabel(p))}">${p.preferred ? `Wants ${esc(p.preferred)}` : "+ Pref"}</button></span>
         <button class="btn danger" type="button" data-remove-player="${esc(p.id)}" data-label="${esc(playerLabel(p))}">Remove</button></li>`
     )
     .join("\n")
@@ -103,7 +104,7 @@ export function renderRoster(team: Team, players: Player[], viewer: AccountUser)
     <header class="drill-head">
       <p class="kicker">Private · only you can see this</p>
       <h1>${esc(team.name)} roster</h1>
-      <p class="lede">Number, first name, and last initial only. Never enter full last names. Tick Goalie for goalies; they stay in net and can only move to Out. Removing a player keeps them in lineups you already saved.</p>
+      <p class="lede">Number, first name, and last initial only. Never enter full last names. Tick Goalie for goalies; they stay in net and can only move to Out. Removing a player keeps them in lineups you already saved. Tap the position tag to edit a player's preferred positions (C, W, D, G).</p>
     </header>
     <form class="lu-add" id="lu-add" autocomplete="off">
       <label>Number <input name="number" type="number" min="0" max="99" inputmode="numeric" required></label>
@@ -133,7 +134,7 @@ export function renderEditor(team: Team, lineup: Lineup | null, players: Player[
     : ""
   const data = {
     lineup: lineup ? { id: lineup.id, title: lineup.title, slots: lineup.slots, shareToken: lineup.shareToken } : null,
-    players: players.map((p) => ({ id: p.id, label: playerLabel(p), active: p.active, goalie: p.goalie })),
+    players: players.map((p) => ({ id: p.id, label: playerLabel(p), pref: p.preferred, active: p.active, goalie: p.goalie })),
   }
   const zones = POSITIONS.map((pos) => {
     const name = POSITION_NAMES[pos]
