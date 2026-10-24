@@ -9,6 +9,8 @@ import {
   ensureShareToken,
   getLineup,
   getSharedLineup,
+  getTeam,
+  listTeams,
   isShareToken,
   LineupInputError,
   listLineups,
@@ -16,7 +18,7 @@ import {
   removePlayer,
   updateLineup,
 } from "./lineups.js"
-import { renderEditor, renderList, renderMessage, renderRoster, renderShared } from "./lineup-pages.js"
+import { renderEditor, renderList, renderMessage, renderRoster, renderShared, renderTeams } from "./lineup-pages.js"
 import { consumeLimit } from "./rate-limit.js"
 import { upcomingGames } from "./schedule.js"
 import { originAllowed } from "./routes.js"
@@ -33,6 +35,7 @@ const MAX_BODY = 16 * 1024
 const ID_RE = /^[0-9a-f-]{36}$/i
 
 type Route =
+  | "teams"
   | "list"
   | "edit"
   | "roster"
@@ -45,6 +48,7 @@ type Route =
   | "api-view"
 
 const ROUTES = new Set<Route>([
+  "teams",
   "list",
   "edit",
   "roster",
@@ -64,6 +68,7 @@ export async function handleLineups(request: Request): Promise<Response> {
   const route = raw as Route
   const id = url.searchParams.get("__id") || ""
   const token = url.searchParams.get("__t") || ""
+  const teamParam = url.searchParams.get("__team")
   try {
     if (route === "view" || route === "api-view") return await sharedView(request, route, token)
     const user = await readSession(request)
@@ -76,25 +81,44 @@ export async function handleLineups(request: Request): Promise<Response> {
       const blocked = await writeGuard(request, admin.id)
       if (blocked) return blocked
     }
+    // Old single-team addresses (/lineups/<id>/, /lineups/roster/, /lineups/new/) redirect to the Stars team.
+    if (teamParam === null && (route === "list" || route === "edit" || route === "roster")) {
+      if (write) return notFound()
+      if (route === "edit" && id !== "new" && !ID_RE.test(id)) return notFound()
+      const suffix = route === "list" ? "" : route === "roster" ? "roster/" : `${id}/`
+      if (route === "edit" && id !== "new") {
+        const old = await getLineup(id)
+        if (!old) return notFound()
+        return redirect(`/lineups/team/${old.teamId}/${id}/`)
+      }
+      return redirect(`/lineups/team/stars/${suffix}`)
+    }
+    if (route === "teams") {
+      if (write) return notFound()
+      return html(renderTeams(await listTeams(), admin))
+    }
+    // API calls without a team (older pages) act on the Stars team.
+    const team = await getTeam(teamParam ?? "stars")
+    if (!team) return notFound()
     switch (route) {
       case "list":
         if (write) return notFound()
-        return html(renderList(await listLineups(), admin))
+        return html(renderList(team, await listLineups(team.id), admin))
       case "roster":
         if (write) return notFound()
-        return html(renderRoster(await listPlayers(), admin))
+        return html(renderRoster(team, await listPlayers(team.id), admin))
       case "edit": {
         if (write) return notFound()
-        const players = await listPlayers(true)
-        if (id === "new") return html(renderEditor(null, players, admin, await upcomingGames()))
+        const players = await listPlayers(team.id, true)
+        if (id === "new") return html(renderEditor(team, null, players, admin, await upcomingGames(team.scheduleUrl)))
         if (!ID_RE.test(id)) return notFound()
         const lineup = await getLineup(id)
-        if (!lineup) return notFound()
-        return html(renderEditor(lineup, players, admin))
+        if (!lineup || lineup.teamId !== team.id) return notFound()
+        return html(renderEditor(team, lineup, players, admin))
       }
       case "api-collection":
-        if (method === "GET") return json({ lineups: await listLineups() })
-        if (method === "POST") return json({ lineup: await createLineup(await readBody(request)) }, 201)
+        if (method === "GET") return json({ lineups: await listLineups(team.id) })
+        if (method === "POST") return json({ lineup: await createLineup(team.id, await readBody(request)) }, 201)
         return json({ error: "Method not allowed." }, 405)
       case "api-item": {
         if (method === "GET") {
@@ -122,12 +146,12 @@ export async function handleLineups(request: Request): Promise<Response> {
         return json({ error: "Method not allowed." }, 405)
       }
       case "api-roster":
-        if (method === "GET") return json({ players: await listPlayers() })
-        if (method === "POST") return json({ player: await addPlayer(await readBody(request)) }, 201)
+        if (method === "GET") return json({ players: await listPlayers(team.id) })
+        if (method === "POST") return json({ player: await addPlayer(team.id, await readBody(request)) }, 201)
         return json({ error: "Method not allowed." }, 405)
       case "api-player":
         if (method === "DELETE") {
-          return (await removePlayer(id)) ? json({ ok: true }) : json({ error: "Player not found." }, 404)
+          return (await removePlayer(team.id, id)) ? json({ ok: true }) : json({ error: "Player not found." }, 404)
         }
         return json({ error: "Method not allowed." }, 405)
     }
@@ -186,6 +210,10 @@ function privateHeaders(type = "text/html; charset=utf-8"): Record<string, strin
     "x-robots-tag": "noindex, nofollow",
     "referrer-policy": "no-referrer",
   }
+}
+
+function redirect(location: string): Response {
+  return new Response(null, { status: 308, headers: { location, "cache-control": "private, no-store", "referrer-policy": "no-referrer" } })
 }
 
 function html(body: string, status = 200, head = false): Response {
