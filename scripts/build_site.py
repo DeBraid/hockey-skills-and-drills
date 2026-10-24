@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import re
@@ -184,6 +185,11 @@ ANALYTICS_SNIPPET = """  <script>
   </script>"""
 
 
+def asset_version(rel: str) -> str:
+    """Short content hash so phones never keep a stale copy after a deploy."""
+    return hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()[:10]
+
+
 def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: str = "") -> str:
     drill_attr = f' data-drill="{esc(drill)}"' if drill else ""
     return f"""<!DOCTYPE html>
@@ -196,7 +202,7 @@ def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: s
   <meta name="theme-color" content="#0c141c" media="(prefers-color-scheme: dark)">
   <title>{esc(title)}</title>
   <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="{prefix}css/styles.css">
+  <link rel="stylesheet" href="{prefix}css/styles.css?v={asset_version("css/styles.css")}">
 {ANALYTICS_SNIPPET}
 </head>
 <body data-page="{page}"{drill_attr}>
@@ -223,7 +229,7 @@ def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: s
       <p class="footer-links"><a href="{prefix}privacy/">Privacy</a> · <a href="{prefix}terms/">Terms</a></p>
     </div>
   </footer>
-  <script src="{prefix}js/site.js"></script>
+  <script src="{prefix}js/site.js?v={asset_version("js/site.js")}"></script>
 </body>
 </html>
 """
@@ -711,7 +717,7 @@ def local_targets(text: str) -> list[str]:
         url = href or md
         if not url or url.startswith(("http://", "https://", "mailto:", "#", "/_vercel/")):
             continue
-        targets.append(url.split("#", 1)[0])
+        targets.append(url.split("#", 1)[0].split("?", 1)[0])
     return targets
 
 
