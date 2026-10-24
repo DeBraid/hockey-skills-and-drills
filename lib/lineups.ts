@@ -12,6 +12,7 @@ export type Position = (typeof POSITIONS)[number]
 export type Slots = Record<Position, string[]>
 
 const MAX_TITLE = 80
+const MAX_NOTES = 5000
 const MAX_PER_SLOT = 30
 const MAX_LINEUPS = 300
 const MAX_PLAYERS = 60
@@ -58,6 +59,8 @@ export interface Lineup {
   title: string
   slots: Slots
   shareToken: string | null
+  notes: string
+  stars: (string | null)[]
   createdAt: string
   updatedAt: string
 }
@@ -68,6 +71,7 @@ export interface LineupSummary {
   placed: number
   out: number
   shared: boolean
+  stars: (string | null)[]
   updatedAt: string
 }
 
@@ -148,7 +152,7 @@ export async function removePlayer(teamId: string, id: string): Promise<boolean>
 
 export async function listLineups(teamId: string): Promise<LineupSummary[]> {
   const result = await getPool().query(
-    `SELECT id, title, slots, share_token, updated_at FROM lineups WHERE team_id = $1 ORDER BY updated_at DESC, id DESC`,
+    `SELECT id, title, slots, share_token, stars, updated_at FROM lineups WHERE team_id = $1 ORDER BY updated_at DESC, id DESC`,
     [teamId]
   )
   return result.rows.map((row) => {
@@ -160,6 +164,7 @@ export async function listLineups(teamId: string): Promise<LineupSummary[]> {
       placed,
       out: slots.OUT.length,
       shared: Boolean(row.share_token),
+      stars: parseStars(row.stars),
       updatedAt: toIso(row.updated_at),
     }
   })
@@ -168,7 +173,7 @@ export async function listLineups(teamId: string): Promise<LineupSummary[]> {
 export async function getLineup(id: string): Promise<Lineup | null> {
   if (!isUuid(id)) return null
   const result = await getPool().query(
-    `SELECT id, team_id, title, slots, share_token, created_at, updated_at FROM lineups WHERE id = $1`,
+    `SELECT id, team_id, title, slots, share_token, notes, stars, created_at, updated_at FROM lineups WHERE id = $1`,
     [id]
   )
   return result.rows[0] ? toLineup(result.rows[0]) : null
@@ -191,10 +196,12 @@ export async function createLineup(teamId: string, input: unknown): Promise<Line
   } else if (body.slots !== undefined) {
     slots = await cleanSlots(body.slots, teamId)
   }
+  const notes = cleanNotes(body.notes)
+  const stars = body.stars === undefined ? [null, null, null] : await cleanStars(body.stars, teamId)
   const result = await pool.query(
-    `INSERT INTO lineups (title, slots, team_id) VALUES ($1, $2::jsonb, $3)
-     RETURNING id, team_id, title, slots, share_token, created_at, updated_at`,
-    [title, JSON.stringify(slots), teamId]
+    `INSERT INTO lineups (title, slots, team_id, notes, stars) VALUES ($1, $2::jsonb, $3, $4, $5::jsonb)
+     RETURNING id, team_id, title, slots, share_token, notes, stars, created_at, updated_at`,
+    [title, JSON.stringify(slots), teamId, notes, JSON.stringify(stars)]
   )
   return toLineup(result.rows[0])
 }
@@ -206,10 +213,12 @@ export async function updateLineup(id: string, input: unknown): Promise<Lineup |
   if (!current) return null
   const title = Object.prototype.hasOwnProperty.call(body, "title") ? cleanTitle(body.title) : current.title
   const slots = Object.prototype.hasOwnProperty.call(body, "slots") ? await cleanSlots(body.slots, current.teamId) : current.slots
+  const notes = Object.prototype.hasOwnProperty.call(body, "notes") ? cleanNotes(body.notes) : current.notes
+  const stars = Object.prototype.hasOwnProperty.call(body, "stars") ? await cleanStars(body.stars, current.teamId) : current.stars
   const result = await getPool().query(
-    `UPDATE lineups SET title = $2, slots = $3::jsonb WHERE id = $1
-     RETURNING id, team_id, title, slots, share_token, created_at, updated_at`,
-    [id, title, JSON.stringify(slots)]
+    `UPDATE lineups SET title = $2, slots = $3::jsonb, notes = $4, stars = $5::jsonb WHERE id = $1
+     RETURNING id, team_id, title, slots, share_token, notes, stars, created_at, updated_at`,
+    [id, title, JSON.stringify(slots), notes, JSON.stringify(stars)]
   )
   return result.rows[0] ? toLineup(result.rows[0]) : null
 }
@@ -306,6 +315,37 @@ async function cleanSlots(value: unknown, teamId: string): Promise<Slots> {
   return slots
 }
 
+function cleanNotes(value: unknown): string {
+  if (value === undefined || value === null) return ""
+  if (typeof value !== "string") throw new LineupInputError("Coach's notes need to be text.")
+  if (value.length > MAX_NOTES) throw new LineupInputError(`Coach's notes are too long (up to ${MAX_NOTES} characters).`)
+  return value
+}
+
+// Three stars: [1st, 2nd, 3rd], each a player id on this team or null. No duplicates.
+async function cleanStars(value: unknown, teamId: string): Promise<(string | null)[]> {
+  if (!Array.isArray(value) || value.length > 3) throw new LineupInputError("Could not read the three stars.")
+  const stars: (string | null)[] = [null, null, null]
+  const seen = new Set<string>()
+  value.forEach((id, i) => {
+    if (id === null || id === "") return
+    if (typeof id !== "string" || !isUuid(id)) throw new LineupInputError("A star player was not found.")
+    if (seen.has(id)) throw new LineupInputError("A player can only be one of the three stars.")
+    seen.add(id)
+    stars[i] = id
+  })
+  if (seen.size) {
+    const found = await getPool().query(`SELECT id FROM players WHERE id = ANY($1::uuid[]) AND team_id = $2`, [[...seen], teamId])
+    if (found.rowCount !== seen.size) throw new LineupInputError("A star player was not found.")
+  }
+  return stars
+}
+
+function parseStars(value: unknown): (string | null)[] {
+  const list = Array.isArray(value) ? value : []
+  return [0, 1, 2].map((i) => (typeof list[i] === "string" && isUuid(list[i]) ? String(list[i]) : null))
+}
+
 function cleanTitle(value: unknown): string {
   if (value === undefined || value === null) return ""
   if (typeof value !== "string") throw new LineupInputError("The lineup name needs to be text.")
@@ -367,6 +407,8 @@ function toLineup(row: Record<string, unknown>): Lineup {
     title: String(row.title ?? ""),
     slots: parseSlots(row.slots),
     shareToken: row.share_token ? String(row.share_token) : null,
+    notes: String(row.notes ?? ""),
+    stars: parseStars(row.stars),
     createdAt: toIso(row.created_at),
     updatedAt: toIso(row.updated_at),
   }

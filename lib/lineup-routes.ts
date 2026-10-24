@@ -112,7 +112,7 @@ export async function handleLineups(request: Request): Promise<Response> {
     switch (route) {
       case "list":
         if (write) return notFound()
-        return html(renderList(team, await listLineups(team.id), admin))
+        return html(renderList(team, await listLineups(team.id), admin, await listPlayers(team.id, true)))
       case "roster":
         if (write) return notFound()
         return html(renderRoster(team, await listPlayers(team.id), admin))

@@ -58,14 +58,19 @@ ${items || `<li class="empty">No teams yet.</li>`}
   return shell("Rosters", body, true)
 }
 
-export function renderList(team: Team, lineups: LineupSummary[], viewer: AccountUser): string {
+export function renderList(team: Team, lineups: LineupSummary[], viewer: AccountUser, players: Player[] = []): string {
+  const names = new Map(players.map((p) => [p.id, playerLabel(p)]))
+  const starsLine = (stars: (string | null)[]) => {
+    const picks = stars.map((id, i) => (id && names.has(id) ? `<span class="lu-star-sum"><b>${"★".repeat(i + 1)}</b> ${esc(names.get(id) || "")}</span>` : "")).filter(Boolean)
+    return picks.length ? `<span class="lu-stars-line">${picks.join(" ")}</span>` : ""
+  }
   const base = `/lineups/team/${esc(team.id)}`
   const rows = lineups.length
     ? lineups
         .map(
           (l) => `<li class="lu-item">
         <a class="lu-item-link" href="${base}/${esc(l.id)}/"><strong>${esc(l.title || "Untitled lineup")}</strong>
-        <span class="muted">${l.placed} placed · ${l.out} out${l.shared ? " · link on" : ""} · ${when(l.updatedAt)}</span></a>
+        <span class="muted">${l.placed} placed · ${l.out} out${l.shared ? " · link on" : ""} · ${when(l.updatedAt)}</span>${starsLine(l.stars)}</a>
         <button class="btn" type="button" data-duplicate="${esc(l.id)}">Duplicate</button>
       </li>`
         )
@@ -133,7 +138,7 @@ export function renderEditor(team: Team, lineup: Lineup | null, players: Player[
       </label>`
     : ""
   const data = {
-    lineup: lineup ? { id: lineup.id, title: lineup.title, slots: lineup.slots, shareToken: lineup.shareToken } : null,
+    lineup: lineup ? { id: lineup.id, title: lineup.title, slots: lineup.slots, shareToken: lineup.shareToken, notes: lineup.notes, stars: lineup.stars } : null,
     players: players.map((p) => ({ id: p.id, label: playerLabel(p), pref: p.preferred, active: p.active, goalie: p.goalie })),
   }
   const zones = POSITIONS.map((pos) => {
@@ -179,6 +184,17 @@ export function renderEditor(team: Team, lineup: Lineup | null, players: Player[
     <div class="lu-board">
 ${zones}
     </div>
+    <section class="lu-post lu-noprint" aria-labelledby="lu-post-h">
+      <h2 id="lu-post-h">After the game <span class="muted">· private, never on the share link</span></h2>
+      <fieldset class="lu-stars">
+        <legend>Three stars</legend>
+        ${[1, 2, 3].map((n) => `<label class="lu-star-row"><span class="lu-star-label"><b aria-hidden="true">${"★".repeat(n)}</b> ${n === 1 ? "1st star · player of the game" : n === 2 ? "2nd star" : "3rd star"}</span>
+          <select data-star="${n - 1}"><option value="">— None —</option></select></label>`).join("\n        ")}
+      </fieldset>
+      <label class="lu-notes-label" for="lu-notes">Coach's notes
+        <textarea id="lu-notes" rows="6" maxlength="5000" placeholder="What went well, what to work on, who stood out…">${esc(lineup?.notes || "")}</textarea>
+      </label>
+    </section>
     <p class="muted lu-noprint">Signed in as ${esc(viewer.email)}.</p>
     <script type="application/json" id="lu-data">${safeJson(data)}</script>
   </main>`
