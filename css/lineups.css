@@ -132,3 +132,32 @@
   .lu-line { background: none; border: 1px solid #000; color: #000; }
   .lu-drop-marker { display: none !important; }
 }
+
+/* Board layout: forwards LW/C/RW in one row, D LD/RD in one row, Out full width. */
+.lu-board { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.4rem; }
+.lu-zone-lw, .lu-zone-c, .lu-zone-rw { grid-column: span 2; }
+.lu-zone-ld, .lu-zone-rd { grid-column: span 3; }
+.lu-zone-out { grid-column: 1 / -1; }
+.lu-zone-out .lu-list { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+@media (max-width: 759px) {
+  .lu-zone { padding: 0.3rem; min-height: 5rem; border-radius: 10px; }
+  .lu-zone h2 { font-size: 0.9rem; padding: 0.15rem 0.25rem; margin-bottom: 0.3rem; }
+  .lu-zone .lu-count { display: none; }
+  .lu-zone .lu-list { gap: 0.25rem; }
+  .lu-zone .lu-chip { padding: 0.35rem 0.3rem; min-height: 36px; font-size: 0.82rem; line-height: 1.2; border-radius: 8px; overflow-wrap: normal; word-break: normal; }
+  .lu-zone .lu-line { display: block; width: fit-content; min-width: 0; margin: 0 0 0.1rem; font-size: 0.68rem; padding: 0 0.25rem; }
+  .lu-zone-out .lu-chip .lu-line { display: inline-block; }
+}
+@media (min-width: 760px) {
+  .lu-board { gap: 0.6rem; }
+  .lu-zone-lw, .lu-zone-c, .lu-zone-rw, .lu-zone-ld, .lu-zone-rd { grid-column: auto; }
+  .lu-zone-out { grid-column: auto; }
+  .lu-zone-out .lu-list { display: grid; }
+}
+@media print {
+  .lu-board { grid-template-columns: repeat(6, 1fr) !important; }
+  .lu-zone-lw, .lu-zone-c, .lu-zone-rw { grid-column: span 2 !important; }
+  .lu-zone-ld, .lu-zone-rd { grid-column: span 3 !important; }
+  .lu-zone-out { grid-column: 1 / -1 !important; }
+  .lu-zone .lu-line { display: inline-block; }
+}
