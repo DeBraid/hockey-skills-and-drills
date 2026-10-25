@@ -289,7 +289,7 @@
 
   // Menu first, and each feature isolated, so one failure (e.g. storage
   // blocked in an in-app browser) can never hide the phone menu.
-  [initMobileMenu, initPlanPage, initAccountPage, initAccounts, trackPageView].forEach(function (fn) {
+  [initMobileMenu, initPlanPage, initPlansPage, initAccountPage, initAccounts, trackPageView].forEach(function (fn) {
     try { fn(); } catch (error) { if (window.console) console.error(error); }
   });
 
@@ -1126,7 +1126,9 @@
       return li;
     }
     item("Drills", new URL("./", rootUrl).href);
-    item("Plans", new URL("plan/", rootUrl).href);
+    var plansItem = item("Plans", new URL("plans/", rootUrl).href);
+    var plansAnchor = plansItem.querySelector("a");
+    if (plansAnchor && onPlansPage()) plansAnchor.setAttribute("aria-current", "page");
     inner.appendChild(btn);
     inner.appendChild(panel);
     function setOpen(open) {
@@ -1234,6 +1236,93 @@
   function onAccountPage() {
     var path = window.location.pathname;
     return /\/account\/(index\.html)?$/.test(path) || /\/account$/.test(path);
+  }
+
+  function onPlansPage() {
+    var path = window.location.pathname;
+    return /\/plans\/(index\.html)?$/.test(path) || /\/plans$/.test(path);
+  }
+
+  function initPlansPage() {
+    var list = document.getElementById("plans-list");
+    if (!list) return;
+    var unavailable = document.getElementById("plans-unavailable");
+    var signedOut = document.getElementById("plans-out");
+    var signedIn = document.getElementById("plans-in");
+    var empty = document.getElementById("plans-empty");
+    var status = document.getElementById("plans-status");
+    var signIn = document.getElementById("plans-signin");
+
+    whenAccountReady(function () {
+      if (signIn) signIn.href = signInHref();
+      if (!accountState.enabled) {
+        if (unavailable) unavailable.hidden = false;
+        if (signedOut) signedOut.hidden = true;
+        if (signedIn) signedIn.hidden = true;
+        return;
+      }
+      if (unavailable) unavailable.hidden = true;
+      if (!accountState.user) {
+        if (signedOut) signedOut.hidden = false;
+        if (signedIn) signedIn.hidden = true;
+        return;
+      }
+      if (signedOut) signedOut.hidden = true;
+      if (signedIn) signedIn.hidden = false;
+      loadPlansList();
+    });
+
+    function loadPlansList() {
+      fetchJson(apiUrl("api/plans")).then(function (result) {
+        if (!result.ok) {
+          if (status) status.textContent = (result.data && result.data.error) || "Could not load your plans.";
+          return;
+        }
+        var plans = (result.data.plans || []).slice().sort(comparePlans);
+        list.textContent = "";
+        var shown = 0;
+        plans.forEach(function (plan) {
+          var row = planRow(plan);
+          if (!row) return;
+          list.appendChild(row);
+          shown += 1;
+        });
+        if (empty) empty.hidden = shown !== 0;
+      }, function () {
+        if (status) status.textContent = "Could not reach your account.";
+      });
+    }
+
+    function comparePlans(a, b) {
+      var aTime = planTime(a);
+      var bTime = planTime(b);
+      if (aTime !== bTime) return bTime - aTime;
+      return String(b && b.id || "").localeCompare(String(a && a.id || ""));
+    }
+
+    function planTime(plan) {
+      var raw = plan && (plan.updatedAt || plan.createdAt);
+      var time = Date.parse(raw || "");
+      return isNaN(time) ? 0 : time;
+    }
+
+    function planRow(plan) {
+      if (!plan || typeof plan.id !== "string" || !/^[0-9a-f-]{36}$/i.test(plan.id)) return null;
+      var li = document.createElement("li");
+      var link = document.createElement("a");
+      link.href = new URL("plan/?saved=" + encodeURIComponent(plan.id), rootUrl).href;
+      var title = document.createElement("strong");
+      var name = typeof plan.title === "string" ? plan.title.trim() : "";
+      title.textContent = name || "Untitled plan";
+      var date = document.createElement("span");
+      date.className = "plans-date";
+      var when = formatUpdated(plan.updatedAt || plan.createdAt);
+      date.textContent = when ? "Updated " + when : "";
+      link.appendChild(title);
+      link.appendChild(date);
+      li.appendChild(link);
+      return li;
+    }
   }
 
   function initAccountPage() {

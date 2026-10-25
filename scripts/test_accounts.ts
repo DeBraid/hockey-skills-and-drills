@@ -219,8 +219,9 @@ async function page(
       } catch {
         // Share falls back to the text field when clipboard is missing.
       }
-      window.fetch = (async (input: RequestInfo | URL) => {
+      window.fetch = (async (input: RequestInfo | URL, init?: { method?: string }) => {
         const target = String(input)
+        const method = String(init?.method || "GET").toUpperCase()
         calls.push(target)
         if (target.endsWith("/api/health")) {
           if (session === "down") return jsonResponse({ ok: false }, 404)
@@ -230,6 +231,42 @@ async function page(
           return jsonResponse(session && session !== "down" ? { user: session } : null)
         }
         if (target.endsWith("/api/plans") && session && session !== "down") {
+          if (method === "GET") {
+            return jsonResponse({
+              plans: [
+                {
+                  id: "123e4567-e89b-42d3-a456-426614174111",
+                  title: "Older practice",
+                  updatedAt: "2026-01-02T12:00:00.000Z",
+                  createdAt: "2026-01-02T12:00:00.000Z",
+                },
+                {
+                  id: "123e4567-e89b-42d3-a456-426614174222",
+                  title: "Thursday practice",
+                  updatedAt: "2026-03-04T15:00:00.000Z",
+                  createdAt: "2026-03-01T12:00:00.000Z",
+                },
+                {
+                  id: "123e4567-e89b-42d3-a456-426614174333",
+                  title: "   ",
+                  updatedAt: "2026-02-01T12:00:00.000Z",
+                  createdAt: "2026-02-01T12:00:00.000Z",
+                },
+                {
+                  id: "123e4567-e89b-42d3-a456-426614174444",
+                  title: '<img src=x onerror="alert(1)">',
+                  updatedAt: "2026-02-15T12:00:00.000Z",
+                  createdAt: "2026-02-15T12:00:00.000Z",
+                },
+                {
+                  id: "not-a-uuid",
+                  title: "Skip me",
+                  updatedAt: "2026-04-01T12:00:00.000Z",
+                  createdAt: "2026-04-01T12:00:00.000Z",
+                },
+              ],
+            })
+          }
           return jsonResponse({
             plan: {
               id: "123e4567-e89b-42d3-a456-426614174000",
@@ -310,6 +347,14 @@ async function main(): Promise<void> {
   assert.equal(fs.existsSync(path.join(root, "public/index.html")), true)
   assert.equal(fs.existsSync(path.join(root, "public/media/cone-weave/cone-weave-anim.html")), true)
   assert.equal(fs.existsSync(path.join(root, "public/drills/cone-weave/index.html")), true)
+  assert.equal(fs.existsSync(path.join(root, "public/plans/index.html")), true)
+  const plansHtml = fs.readFileSync(path.join(root, "plans/index.html"), "utf8")
+  assert.match(plansHtml, /href="\.\.\/plan\/">New plan</)
+  assert.match(plansHtml, /id="plans-list"/)
+  assert.doesNotMatch(plansHtml, /lastName|last name/)
+  const siteJs = fs.readFileSync(path.join(root, "js/site.js"), "utf8")
+  assert.match(siteJs, /item\("Plans", new URL\("plans\/", rootUrl\)\.href\)/)
+  assert.doesNotMatch(siteJs, /item\("Plans", new URL\("plan\/", rootUrl\)\.href\)/)
 
   ensureDatabase()
   setAuthEnv()
@@ -763,6 +808,12 @@ async function main(): Promise<void> {
     await waitFor(() => signedOut.window.document.querySelector("[data-account-slot]")?.textContent?.includes("Sign in") === true)
     const signInLink = signedOut.window.document.querySelector("[data-account-slot] a") as HTMLAnchorElement
     assert.match(signInLink.href, /\/hockey-skills-and-drills\/account\/$/)
+    const plansMenu = [...signedOut.window.document.querySelectorAll("#site-menu a")].find(
+      (link) => link.textContent === "Plans"
+    ) as HTMLAnchorElement | undefined
+    assert.ok(plansMenu)
+    assert.match(plansMenu.href, /\/hockey-skills-and-drills\/plans\/$/)
+    assert.doesNotMatch(plansMenu.href, /\/plan\/$/)
     assert.ok(signedOutCalls.some((url) => url.endsWith("/hockey-skills-and-drills/api/health")))
     assert.ok(signedOutCalls.some((url) => url.endsWith("/hockey-skills-and-drills/api/event")))
     assert.equal(absentCalls.some((url) => url.includes("/api/event")), false)
@@ -819,6 +870,57 @@ async function main(): Promise<void> {
     assert.equal(accountDown.window.document.getElementById("account-out")?.hidden, true)
     assert.equal(accountDown.window.document.querySelector("[data-account-slot]")?.hasAttribute("hidden"), true)
     accountDown.window.close()
+
+    const plansSource = fs.readFileSync(path.join(root, "plans/index.html"), "utf8")
+    const userPlans = await page(plansSource, `${origin}/plans/index.html`, user, [])
+    await waitFor(() => userPlans.window.document.querySelectorAll("#plans-list a").length === 4)
+    const planLinks = [...userPlans.window.document.querySelectorAll("#plans-list a")] as HTMLAnchorElement[]
+    assert.deepEqual(
+      planLinks.map((link) => link.querySelector("strong")?.textContent),
+      ["Thursday practice", '<img src=x onerror="alert(1)">', "Untitled plan", "Older practice"]
+    )
+    assert.match(planLinks[0].href, /\/plan\/\?saved=123e4567-e89b-42d3-a456-426614174222$/)
+    assert.match(planLinks[1].href, /\/plan\/\?saved=123e4567-e89b-42d3-a456-426614174444$/)
+    assert.match(planLinks[3].href, /\/plan\/\?saved=123e4567-e89b-42d3-a456-426614174111$/)
+    assert.match(planLinks[0].querySelector(".plans-date")?.textContent || "", /2026/)
+    assert.match(planLinks[3].querySelector(".plans-date")?.textContent || "", /2026/)
+    assert.equal(userPlans.window.document.querySelectorAll("#plans-list img").length, 0)
+    assert.doesNotMatch(userPlans.window.document.body.textContent || "", /Skip me/)
+    const newPlan = userPlans.window.document.querySelector(".plans-toolbar a") as HTMLAnchorElement
+    assert.equal(newPlan.textContent, "New plan")
+    assert.match(newPlan.href, /\/plan\/$/)
+    const currentPlans = userPlans.window.document.querySelector('#site-menu a[aria-current="page"]') as HTMLAnchorElement
+    assert.equal(currentPlans.textContent, "Plans")
+    assert.match(currentPlans.href, /\/plans\/$/)
+    userPlans.window.close()
+
+    const plansOut = await page(plansSource, `${origin}/plans/index.html`, null, [])
+    await waitFor(() => plansOut.window.document.getElementById("plans-out")?.hidden === false)
+    assert.equal(plansOut.window.document.getElementById("plans-in")?.hidden, true)
+    const plansSignIn = plansOut.window.document.getElementById("plans-signin") as HTMLAnchorElement
+    assert.match(plansSignIn.href, /\/account\/\?next=/)
+    assert.match(decodeURIComponent(plansSignIn.href), /\/plans\/$/)
+    plansOut.window.close()
+
+    const plansDown = await page(plansSource, `${origin}/plans/index.html`, "down", [])
+    await waitFor(() => plansDown.window.document.getElementById("plans-unavailable")?.hidden === false)
+    assert.equal(plansDown.window.document.getElementById("plans-out")?.hidden, true)
+    assert.equal(plansDown.window.document.getElementById("plans-in")?.hidden, true)
+    plansDown.window.close()
+
+    const drillMenu = await page(
+      fs.readFileSync(path.join(root, "drills/cone-weave/index.html"), "utf8"),
+      `${origin}/drills/cone-weave/index.html`,
+      null,
+      []
+    )
+    const drillPlans = [...drillMenu.window.document.querySelectorAll("#site-menu a")].find(
+      (link) => link.textContent === "Plans"
+    ) as HTMLAnchorElement | undefined
+    assert.ok(drillPlans)
+    assert.match(drillPlans.href, /\/plans\/$/)
+    assert.doesNotMatch(drillPlans.href, /\/plan\/$/)
+    drillMenu.window.close()
 
     const poisoned = resolvePublicUrl(
       new Request("https://hockey-skills-and-drills.vercel.app/api/health", {
