@@ -99,7 +99,7 @@ export function renderRoster(team: Team, players: Player[], viewer: AccountUser)
   const base = `/lineups/team/${esc(team.id)}`
   const rows = players
     .map(
-      (p) => `<li class="lu-item"><span><strong>${esc(playerLabel(p))}</strong>${p.goalie ? ` <span class="lu-tag">G</span>` : ""}
+      (p) => `<li class="lu-item"><span><strong>${esc(playerLabel(p))}</strong>${p.practiceNumber != null ? ` <span class="lu-practice" title="Practice jersey">· practice ${p.practiceNumber}</span>` : ""}${p.goalie ? ` <span class="lu-tag">G</span>` : ""}
           <button class="lu-pref" type="button" data-pref-player="${esc(p.id)}" data-pref="${esc(p.preferred)}" aria-label="Preferred positions for ${esc(playerLabel(p))}">${p.preferred ? `Wants ${esc(p.preferred)}` : "+ Pref"}</button></span>
         <button class="btn danger" type="button" data-remove-player="${esc(p.id)}" data-label="${esc(playerLabel(p))}">Remove</button></li>`
     )
