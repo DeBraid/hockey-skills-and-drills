@@ -179,8 +179,8 @@
 .lu-star-row { display: grid; gap: 0.25rem; }
 .lu-star-label { font-size: 0.9rem; }
 .lu-star-label b { color: #b8860b; letter-spacing: -0.05em; }
-.lu-star-row select { width: 100%; min-height: 44px; font: inherit; font-size: 16px; padding: 0.4rem 0.5rem; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: inherit; }
-.lu-star-row select.set { border-color: #b8860b; background: #fff9e6; }
+.lu-star-row select { width: 100%; min-height: 44px; font: inherit; font-size: 16px; padding: 0.4rem 0.5rem; border: 1px solid var(--line); border-radius: 10px; background: #0f1724; color: #f3f5f8; color-scheme: dark; }
+.lu-star-row select.set { border-color: #b8860b; background: rgba(184,134,11,0.18); color: #fff; }
 .lu-notes-label { display: grid; gap: 0.25rem; font-weight: 600; }
 .lu-notes-label textarea { width: 100%; box-sizing: border-box; min-height: 8rem; font: inherit; font-size: 16px; font-weight: 400; padding: 0.5rem; border: 1px solid var(--line); border-radius: 10px; resize: vertical; }
 @media (min-width: 760px) {
