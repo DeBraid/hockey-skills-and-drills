@@ -51,6 +51,7 @@ export interface Player {
   goalie: boolean
   active: boolean
   preferred: string
+  practiceNumber: number | null
 }
 
 export interface Lineup {
@@ -98,7 +99,7 @@ export function emptySlots(): Slots {
 
 export async function listPlayers(teamId: string, includeInactive = false): Promise<Player[]> {
   const result = await getPool().query(
-    `SELECT id, number, first_name, last_initial, goalie, active, preferred_positions
+    `SELECT id, number, first_name, last_initial, goalie, active, preferred_positions, practice_number
      FROM players
      WHERE team_id = $1 ${includeInactive ? "" : "AND active"}
      ORDER BY goalie, number, first_name`,
@@ -121,7 +122,7 @@ export async function addPlayer(teamId: string, input: unknown): Promise<Player>
   const result = await pool.query(
     `INSERT INTO players (number, first_name, last_initial, goalie, team_id)
      VALUES ($1, $2, $3, $4, $5)
-     RETURNING id, number, first_name, last_initial, goalie, active, preferred_positions`,
+     RETURNING id, number, first_name, last_initial, goalie, active, preferred_positions, practice_number`,
     [number, firstName, lastInitial, goalie, teamId]
   )
   return toPlayer(result.rows[0])
@@ -412,6 +413,7 @@ function toPlayer(row: Record<string, unknown>): Player {
     goalie: Boolean(row.goalie),
     active: Boolean(row.active),
     preferred: String(row.preferred_positions ?? ""),
+    practiceNumber: row.practice_number == null ? null : Number(row.practice_number),
   }
 }
 
