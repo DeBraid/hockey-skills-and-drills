@@ -478,6 +478,14 @@ A backward-skating and passing drill run in both end-zone circles at once. Playe
 
 [Note](drills/backward-transition-passing.md) · [Drill page](drills/backward-transition-passing/) · [Animation](media/backward-transition-passing/backward-transition-passing-anim.html) · [PNG](media/backward-transition-passing/backward-transition-passing.png) · [Excalidraw](media/backward-transition-passing/backward-transition-passing.excalidraw)
 
+### [Full-Ice 5-on-0 Breakout](drills/full-ice-5-on-0-breakout.md)
+
+The classic 5-on-0 breakout, run both ways. The coach dumps the puck in, the D retrieve and go D-to-D, then up the wall to the winger, who bumps it off the boards to the centre. All five rush the length of the ice to a shot on the far net. On the whistle the same three forwards come back the other way with the D pair from that end, and the first pair stays there.
+
+**Tags:** `full-ice`, `breakout`, `passing`, `defence`, `shooting`
+
+[Note](drills/full-ice-5-on-0-breakout.md) · [Drill page](drills/full-ice-5-on-0-breakout/) · [Animation](media/full-ice-5-on-0-breakout/full-ice-5-on-0-breakout-anim.html) · [PNG](media/full-ice-5-on-0-breakout/full-ice-5-on-0-breakout.png) · [Excalidraw](media/full-ice-5-on-0-breakout/full-ice-5-on-0-breakout.excalidraw)
+
 
 ## Add a drill
 
