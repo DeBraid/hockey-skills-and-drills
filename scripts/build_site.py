@@ -556,6 +556,34 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
     (out / "index.html").write_text(page_shell(title, "../", body, page="plan"), encoding="utf-8")
 
 
+def write_plans() -> None:
+    body = """  <main id="content" class="wrap-read plans-page">
+    <header class="drill-head">
+      <p class="kicker">On-ice coaching</p>
+      <h1>Plans</h1>
+      <p class="lede">Practice plans saved to your account, newest first. Open one to keep editing it.</p>
+    </header>
+    <p class="plans-toolbar"><a class="btn primary" href="../plan/">New plan</a></p>
+    <div id="plans-unavailable" hidden>
+      <p>Saving plans to an account is not available on this copy of the site. You can still build a practice plan in this browser.</p>
+    </div>
+    <div id="plans-out" hidden>
+      <p>Sign in to see the practice plans saved to your account.</p>
+      <p><a class="btn primary" id="plans-signin" href="../account/">Sign in</a></p>
+    </div>
+    <div id="plans-in" hidden>
+      <p class="empty" id="plans-empty" hidden>No saved plans yet. Use New plan, then tap Save.</p>
+      <ul class="plans-list" id="plans-list"></ul>
+    </div>
+    <p class="plan-status" id="plans-status" role="status"></p>
+  </main>
+"""
+    out = ROOT / "plans"
+    out.mkdir(parents=True, exist_ok=True)
+    title = "Plans · Hockey Skills & Drills"
+    (out / "index.html").write_text(page_shell(title, "../", body, page="plans"), encoding="utf-8")
+
+
 def write_account() -> None:
     body = """  <main id="content" class="wrap-read account-page">
     <header class="drill-head">
@@ -726,6 +754,7 @@ def check_output(drills: list[dict]) -> None:
         ROOT / "index.html",
         ROOT / "README.md",
         ROOT / "plan" / "index.html",
+        ROOT / "plans" / "index.html",
         ROOT / "account" / "index.html",
         ROOT / "privacy" / "index.html",
         ROOT / "terms" / "index.html",
@@ -814,6 +843,13 @@ def check_output(drills: list[dict]) -> None:
         raise SystemExit("home page should hide account controls until the API is available")
     if "Sign in" in home or "My plans" in home:
         raise SystemExit("home page should not show account controls until the API is available")
+    plans_page = (ROOT / "plans" / "index.html").read_text(encoding="utf-8")
+    if "Fork or star" in plans_page or "Add a drill" in plans_page:
+        raise SystemExit("plans page should stay read-only")
+    if 'href="../plan/">New plan</a>' not in plans_page or 'id="plans-list"' not in plans_page:
+        raise SystemExit("plans page is missing the list or the new-plan link")
+    if 'id="plans-out" hidden' not in plans_page or "data-account-slot hidden" not in plans_page:
+        raise SystemExit("plans page should hide sign-in until the API is available")
     account = (ROOT / "account" / "index.html").read_text(encoding="utf-8")
     if "Fork or star" in account or "Add a drill" in account:
         raise SystemExit("account page should stay read-only")
@@ -824,6 +860,7 @@ def check_output(drills: list[dict]) -> None:
     html_pages = [
         ROOT / "index.html",
         ROOT / "plan" / "index.html",
+        ROOT / "plans" / "index.html",
         ROOT / "account" / "index.html",
         ROOT / "privacy" / "index.html",
         ROOT / "terms" / "index.html",
@@ -854,7 +891,7 @@ def publish_site() -> None:
         if source.is_file():
             shutil.copy2(source, SITE / name)
     shutil.copy2(ROOT / "index.html", SITE / "index.html")
-    for name in ("plan", "account", "privacy", "terms"):
+    for name in ("plan", "plans", "account", "privacy", "terms"):
         shutil.copytree(ROOT / name, SITE / name)
     drills = SITE / "drills"
     drills.mkdir()
@@ -888,6 +925,7 @@ def publish_site() -> None:
     required = [
         SITE / "index.html",
         SITE / "plan" / "index.html",
+        SITE / "plans" / "index.html",
         SITE / "account" / "index.html",
         SITE / "privacy" / "index.html",
         SITE / "terms" / "index.html",
@@ -914,6 +952,7 @@ def main() -> None:
         write_drill_md(drill, by_slug, labels)
     write_readme(data["drills"], labels)
     write_plan(data, labels)
+    write_plans()
     write_account()
     write_legal()
     check_output(data["drills"])

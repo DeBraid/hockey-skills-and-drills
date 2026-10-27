@@ -907,6 +907,55 @@ main {
   color: var(--muted);
 }
 
+.plans-toolbar {
+  margin: 0 0 1rem;
+}
+
+.plans-toolbar .btn,
+.plans-out .btn {
+  text-decoration: none;
+}
+
+.plans-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.plans-list a {
+  display: block;
+  padding: 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: inherit;
+  text-decoration: none;
+}
+
+.plans-list a:hover,
+.plans-list a:focus-visible {
+  border-color: var(--blue);
+}
+
+.plans-list strong {
+  display: block;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.plans-date {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
 .rename-row {
   display: flex;
   flex-direction: column;
@@ -1236,7 +1285,8 @@ main {
   color: var(--header-ink); font: inherit; font-weight: 700; text-align: left; text-decoration: none;
   background: none; border: 0; cursor: pointer;
 }
-.menu-panel a:hover, .menu-auth:hover, .menu-panel a:focus-visible, .menu-auth:focus-visible { background: rgba(255,255,255,.12); }
+.menu-panel a:hover, .menu-auth:hover, .menu-panel a:focus-visible, .menu-auth:focus-visible,
+.menu-panel a[aria-current="page"] { background: rgba(255,255,255,.12); }
 .menu-foot { border-top: 1px solid rgba(255,255,255,.2); margin-top: .3rem; padding-top: .3rem; }
 .menu-foot:empty { display: none; }
 .menu-auth { font-size: .85rem; font-weight: 600; opacity: .85; min-height: 36px; }

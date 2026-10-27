@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#10243c" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c141c" media="(prefers-color-scheme: dark)">
+  <title>Plans · Hockey Skills &amp; Drills</title>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/styles.css?v=428096ca1d">
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    (function () {
+      try { if (localStorage.getItem("hsd-exclude-stats") === "1") return; } catch (error) {}
+      var s = document.createElement("script");
+      s.defer = true;
+      s.src = "/_vercel/insights/script.js";
+      document.head.appendChild(s);
+    })();
+  </script>
+</head>
+<body data-page="plans">
+  <a class="skip" href="#content">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../">
+        <span class="mark" aria-hidden="true"><span></span></span>
+        <span class="brand-text">
+          <span class="brand-kicker">Coaching library</span>
+          <span class="brand-name">Hockey Skills &amp; Drills</span>
+        </span>
+      </a>
+      <nav class="header-actions" aria-label="Site">
+        <a class="plan-nav" href="../plan/">Practice plan <span data-plan-count>(0)</span></a>
+        <div class="account-slot" data-account-slot hidden></div>
+      </nav>
+    </div>
+  </header>
+  <main id="content" class="wrap-read plans-page">
+    <header class="drill-head">
+      <p class="kicker">On-ice coaching</p>
+      <h1>Plans</h1>
+      <p class="lede">Practice plans saved to your account, newest first. Open one to keep editing it.</p>
+    </header>
+    <p class="plans-toolbar"><a class="btn primary" href="../plan/">New plan</a></p>
+    <div id="plans-unavailable" hidden>
+      <p>Saving plans to an account is not available on this copy of the site. You can still build a practice plan in this browser.</p>
+    </div>
+    <div id="plans-out" hidden>
+      <p>Sign in to see the practice plans saved to your account.</p>
+      <p><a class="btn primary" id="plans-signin" href="../account/">Sign in</a></p>
+    </div>
+    <div id="plans-in" hidden>
+      <p class="empty" id="plans-empty" hidden>No saved plans yet. Use New plan, then tap Save.</p>
+      <ul class="plans-list" id="plans-list"></ul>
+    </div>
+    <p class="plan-status" id="plans-status" role="status"></p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Hockey Skills &amp; Drills</p>
+      <p class="footer-links"><a href="../privacy/">Privacy</a> · <a href="../terms/">Terms</a></p>
+    </div>
+  </footer>
+  <script src="../js/site.js?v=6497666cfd"></script>
+</body>
+</html>
