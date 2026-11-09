@@ -1,6 +1,7 @@
 // Upcoming games for the lineup name prefill (admin-only editor).
-// Source: the team's public MBSportsWeb / OMHA Digital Network iCal feed.
-// Override with LINEUPS_SCHEDULE_ICS_URL (e.g. another team's webcal.ashx?IDs=<team id>).
+// Source: each team's public MBSportsWeb / OMHA Digital Network iCal feed.
+// The teams table stores the link. LINEUPS_SCHEDULE_ICS_URL is only the legacy
+// fallback when a caller does not pass a team URL (it does not retarget Select).
 // The feed itself only refreshes hourly, so results are cached for an hour per instance.
 
 const DEFAULT_ICS_URL = "https://westniagaraminorhockey.ca/webcal.ashx?IDs=2945" // U11 Stars, West Niagara Minor Hockey
@@ -9,6 +10,13 @@ const CACHE_MS = 60 * 60 * 1000
 const FETCH_TIMEOUT_MS = 4000
 const MAX_TITLE = 80
 
+// Public feeds used when teams.schedule_url is still empty.
+// Select: current-season team page https://westniagaraminorhockey.ca/Teams/2897/
+// (2025-26 team 2567 is not the current season and has no upcoming games.)
+export const TEAM_SCHEDULE_FEEDS: Readonly<Record<string, string>> = {
+  select: "https://westniagaraminorhockey.ca/webcal.ashx?IDs=2897",
+}
+
 export interface Game {
   start: string // ISO
   label: string // e.g. "Fri Oct 23 6:15 PM vs Mustangs, Fleming Memorial Arena"
@@ -16,7 +24,8 @@ export interface Game {
 
 const caches = new Map<string, { at: number; events: Game[] }>()
 
-// Team schedule link (from the teams table); null means no schedule prefill.
+// https calendar link, or null. undefined uses the legacy Stars/env fallback.
+// A passed null or "" means "no link" and does not fall back to Stars.
 export function scheduleUrl(teamUrl?: string | null): string | null {
   const raw = (teamUrl === undefined ? process.env.LINEUPS_SCHEDULE_ICS_URL || DEFAULT_ICS_URL : teamUrl || "")
     .trim()
@@ -28,6 +37,17 @@ export function scheduleUrl(teamUrl?: string | null): string | null {
   } catch {
     return null
   }
+}
+
+export function resolveTeamScheduleUrl(teamId: string, stored: string | null | undefined): string | null {
+  const explicit = (stored ?? "").trim()
+  if (explicit) return scheduleUrl(explicit)
+  const known = TEAM_SCHEDULE_FEEDS[teamId]
+  return known ? scheduleUrl(known) : null
+}
+
+export function clearScheduleCache(): void {
+  caches.clear()
 }
 
 // Never throws: any failure returns [] so the name is simply left blank.
@@ -70,7 +90,8 @@ export function parseGames(ics: string): Game[] {
     if (!game) continue
     const start = parseDate(field("DTSTART"))
     if (!start) continue
-    const opponent = (game[2].split(" - ").pop() || game[2]).trim()
+    const opponent = cleanOpponent((game[2].split(" - ").pop() || game[2]).replace(/\s+/g, " ").trim())
+    if (!opponent) continue
     const location = field("LOCATION")
     const label = `${formatWhen(start)} ${game[1]} ${opponent}${location ? `, ${location}` : ""}`.slice(0, MAX_TITLE)
     games.push({ start: start.toISOString(), label })
@@ -102,4 +123,11 @@ function formatWhen(date: Date): string {
 
 function unescapeText(value: string): string {
   return value.replace(/\\n/gi, " ").replace(/\\([,;\\])/g, "$1")
+}
+
+// House-league names keep the division code and score ("Mustangs [U11-R9](W 3-6)").
+// Select names have no code; drop a trailing result so the lineup reads "vs Waterloo".
+function cleanOpponent(opponent: string): string {
+  if (opponent.includes("[")) return opponent
+  return opponent.replace(/\s*\([WLT][^)]*\)\s*$/i, "").trim()
 }

@@ -744,6 +744,113 @@ async function main(): Promise<void> {
     assert.match(adminHtml, /vercel\.com\/debraids-projects\/hockey-skills-and-drills\/analytics/)
     assert.doesNotMatch(adminHtml, /<script/i)
     assert.equal((await fetch(`${origin}/admin`, { method: "POST", headers: { cookie: coachA.header() } })).status, 404)
+
+    // Lineup schedules stay on their own team feeds. Everyone except an admin gets 404.
+    const { handleLineups } = await import("../lib/lineup-routes.js")
+    const { clearScheduleCache } = await import("../lib/schedule.js")
+    const { SELECT_ICS, STARS_ICS, SELECT_FEED, STARS_FEED } = await import("./schedule_fixtures.js")
+    const { parseGames } = await import("../lib/schedule.js")
+    const realFetch = globalThis.fetch
+    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url
+      if (url === SELECT_FEED) return new Response(SELECT_ICS, { status: 200 })
+      if (url === STARS_FEED) return new Response(STARS_ICS, { status: 200 })
+      return realFetch(input, init)
+    }) as typeof fetch
+    clearScheduleCache()
+    try {
+      const lineupRequest = (jar: CookieJar | null, query: string, method = "GET", body?: unknown) =>
+        handleLineups(
+          new Request(`${origin}/api/lineups?${query}`, {
+            method,
+            headers: {
+              ...(jar ? { cookie: jar.header() } : {}),
+              ...(method !== "GET" && method !== "HEAD" ? { origin } : {}),
+              ...(body !== undefined ? { "content-type": "application/json" } : {}),
+            },
+            body: body !== undefined ? JSON.stringify(body) : undefined,
+          })
+        )
+      const privateRoutes = ["select", "stars"].flatMap((team) => [
+        `__lu=edit&__team=${team}&__id=new`,
+        `__lu=list&__team=${team}`,
+        `__lu=roster&__team=${team}`,
+        `__lu=api-collection&__team=${team}`,
+        `__lu=api-roster&__team=${team}`,
+      ])
+      for (const query of privateRoutes) {
+        for (const jar of [null, coachB, new CookieJar()]) {
+          const hidden = await lineupRequest(jar, query)
+          assert.equal(hidden.status, 404, query)
+          assert.equal(await hidden.text(), "Not found")
+        }
+        const forged = await handleLineups(
+          new Request(`${origin}/api/lineups?${query}`, { headers: { cookie: "hsd.session-token=forged" } })
+        )
+        assert.equal(forged.status, 404, query)
+      }
+      const blockedWrite = await lineupRequest(coachB, "__lu=api-collection&__team=select", "POST", { title: "Should not save" })
+      assert.equal(blockedWrite.status, 404)
+      const nextOf = (ics: string) => {
+        const cutoff = Date.now() - 60 * 60 * 1000
+        return parseGames(ics).filter((game) => Date.parse(game.start) >= cutoff).slice(0, 6)
+      }
+      const selectNext = nextOf(SELECT_ICS)
+      const starsNext = nextOf(STARS_ICS)
+      const selectPage = await lineupRequest(coachA, "__lu=edit&__team=select&__id=new")
+      const starsPage = await lineupRequest(coachA, "__lu=edit&__team=stars&__id=new")
+      assert.equal(selectPage.status, 200)
+      assert.equal(starsPage.status, 200)
+      assert.match(selectPage.headers.get("cache-control") || "", /no-store/)
+      assert.equal(selectPage.headers.get("x-robots-tag"), "noindex, nofollow")
+      const selectBody = await selectPage.text()
+      const starsBody = await starsPage.text()
+      assert.match(selectBody, /data-team="select"/)
+      assert.match(starsBody, /data-team="stars"/)
+      assert.match(selectBody, /U11 Select/)
+      assert.match(starsBody, /U11 Stars/)
+      if (selectNext.length) {
+        assert.match(selectBody, new RegExp(`value="${selectNext[0].label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`))
+        assert.match(selectBody, /id="lu-game"/)
+        assert.equal(starsBody.includes(selectNext[0].label), false)
+      } else {
+        assert.match(selectBody, /No upcoming games on the team schedule/)
+        assert.doesNotMatch(selectBody, /id="lu-game"/)
+      }
+      if (starsNext.length) {
+        assert.match(starsBody, new RegExp(`value="${starsNext[0].label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`))
+        assert.equal(selectBody.includes(starsNext[0].label), false)
+      } else {
+        assert.match(starsBody, /No upcoming games on the team schedule/)
+      }
+      const createdSelect = await lineupRequest(coachA, "__lu=api-collection&__team=select", "POST", {
+        title: selectNext[0]?.label || "Select only",
+      })
+      assert.equal(createdSelect.status, 201)
+      const createdBody = (await createdSelect.json()) as { lineup: { id: string; title: string; teamId: string } }
+      assert.equal(createdBody.lineup.teamId, "select")
+      const starsList = await lineupRequest(coachA, "__lu=api-collection&__team=stars")
+      const starsListBody = (await starsList.json()) as { lineups: { id: string }[] }
+      assert.equal(starsListBody.lineups.some((lineup) => lineup.id === createdBody.lineup.id), false)
+      const selectList = await lineupRequest(coachA, "__lu=api-collection&__team=select")
+      const selectListBody = (await selectList.json()) as { lineups: { id: string }[] }
+      assert.equal(selectListBody.lineups.some((lineup) => lineup.id === createdBody.lineup.id), true)
+      const shared = await lineupRequest(coachA, `__lu=api-share&__id=${createdBody.lineup.id}`, "POST", {})
+      assert.equal(shared.status, 200)
+      const shareBody = (await shared.json()) as { shareToken: string }
+      const publicView = await lineupRequest(null, `__lu=view&__t=${shareBody.shareToken}`)
+      assert.equal(publicView.status, 200)
+      const publicHtml = await publicView.text()
+      assert.ok(publicHtml.includes(createdBody.lineup.title))
+      assert.doesNotMatch(publicHtml, /id="lu-add"|id="lu-game"|Skater/)
+      const missingShare = await lineupRequest(null, "__lu=view&__t=not-a-real-token-value-here")
+      assert.equal(missingShare.status, 404)
+      const removed = await lineupRequest(coachA, `__lu=api-item&__id=${createdBody.lineup.id}`, "DELETE")
+      assert.equal(removed.status, 200)
+    } finally {
+      globalThis.fetch = realFetch
+      clearScheduleCache()
+    }
     delete process.env.ADMIN_EMAILS
 
     const staticServer = http.createServer((req, res) => {
