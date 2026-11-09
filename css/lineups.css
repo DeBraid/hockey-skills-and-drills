@@ -11,6 +11,11 @@
 .lu-title-label { display: grid; gap: 0.3rem; font-weight: 600; max-width: 32rem; }
 .lu-title-label > * { min-width: 0; max-width: 100%; }
 .lu-title-label select { width: 100%; text-overflow: ellipsis; }
+.lu-schedule-empty { margin: 0.15rem 0 0.35rem; max-width: 32rem; }
+#lu-game { color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  #lu-game { color-scheme: dark; }
+}
 .lu-title-label input,
 .lu-title-label select,
 .lu-add input[type="text"],

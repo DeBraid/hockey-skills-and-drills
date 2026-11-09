@@ -136,7 +136,9 @@ export function renderEditor(team: Team, lineup: Lineup | null, players: Player[
           <option value="">Other (type a name)</option>
         </select>
       </label>`
-    : ""
+    : !lineup
+      ? `<p class="muted lu-schedule-empty" id="lu-schedule-empty">No upcoming games on the team schedule. Type a lineup name.</p>`
+      : ""
   const data = {
     lineup: lineup ? { id: lineup.id, title: lineup.title, slots: lineup.slots, shareToken: lineup.shareToken, notes: lineup.notes, stars: lineup.stars } : null,
     players: players.map((p) => ({ id: p.id, label: playerLabel(p), pref: p.preferred, active: p.active, goalie: p.goalie })),

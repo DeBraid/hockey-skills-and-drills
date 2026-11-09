@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto"
 import { getPool } from "./db.js"
 import { isUuid } from "./plans.js"
+import { resolveTeamScheduleUrl } from "./schedule.js"
 
 // Private team lineups. Only ADMIN_EMAILS users reach these functions for
 // listing and writing (see lib/lineup-routes.ts). The one public read is
@@ -40,7 +41,9 @@ export async function getTeam(id: string): Promise<Team | null> {
 }
 
 function toTeam(row: Record<string, unknown>): Team {
-  return { id: String(row.id), name: String(row.name ?? ""), scheduleUrl: row.schedule_url ? String(row.schedule_url) : null }
+  const id = String(row.id)
+  const stored = row.schedule_url ? String(row.schedule_url) : null
+  return { id, name: String(row.name ?? ""), scheduleUrl: resolveTeamScheduleUrl(id, stored) }
 }
 
 export interface Player {
