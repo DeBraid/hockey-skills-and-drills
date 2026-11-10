@@ -488,7 +488,7 @@ The classic 5-on-0 breakout, run both ways. The coach dumps the puck in, the D r
 
 ### [Special One II](drills/special-one-ii.md)
 
-A busy full-ice timing drill with two pucks going at once. At the left end, a forward takes a lead pass, swings around the centre circle, passes to the D and gets it back after the D wheels the net. At the right end, a forward carries around the circle, passes to the D, gets it back in the slot and bumps it up to a forward heading the other way. Then one forward goes in alone on the left net while the other two attack 2-on-1 against the D at the right end. Walk it through slowly the first time. Adapted from a drill by Oldrich Jindra (CoachThem).
+A busy full-ice timing drill with two pucks going at once. At the left end, a forward takes a lead pass, swings around the centre circle, passes to the D and gets it back after the D wheels the net. At the right end, a forward carries around the circle, passes to the D, gets it back in the slot and bumps it up to a forward heading the other way. Then one forward attacks the left net 1-on-1 against the D who stays in to defend, while the other two attack 2-on-1 against the D at the right end. Walk it through slowly the first time. Adapted from a drill by Oldrich Jindra (CoachThem).
 
 **Tags:** `full-ice`, `passing`, `shooting`, `defence`
 
