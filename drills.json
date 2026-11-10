@@ -1669,6 +1669,47 @@
         "d-to-wall-breakout",
         "olympic-breakout-pass"
       ]
+    },
+    {
+      "slug": "special-one-ii",
+      "title": "Special One II",
+      "subtitle": "Both ends go on one whistle: a forward and D trade passes at one end, three quick passes connect at the other, then a 1-on-0 one way and a 2-on-1 the other.",
+      "blurb": "A busy full-ice timing drill with two pucks going at once. At the left end, a forward takes a lead pass, swings around the centre circle, passes to the D and gets it back after the D wheels the net. At the right end, a forward carries around the circle, passes to the D, gets it back in the slot and bumps it up to a forward heading the other way. Then one forward goes in alone on the left net while the other two attack 2-on-1 against the D at the right end. Walk it through slowly the first time. Adapted from a drill by Oldrich Jindra (CoachThem).",
+      "diagramAlt": "Full-ice diagram of Special One II. D lines sit in both top corners and forward lines sit at both blue lines on the bottom boards and in the bottom-right corner, with pucks at centre ice and in two corners. On the left, a forward takes a lead pass, carries around the centre circle, passes to the D, loops high and gets a return pass from behind the net. On the right, the corner forward carries around the bottom circle, passes to the D, gets it back in the slot and relays it to a forward skating up from the blue line. That forward carries to the left net for a 1-on-0 shot, while the left forward and the slot forward attack the right net 2-on-1 against the recovering D.",
+      "tags": [
+        "full-ice",
+        "passing",
+        "shooting",
+        "defence"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Heads up: look before the puck gets to you.",
+        "Pass to where your teammate is going, not where they are.",
+        "Keep your feet moving. Nobody stops to wait for the puck.",
+        "Give a target: stick on the ice and the blade open.",
+        "D: get back inside, between the puck and the net.",
+        "2-on-1: stay wide so the D has to pick one of you, then shoot or pass.",
+        "Send the next group only when the last one is clear.",
+        "Coach note: the original sheets were too small to read every arrow, so these routes follow the written steps. Walk it through and adjust to your group.",
+        "Coach note: two pucks are live at once, one at each end. If it gets messy, run one end at a time first.",
+        "Coach note: the fresh puck to the D on the wall starts the next rep. Rotate lines however suits your group.",
+        "Adapted from a drill by Oldrich Jindra (CoachThem)."
+      ],
+      "steps": [
+        "Setup: D lines in both top corners. Forward lines at both blue lines on the bottom boards and in the bottom-right corner. Pucks at centre and in two corners, and a goalie in each net.",
+        "On one whistle, the left forward bursts up the middle and takes a lead pass from the right forward line. At the right end, the D curls into the top circle and the corner forward starts up the wall with a puck.",
+        "Left end: the forward carries around the centre circle and passes to the D curling off the wall. The D carries behind the net while the forward loops high and then cuts to the middle.",
+        "Right end: the corner forward carries around the bottom circle and passes to the D. The D carries behind the net and passes back to the forward, who has moved to the slot.",
+        "Timing: the left D passes from behind the net to the forward cutting in. The right forward in the slot bumps the puck up to the forward skating up from the blue line.",
+        "The forward from the right side carries all the way to the left net, 1-on-0. The left forward carries up ice toward the right end, the slot forward swings out to join, and the right D gets back in front of the net.",
+        "Left: shoot! The D skates up the wall for a fresh puck from the next D in the corner. Right: 2-on-1. The puck carrier drives inside, the partner drives the far side to the net, and they shoot or pass depending on what the D does."
+      ],
+      "related": [
+        "one-on-one-shooting-to-two-on-one",
+        "two-line-2-on-0-flow",
+        "full-ice-5-on-0-breakout"
+      ]
     }
   ]
 }
