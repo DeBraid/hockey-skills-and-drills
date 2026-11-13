@@ -844,6 +844,36 @@ main {
   gap: 0.45rem;
 }
 
+.plan-actions .btn {
+  width: 100%;
+}
+
+.plan-when {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.plan-title-label input.plan-when-input {
+  font-size: 1rem;
+}
+
+.plan-title-label input.plan-when-input:read-only {
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 44px;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--line);
+  background: var(--ice);
+  color: var(--ink);
+}
+
+.plan-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
 .plan-account-state {
   margin: 0;
   color: var(--muted);
@@ -1153,6 +1183,299 @@ main {
   .downloads a {
     flex-basis: 100%;
   }
+
+  .plan-when {
+    grid-template-columns: 1fr;
+  }
+}
+
+main.practice-page {
+  width: min(40rem, calc(100% - 1.5rem));
+  overflow-x: clip;
+}
+
+.practice-head h1,
+.practice-card h2 {
+  overflow-wrap: anywhere;
+}
+
+.practice-summary {
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+}
+
+.practice-plan-notes {
+  margin: 0 0 0.85rem;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+.practice-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.2rem, 1fr));
+  gap: 0.45rem;
+  margin: 0 0 0.35rem;
+  padding: 0.45rem 0;
+  background: var(--bg);
+}
+
+.practice-toolbar .btn {
+  width: 100%;
+  min-height: 48px;
+  padding-inline: 0.45rem;
+}
+
+.practice-skipped {
+  margin: 0 0 0.8rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.practice-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.practice-card {
+  min-width: 0;
+  margin: 0;
+  padding: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.practice-kicker {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.practice-card h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.15rem 0 0.65rem;
+  font-size: 1.28rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.practice-schedule {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.7rem;
+  margin: 0 0 0.35rem;
+}
+
+.practice-mins {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0.1rem 0.75rem;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.practice-clock {
+  color: var(--ink);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.practice-note {
+  margin: 0 0 0.75rem;
+  padding: 0.7rem 0.8rem;
+  background: var(--chip);
+  color: var(--chip-ink);
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.practice-media {
+  position: relative;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.practice-still {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+}
+
+.practice-media .anim-frame {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.practice-media:not(.is-live) .anim-frame {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.practice-media.is-live .practice-still {
+  display: none;
+}
+
+.practice-media.is-live .anim-frame {
+  position: relative;
+  height: auto;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.practice-points-heading {
+  margin: 0.85rem 0 0.25rem;
+  font-size: 0.98rem;
+}
+
+.practice-more {
+  margin: 0.75rem 0 0;
+}
+
+.practice-more a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.practice-cta {
+  margin: 1.4rem 0 0.4rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--red);
+  border-radius: var(--radius);
+}
+
+.practice-cta h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.3rem;
+  line-height: 1.25;
+}
+
+.practice-cta p {
+  margin: 0 0 0.85rem;
+  color: var(--muted);
+}
+
+.practice-cta .btn {
+  width: 100%;
+  min-height: 48px;
+}
+
+.practice-edit {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+}
+
+.practice-edit a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.practice-qr-dialog {
+  width: min(calc(100vw - 1.25rem), 26rem);
+  max-width: calc(100vw - 1.25rem);
+  max-height: calc(100dvh - 1.25rem);
+  margin: auto;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.practice-qr-dialog::backdrop {
+  background: rgba(8, 12, 18, 0.72);
+}
+
+.practice-qr-dialog h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.practice-qr-pad {
+  margin: 0.7rem 0 0.75rem;
+  padding: 0.75rem;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.practice-qr-pad svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  shape-rendering: crispEdges;
+}
+
+.practice-qr-url {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.practice-qr-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.practice-qr-actions .btn {
+  width: 100%;
+  min-height: 48px;
+  border-color: var(--blue);
+}
+
+@media (prefers-color-scheme: dark) {
+  .practice-toolbar .btn.primary,
+  .practice-cta .btn.primary {
+    background: #2f6fa8;
+    border-color: #9dcef5;
+    color: #f7fafc;
+  }
+
+  .practice-toolbar .btn,
+  .practice-qr-actions .btn {
+    border-color: #9dcef5;
+    color: #f7fafc;
+  }
+
+  .practice-toolbar .btn.primary {
+    color: #f7fafc;
+  }
 }
 
 @media print {
@@ -1172,7 +1495,12 @@ main {
   .plan-fields,
   .plan-item-actions,
   .plan-status,
-  .skip {
+  .skip,
+  .practice-toolbar,
+  .practice-cta,
+  .practice-edit,
+  .practice-qr-dialog,
+  .practice-more {
     display: none !important;
   }
 
@@ -1256,6 +1584,39 @@ main {
 
   .plan-total {
     margin-bottom: 0.6rem;
+  }
+
+  .practice-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
+    background: white !important;
+    color: black !important;
+    border-color: #ccc !important;
+  }
+
+  .practice-clock,
+  .practice-summary,
+  .practice-plan-notes,
+  .practice-card h2 {
+    color: black !important;
+  }
+
+  .practice-note {
+    background: #f4f4f4 !important;
+    color: black !important;
+  }
+
+  .practice-media .practice-still {
+    display: block !important;
+    max-height: 3.2in;
+    width: auto;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .practice-media .anim-frame {
+    display: none !important;
   }
 
   a {
