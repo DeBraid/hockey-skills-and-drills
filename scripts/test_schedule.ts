@@ -37,6 +37,7 @@ const skater: Player = {
   active: true,
   preferred: "",
   practiceNumber: null,
+  position: "",
 }
 
 function ensureDatabase(): void {
@@ -163,8 +164,10 @@ async function main(): Promise<void> {
 
   const selectGames = parseGames(SELECT_ICS).filter((game) => Date.parse(game.start) >= AS_OF_NOV_9 - 60 * 60 * 1000).slice(0, 6)
   const starsGames = parseGames(STARS_ICS).filter((game) => Date.parse(game.start) >= AS_OF_NOV_9 - 60 * 60 * 1000).slice(0, 6)
-  const selectHtml = renderEditor({ id: "select", name: "U11 Select", scheduleUrl: SELECT_FEED }, null, [skater], viewer, selectGames)
-  const starsHtml = renderEditor({ id: "stars", name: "U11 Stars", scheduleUrl: STARS_FEED }, null, [skater], viewer, starsGames)
+  const selectTeam = { id: "select", name: "U11 Select", scheduleUrl: SELECT_FEED, ageGroup: "U11", season: "2026-27" }
+  const starsTeam = { id: "stars", name: "U11 Stars", scheduleUrl: STARS_FEED, ageGroup: "U11", season: "2026-27" }
+  const selectHtml = renderEditor(selectTeam, null, [skater], viewer, selectGames)
+  const starsHtml = renderEditor(starsTeam, null, [skater], viewer, starsGames)
   assert.match(selectHtml, /data-team="select"/)
   assert.match(starsHtml, /data-team="stars"/)
   assert.match(selectHtml, /id="lu-game"/)
@@ -176,13 +179,13 @@ async function main(): Promise<void> {
   assert.match(selectHtml, /value="Sat Nov 14 7:15 PM vs Mount Hamilton, Fleming Memorial Arena"/)
   assert.match(selectHtml, /Skater A/)
   assert.doesNotMatch(selectHtml, /lastName|parent/i)
-  const emptyHtml = renderEditor({ id: "select", name: "U11 Select", scheduleUrl: SELECT_FEED }, null, [skater], viewer, [])
+  const emptyHtml = renderEditor(selectTeam, null, [skater], viewer, [])
   assert.match(emptyHtml, /id="lu-schedule-empty"/)
   assert.match(emptyHtml, /No upcoming games on the team schedule/)
   assert.doesNotMatch(emptyHtml, /id="lu-game"/)
   assert.match(emptyHtml, /id="lu-title"[^>]*value=""/)
   const saved = renderEditor(
-    { id: "select", name: "U11 Select", scheduleUrl: SELECT_FEED },
+    selectTeam,
     {
       id: "33333333-3333-4333-8333-333333333333",
       teamId: "select",

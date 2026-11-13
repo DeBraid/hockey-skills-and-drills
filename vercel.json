@@ -49,6 +49,70 @@
       "destination": "/api/event"
     },
     {
+      "source": "/api/teams/join/:token/",
+      "destination": "/api/lineups?__lu=api-join&__t=:token"
+    },
+    {
+      "source": "/api/teams/join/:token",
+      "destination": "/api/lineups?__lu=api-join&__t=:token"
+    },
+    {
+      "source": "/api/teams/:team/members/:id/",
+      "destination": "/api/lineups?__lu=api-member&__team=:team&__id=:id"
+    },
+    {
+      "source": "/api/teams/:team/members/:id",
+      "destination": "/api/lineups?__lu=api-member&__team=:team&__id=:id"
+    },
+    {
+      "source": "/api/teams/:team/members/",
+      "destination": "/api/lineups?__lu=api-members&__team=:team"
+    },
+    {
+      "source": "/api/teams/:team/members",
+      "destination": "/api/lineups?__lu=api-members&__team=:team"
+    },
+    {
+      "source": "/api/teams/:team/invites/:id/",
+      "destination": "/api/lineups?__lu=api-invite&__team=:team&__id=:id"
+    },
+    {
+      "source": "/api/teams/:team/invites/:id",
+      "destination": "/api/lineups?__lu=api-invite&__team=:team&__id=:id"
+    },
+    {
+      "source": "/api/teams/:team/invites/",
+      "destination": "/api/lineups?__lu=api-invites&__team=:team"
+    },
+    {
+      "source": "/api/teams/:team/invites",
+      "destination": "/api/lineups?__lu=api-invites&__team=:team"
+    },
+    {
+      "source": "/api/teams/:team/",
+      "destination": "/api/lineups?__lu=api-team&__team=:team"
+    },
+    {
+      "source": "/api/teams/:team",
+      "destination": "/api/lineups?__lu=api-team&__team=:team"
+    },
+    {
+      "source": "/api/teams/",
+      "destination": "/api/lineups?__lu=api-my-teams"
+    },
+    {
+      "source": "/api/teams",
+      "destination": "/api/lineups?__lu=api-my-teams"
+    },
+    {
+      "source": "/lineups/join/:token/",
+      "destination": "/api/lineups?__lu=join&__t=:token"
+    },
+    {
+      "source": "/lineups/join/:token",
+      "destination": "/api/lineups?__lu=join&__t=:token"
+    },
+    {
       "source": "/lineups",
       "destination": "/api/lineups?__lu=teams"
     },

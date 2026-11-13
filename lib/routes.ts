@@ -4,7 +4,7 @@ import { resolvePublicUrl, routedUrl } from "./base-path.js"
 import { isAdminEmail } from "./admins.js"
 import { logEvent, MAX_EVENT_BODY, parseClientEvent, recordEvent } from "./events.js"
 import { clientIp, json } from "./http.js"
-import { createPlan, deletePlan, getPlan, isUuid, listPlans, PlanInputError, updatePlan } from "./plans.js"
+import { createPlan, deletePlan, getPlan, isUuid, listPlans, PlanAccessError, PlanInputError, updatePlan } from "./plans.js"
 import { consumeLimit } from "./rate-limit.js"
 
 const MAX_BODY = 32 * 1024
@@ -202,6 +202,7 @@ function planId(request: Request): string {
 }
 
 function planError(error: unknown): Response {
+  if (error instanceof PlanAccessError) return json({ error: "Not found." }, 404)
   if (error instanceof PlanInputError) return json({ error: error.message }, 400)
   console.error(error)
   return json({ error: "Could not reach the plans database." }, 500)

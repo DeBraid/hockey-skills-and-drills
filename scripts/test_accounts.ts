@@ -333,7 +333,7 @@ async function main(): Promise<void> {
   assert.match(home, /href="drills\/cone-weave\/"/)
   const planHtml = fs.readFileSync(path.join(root, "plan/index.html"), "utf8")
   assert.match(planHtml, /id="plan-save" hidden/)
-  assert.match(planHtml, /Copy share link/)
+  assert.match(planHtml, /id="plan-share">Share/)
   assert.doesNotMatch(planHtml, /index\.html/)
   assert.match(planHtml, /"page": "\.\.\/drills\/cone-weave\/"/)
   const accountHtml = fs.readFileSync(path.join(root, "account/index.html"), "utf8")
@@ -442,6 +442,7 @@ async function main(): Promise<void> {
   assert.equal(blockedStaticPath("/js/site.js"), false)
   const authSource = fs.readFileSync(path.join(root, "lib/auth.ts"), "utf8")
   assert.doesNotMatch(authSource, /allowDangerousEmailAccountLinking/)
+  assert.match(authSource, /RESEND_API_KEY/)
   assert.equal(safeRedirectTarget("https://evil.example/phish", "https://hockey.derekbraid.com"), "https://hockey.derekbraid.com")
   assert.equal(safeRedirectTarget("//evil.example", "https://hockey.derekbraid.com"), "https://hockey.derekbraid.com")
   assert.equal(safeRedirectTarget("/account/", "https://hockey.derekbraid.com"), "https://hockey.derekbraid.com/account/")
@@ -851,6 +852,227 @@ async function main(): Promise<void> {
       globalThis.fetch = realFetch
       clearScheduleCache()
     }
+    // Any signed-in coach can own a team. Non-members get 404. Share links stay public.
+    const { handleLineups: teamRoutes } = await import("../lib/lineup-routes.js")
+    const { emailReady } = await import("../lib/auth.js")
+    const teamRequest = (jar: CookieJar | null, query: string, method = "GET", body?: unknown) =>
+      teamRoutes(
+        new Request(`${origin}/api/lineups?${query}`, {
+          method,
+          headers: {
+            ...(jar ? { cookie: jar.header() } : {}),
+            ...(method !== "GET" && method !== "HEAD" ? { origin } : {}),
+            ...(body !== undefined ? { "content-type": "application/json" } : {}),
+          },
+          body: body !== undefined ? JSON.stringify(body) : undefined,
+        })
+      )
+    const freshCoach = await signIn(origin, "coach-d@example.com")
+    const emptyTeams = await teamRequest(freshCoach, "__lu=teams")
+    assert.equal(emptyTeams.status, 200)
+    assert.match(await emptyTeams.text(), /Create your first team/)
+    const createdTeam = await teamRequest(coachB, "__lu=api-my-teams", "POST", {
+      name: "River Otters",
+      ageGroup: "U11",
+      season: "2026-27",
+      scheduleUrl: "webcal://example.com/otters.ics",
+    })
+    assert.equal(createdTeam.status, 201)
+    const teamBody = (await createdTeam.json()) as { team: { id: string; name: string; scheduleUrl: string; role: string } }
+    assert.equal(teamBody.team.name, "River Otters")
+    assert.equal(teamBody.team.role, "owner")
+    assert.equal(teamBody.team.scheduleUrl, "https://example.com/otters.ics")
+    const teamId = teamBody.team.id
+    const onlyMine = await teamRequest(coachB, "__lu=api-my-teams")
+    const onlyMineBody = (await onlyMine.json()) as { teams: { id: string }[] }
+    assert.deepEqual(onlyMineBody.teams.map((team) => team.id), [teamId])
+    for (const jar of [null, coachA, freshCoach]) {
+      for (const query of [
+        `__lu=list&__team=${teamId}`,
+        `__lu=roster&__team=${teamId}`,
+        `__lu=api-roster&__team=${teamId}`,
+        `__lu=api-collection&__team=${teamId}`,
+        `__lu=api-team&__team=${teamId}`,
+      ]) {
+        const hiddenTeam = await teamRequest(jar, query)
+        assert.equal(hiddenTeam.status, 404, query)
+        assert.equal(await hiddenTeam.text(), "Not found")
+      }
+    }
+    const badInitial = await teamRequest(coachB, `__lu=api-roster&__team=${teamId}`, "POST", {
+      number: 8,
+      firstName: "Alex",
+      lastInitial: "Smith",
+      position: "D",
+    })
+    assert.equal(badInitial.status, 400)
+    assert.match((await badInitial.json()).error, /one or two letters/)
+    const added = await teamRequest(coachB, `__lu=api-roster&__team=${teamId}`, "POST", {
+      number: 7,
+      practiceNumber: 17,
+      firstName: "Sam",
+      lastInitial: "Q",
+      position: "F",
+      preferred: "C/W",
+    })
+    assert.equal(added.status, 201)
+    const player = (await added.json()).player as { id: string; lastInitial: string; practiceNumber: number; position: string; preferred: string; goalie: boolean }
+    assert.equal(player.lastInitial, "Q")
+    assert.equal(player.practiceNumber, 17)
+    assert.equal(player.position, "F")
+    assert.equal(player.preferred, "C/W")
+    assert.equal(player.goalie, false)
+    const twoLetters = await teamRequest(coachB, `__lu=api-roster&__team=${teamId}`, "POST", {
+      number: 9,
+      firstName: "Alex",
+      lastInitial: "Jo",
+      position: "D",
+    })
+    assert.equal(twoLetters.status, 201)
+    assert.equal((await twoLetters.json()).player.lastInitial, "JO")
+    const goalie = await teamRequest(coachB, `__lu=api-roster&__team=${teamId}`, "POST", {
+      number: 1,
+      firstName: "Pat",
+      lastInitial: "R",
+      position: "G",
+    })
+    assert.equal(goalie.status, 201)
+    assert.equal((await goalie.json()).player.goalie, true)
+    const rosterPage = await teamRequest(coachB, `__lu=roster&__team=${teamId}`)
+    assert.equal(rosterPage.status, 200)
+    const rosterHtml = await rosterPage.text()
+    assert.match(rosterHtml, /maxlength="2"/)
+    assert.match(rosterHtml, /Sam/)
+    assert.doesNotMatch(rosterHtml, /name="lastName"|parent|guardian/i)
+    const lineup = await teamRequest(coachB, `__lu=api-collection&__team=${teamId}`, "POST", {
+      title: "Sat vs Hawks",
+      slots: { LW: [player.id] },
+    })
+    assert.equal(lineup.status, 201)
+    const lineupId = (await lineup.json()).lineup.id as string
+    const shared = await teamRequest(coachB, `__lu=api-share&__id=${lineupId}`, "POST", {})
+    assert.equal(shared.status, 200)
+    const shareToken = (await shared.json()).shareToken as string
+    const publicLineup = await teamRequest(null, `__lu=view&__t=${shareToken}`)
+    assert.equal(publicLineup.status, 200)
+    const publicHtml = await publicLineup.text()
+    assert.match(publicHtml, /Sat vs Hawks/)
+    assert.match(publicHtml, /7 Sam Q/)
+    assert.doesNotMatch(publicHtml, /practice 17|River Otters/)
+    const peeked = await teamRequest(coachA, `__lu=api-item&__id=${lineupId}`)
+    assert.equal(peeked.status, 404)
+    assert.equal(await peeked.text(), "Not found")
+    const invite = await teamRequest(coachB, `__lu=api-invites&__team=${teamId}`, "POST", { singleUse: true, expiresInHours: 48 })
+    assert.equal(invite.status, 201)
+    const invitePath = (await invite.json()).invite.path as string
+    const inviteToken = invitePath.split("/").pop() || ""
+    const accepted = await teamRequest(coachA, `__lu=api-join&__t=${inviteToken}`, "POST", {})
+    assert.equal(accepted.status, 200)
+    const acceptedBody = (await accepted.json()) as { teamId: string; joined: boolean }
+    assert.equal(acceptedBody.teamId, teamId)
+    assert.equal(acceptedBody.joined, true)
+    const reused = await teamRequest(freshCoach, `__lu=api-join&__t=${inviteToken}`, "POST", {})
+    assert.equal(reused.status, 404)
+    const assistantAdd = await teamRequest(coachA, `__lu=api-roster&__team=${teamId}`, "POST", {
+      number: 22,
+      firstName: "Riley",
+      lastInitial: "K",
+      position: "D",
+    })
+    assert.equal(assistantAdd.status, 201)
+    const assistantDelete = await teamRequest(coachA, `__lu=api-team&__team=${teamId}`, "DELETE")
+    assert.equal(assistantDelete.status, 404)
+    const assistantInvite = await teamRequest(coachA, `__lu=api-invites&__team=${teamId}`, "POST", { singleUse: true, expiresInHours: 24 })
+    assert.equal(assistantInvite.status, 404)
+    const home = await teamRequest(coachB, `__lu=list&__team=${teamId}`)
+    assert.equal(home.status, 200)
+    assert.match(await home.text(), /River Otters/)
+    const savedPlan = await api(origin, coachB, "POST", "/api/plans", {
+      title: "Tuesday skills",
+      notes: "edges",
+      practiceDate: "2026-11-10",
+      teamId,
+      items: [
+        { slug: "cone-weave", minutes: 10, note: "" },
+        { slug: "stops-and-starts", minutes: 5, note: "" },
+      ],
+    })
+    assert.equal(savedPlan.status, 201)
+    assert.equal(savedPlan.data.plan.teamId, teamId)
+    assert.equal(savedPlan.data.plan.practiceDate, "2026-11-10")
+    const personal = await api(origin, coachB, "POST", "/api/plans", {
+      title: "Personal skate",
+      notes: "",
+      items: [{ slug: "cone-weave", minutes: 8, note: "" }],
+    })
+    assert.equal(personal.status, 201)
+    assert.equal(personal.data.plan.teamId, null)
+    assert.equal((await api(origin, coachA, "GET", `/api/plans/${personal.data.plan.id}`)).status, 404)
+    assert.equal((await api(origin, coachA, "GET", `/api/plans/${savedPlan.data.plan.id}`)).status, 200)
+    assert.equal((await api(origin, freshCoach, "GET", `/api/plans/${savedPlan.data.plan.id}`)).status, 404)
+    const history = await teamRequest(coachB, `__lu=list&__team=${teamId}`)
+    const historyHtml = await history.text()
+    assert.match(historyHtml, /Tuesday skills/)
+    assert.match(historyHtml, /Run it again/)
+    assert.match(historyHtml, /15 min/)
+    assert.match(historyHtml, /cone-weave/)
+    assert.match(historyHtml, /Practice page/)
+    assert.doesNotMatch(historyHtml, /Personal skate/)
+    const assigned = await api(origin, coachB, "PATCH", `/api/plans/${personal.data.plan.id}`, { teamId })
+    assert.equal(assigned.status, 200)
+    assert.equal(assigned.data.plan.teamId, teamId)
+    assert.equal((await api(origin, coachA, "GET", `/api/plans/${personal.data.plan.id}`)).status, 200)
+    const again = await api(origin, coachA, "POST", "/api/plans", {
+      copyFrom: savedPlan.data.plan.id,
+      teamId,
+      practiceDate: "2026-11-13",
+    })
+    assert.equal(again.status, 201)
+    assert.notEqual(again.data.plan.id, savedPlan.data.plan.id)
+    assert.equal(again.data.plan.teamId, teamId)
+    assert.equal(again.data.plan.practiceDate, "2026-11-13")
+    assert.equal(again.data.plan.items.length, 2)
+    const sessionCoachA = await api(origin, coachA, "GET", "/api/auth/session")
+    const removedMember = await teamRequest(coachB, `__lu=api-member&__team=${teamId}&__id=${sessionCoachA.data.user.id}`, "DELETE")
+    assert.equal(removedMember.status, 200)
+    const lockedOut = await teamRequest(coachA, `__lu=list&__team=${teamId}`)
+    assert.equal(lockedOut.status, 404)
+    assert.equal((await api(origin, coachA, "GET", `/api/plans/${savedPlan.data.plan.id}`)).status, 404)
+    const lasting = await teamRequest(coachB, `__lu=api-invites&__team=${teamId}`, "POST", { singleUse: false, expiresInHours: 24 })
+    assert.equal(lasting.status, 201)
+    const lastingBody = (await lasting.json()) as { invite: { id: string; path: string } }
+    const revoked = await teamRequest(coachB, `__lu=api-invite&__team=${teamId}&__id=${lastingBody.invite.id}`, "DELETE")
+    assert.equal(revoked.status, 200)
+    const revokedToken = lastingBody.invite.path.split("/").pop() || ""
+    assert.equal((await teamRequest(freshCoach, `__lu=api-join&__t=${revokedToken}`, "POST", {})).status, 404)
+    const expiring = await teamRequest(coachB, `__lu=api-invites&__team=${teamId}`, "POST", { singleUse: true, expiresInHours: 24 })
+    const expiringBody = (await expiring.json()) as { invite: { path: string } }
+    const expiringToken = expiringBody.invite.path.split("/").pop() || ""
+    await getPool().query(`UPDATE team_invites SET expires_at = now() - interval '1 hour' WHERE token = $1`, [expiringToken])
+    assert.equal((await teamRequest(freshCoach, `__lu=api-join&__t=${expiringToken}`, "POST", {})).status, 404)
+    const teamEvents = await getPool().query(
+      `SELECT name FROM events WHERE name IN ('team_created', 'invite_accepted') ORDER BY name`
+    )
+    assert.deepEqual(
+      teamEvents.rows.map((row) => row.name),
+      ["invite_accepted", "team_created"]
+    )
+    const savedDelivery = process.env.EMAIL_DELIVERY
+    const savedKey = process.env.AUTH_RESEND_KEY
+    const savedFrom = process.env.EMAIL_FROM
+    delete process.env.EMAIL_DELIVERY
+    delete process.env.AUTH_RESEND_KEY
+    delete process.env.RESEND_API_KEY
+    assert.equal(emailReady(), false)
+    process.env.RESEND_API_KEY = "re_test"
+    assert.equal(emailReady(), true)
+    delete process.env.EMAIL_FROM
+    assert.equal(emailReady(), false)
+    process.env.EMAIL_FROM = savedFrom
+    delete process.env.RESEND_API_KEY
+    process.env.AUTH_RESEND_KEY = savedKey
+    process.env.EMAIL_DELIVERY = savedDelivery
+
     delete process.env.ADMIN_EMAILS
 
     const staticServer = http.createServer((req, res) => {
@@ -878,7 +1100,7 @@ async function main(): Promise<void> {
       const pageText = await (await fetch(`${staticOrigin}/`)).text()
       assert.match(pageText, /data-account-slot hidden/)
       const planText = await (await fetch(`${staticOrigin}/plan/`)).text()
-      assert.match(planText, /Copy share link/)
+      assert.match(planText, /id="plan-share">Share/)
       assert.match(planText, /id="plan-save" hidden/)
     } finally {
       await close(staticServer)
@@ -898,11 +1120,11 @@ async function main(): Promise<void> {
     absent.window.document.getElementById("plan-share")?.dispatchEvent(new absent.window.Event("click"))
     await waitFor(() => !absent.window.document.getElementById("plan-share-fallback")?.hasAttribute("hidden"))
     const shareValue = (absent.window.document.getElementById("plan-share-fallback") as HTMLInputElement).value
-    assert.match(shareValue, /plan\/\?d=cone-weave/)
+    assert.match(shareValue, /practice\/\?d=cone-weave/)
     assert.match(shareValue, /m=10/)
     assert.match(shareValue, /t=Tuesday/)
-    assert.doesNotMatch(shareValue, /edges/)
-    assert.doesNotMatch(shareValue, /hips/)
+    assert.match(shareValue, /edges/)
+    assert.match(shareValue, /hips/)
     absent.window.close()
 
     const signedOutCalls: string[] = []
@@ -999,6 +1221,10 @@ async function main(): Promise<void> {
     const currentPlans = userPlans.window.document.querySelector('#site-menu a[aria-current="page"]') as HTMLAnchorElement
     assert.equal(currentPlans.textContent, "Plans")
     assert.match(currentPlans.href, /\/plans\/$/)
+    const menuLabels = [...userPlans.window.document.querySelectorAll("#site-menu a")].map((link) => link.textContent)
+    assert.ok(menuLabels.includes("Lineups"))
+    assert.ok(menuLabels.includes("Rosters"))
+    assert.equal(menuLabels.includes("Admin"), false)
     userPlans.window.close()
 
     const plansOut = await page(plansSource, `${origin}/plans/index.html`, null, [])
@@ -1027,6 +1253,10 @@ async function main(): Promise<void> {
     assert.ok(drillPlans)
     assert.match(drillPlans.href, /\/plans\/$/)
     assert.doesNotMatch(drillPlans.href, /\/plan\/$/)
+    assert.equal(
+      [...drillMenu.window.document.querySelectorAll("#site-menu a")].some((link) => link.textContent === "Lineups"),
+      false
+    )
     drillMenu.window.close()
 
     const poisoned = resolvePublicUrl(

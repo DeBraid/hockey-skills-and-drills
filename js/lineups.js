@@ -1,6 +1,5 @@
 /* Private lineup pages: editor, list, roster, and the read-only share view.
-   No analytics or beacons. Contains no roster data; the server embeds it
-   only in pages for signed-in admins. */
+   Contains no roster data; the server embeds it only for that team's coaches. */
 (function () {
   "use strict";
 
@@ -39,6 +38,120 @@
     button.addEventListener("click", function () { window.print(); });
   });
 
+  document.querySelectorAll("[data-team-switch]").forEach(function (select) {
+    select.addEventListener("change", function () {
+      var tail = select.getAttribute("data-tail") || "";
+      location.href = "/lineups/team/" + select.value + "/" + tail;
+    });
+  });
+
+  var createForm = document.getElementById("lu-create");
+  var showCreate = document.getElementById("lu-show-create");
+  if (showCreate && createForm) {
+    showCreate.addEventListener("click", function () {
+      createForm.hidden = false;
+      showCreate.parentElement.hidden = true;
+      var first = createForm.querySelector("input");
+      if (first) first.focus();
+    });
+  }
+  if (createForm) {
+    createForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var form = new FormData(createForm);
+      api("POST", "/api/teams", {
+        name: String(form.get("name") || ""),
+        ageGroup: String(form.get("ageGroup") || ""),
+        season: String(form.get("season") || ""),
+        scheduleUrl: String(form.get("scheduleUrl") || "")
+      }).then(function (data) {
+        location.href = "/lineups/team/" + data.team.id + "/roster/";
+      }).catch(function (error) { status(error.message, true); });
+    });
+  }
+
+  var settingsForm = document.getElementById("lu-settings");
+  if (settingsForm) {
+    settingsForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var form = new FormData(settingsForm);
+      api("PATCH", "/api/teams/" + TEAM, {
+        name: String(form.get("name") || ""),
+        ageGroup: String(form.get("ageGroup") || ""),
+        season: String(form.get("season") || ""),
+        scheduleUrl: String(form.get("scheduleUrl") || "")
+      }).then(function () { location.reload(); })
+        .catch(function (error) { status(error.message, true); });
+    });
+  }
+  var deleteTeam = document.getElementById("lu-delete-team");
+  if (deleteTeam) {
+    deleteTeam.addEventListener("click", function () {
+      if (!confirm("Delete this team, its roster, and its lineups? This cannot be undone.")) return;
+      api("DELETE", "/api/teams/" + TEAM).then(function () { location.href = "/lineups/"; })
+        .catch(function (error) { status(error.message, true); });
+    });
+  }
+  var inviteForm = document.getElementById("lu-invite");
+  if (inviteForm) {
+    inviteForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var form = new FormData(inviteForm);
+      var hours = String(form.get("expiresInHours") || "");
+      api("POST", "/api/teams/" + TEAM + "/invites", {
+        singleUse: form.get("singleUse") === "on",
+        expiresInHours: hours ? Number(hours) : null
+      }).then(function (data) {
+        var link = document.getElementById("lu-invite-link");
+        if (link && data.invite) {
+          link.hidden = false;
+          link.textContent = "";
+          var a = document.createElement("a");
+          a.href = data.invite.path;
+          a.textContent = location.origin + data.invite.path;
+          link.appendChild(a);
+        }
+        location.reload();
+      }).catch(function (error) { status(error.message, true); });
+    });
+  }
+  document.querySelectorAll("[data-revoke-invite]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      api("DELETE", "/api/teams/" + TEAM + "/invites/" + button.getAttribute("data-revoke-invite"))
+        .then(function () { location.reload(); })
+        .catch(function (error) { status(error.message, true); });
+    });
+  });
+  document.querySelectorAll("[data-remove-member]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      if (!confirm("Remove this assistant coach?")) return;
+      api("DELETE", "/api/teams/" + TEAM + "/members/" + button.getAttribute("data-remove-member"))
+        .then(function () { location.reload(); })
+        .catch(function (error) { status(error.message, true); });
+    });
+  });
+  document.querySelectorAll("[data-run-again]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      button.disabled = true;
+      var now = new Date();
+      var month = String(now.getMonth() + 1);
+      var day = String(now.getDate());
+      var today = now.getFullYear() + "-" + (month.length < 2 ? "0" : "") + month + "-" + (day.length < 2 ? "0" : "") + day;
+      api("POST", "/api/plans", { copyFrom: button.getAttribute("data-run-again"), teamId: TEAM, practiceDate: today })
+        .then(function (data) { location.href = "/plan/?saved=" + data.plan.id; })
+        .catch(function (error) { button.disabled = false; status(error.message, true); });
+    });
+  });
+  var joinForm = document.getElementById("lu-join");
+  if (joinForm) {
+    joinForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      api("POST", "/api/teams/join/" + joinForm.getAttribute("data-token"), {})
+        .then(function (data) { location.href = "/lineups/team/" + data.teamId + "/"; })
+        .catch(function () { status("That invite link is no longer good.", true); });
+    });
+  }
+
   // ---------- list page ----------
   document.querySelectorAll("[data-duplicate]").forEach(function (button) {
     button.addEventListener("click", function () {
@@ -55,11 +168,15 @@
     addForm.addEventListener("submit", function (event) {
       event.preventDefault();
       var form = new FormData(addForm);
+      var practiceRaw = form.get("practiceNumber");
       api("POST", API + "/roster", {
         number: Number(form.get("number")),
+        practiceNumber: practiceRaw === null || String(practiceRaw) === "" ? null : Number(practiceRaw),
         firstName: String(form.get("firstName") || ""),
-        lastInitial: String(form.get("lastInitial") || "").trim().replace(/\./g, "").slice(0, 1).toUpperCase(),
-        goalie: form.get("goalie") === "on"
+        lastInitial: String(form.get("lastInitial") || "").trim().replace(/\./g, "").slice(0, 2).toUpperCase(),
+        position: String(form.get("position") || ""),
+        preferred: String(form.get("preferred") || ""),
+        goalie: String(form.get("position") || "") === "G"
       })
         .then(function () { location.reload(); })
         .catch(function (error) { status(error.message, true); });

@@ -56,7 +56,8 @@
       <li>Your name, email address, and profile photo link from Google (or just your email address if you use an email link).</li>
       <li>The account link Google returns at sign-in, including its sign-in tokens. We do not use them to access anything else in your Google account.</li>
       <li>A session record and a secure sign-in cookie so you stay signed in, for up to 30 days.</li>
-      <li>The practice plans you save: titles, drills, times, and notes. Saved plans are visible only to you.</li>
+      <li>The practice plans you save: titles, drills, times, notes, an optional practice date, and an optional team. A plan with no team is visible only to you. A plan saved to a team is visible to the coaches on that team.</li>
+      <li>Teams you create or join: the team name, age group, season, and schedule link, plus the roster (first name, a one- or two-letter last initial, jersey numbers, and position). No full last names and no parent or guardian details. Rosters and lineups are visible only to coaches on that team. A lineup share link, if you turn one on, shows the players placed on that lineup to anyone with the link.</li>
     </ul>
 
     <h2>Google user data</h2>
@@ -77,7 +78,7 @@
     <h2>Who processes data for us</h2>
     <ul>
       <li><strong>Vercel</strong> hosts the site and runs the sign-in and plan features. Like any web host, it handles IP addresses to serve pages.</li>
-      <li><strong>Neon</strong> hosts the Postgres database that holds accounts, saved plans, and the event log.</li>
+      <li><strong>Neon</strong> hosts the Postgres database that holds accounts, teams, rosters, lineups, saved plans, and the event log.</li>
       <li><strong>Google</strong> handles Google sign-in.</li>
       <li><strong>Resend</strong> will send email sign-in links once email sign-in is turned on. It receives only your email address and the link.</li>
     </ul>
@@ -99,6 +100,6 @@
       <p class="footer-links"><a href="../privacy/">Privacy</a> · <a href="../terms/">Terms</a></p>
     </div>
   </footer>
-  <script src="../js/site.js?v=7a6f2e94ff"></script>
+  <script src="../js/site.js?v=4b622d9591"></script>
 </body>
 </html>

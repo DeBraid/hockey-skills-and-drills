@@ -185,8 +185,8 @@
 .lu-star-row { display: grid; gap: 0.25rem; }
 .lu-star-label { font-size: 0.9rem; }
 .lu-star-label b { color: #b8860b; letter-spacing: -0.05em; }
-.lu-star-row select { width: 100%; min-height: 44px; font: inherit; font-size: 16px; padding: 0.4rem 0.5rem; border: 1px solid var(--line); border-radius: 10px; background: #0f1724; color: #f3f5f8; color-scheme: dark; }
-.lu-star-row select.set { border-color: #b8860b; background: rgba(184,134,11,0.18); color: #fff; }
+.lu-star-row select { width: 100%; min-height: 44px; font: inherit; font-size: 16px; padding: 0.4rem 0.5rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); color-scheme: light dark; }
+.lu-star-row select.set { border-color: #8a6a12; background: var(--chip); color: var(--ink); }
 .lu-notes-label { display: grid; gap: 0.25rem; font-weight: 600; }
 .lu-notes-label textarea { width: 100%; box-sizing: border-box; min-height: 8rem; font: inherit; font-size: 16px; font-weight: 400; padding: 0.5rem; border: 1px solid var(--line); border-radius: 10px; resize: vertical; }
 @media (min-width: 760px) {
@@ -201,6 +201,46 @@
 .lu-star-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
 .lu-star-row b { color: #b8860b; font-weight: 400; display: inline-block; min-width: 3.2em; }
 .lu-notes-view { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
+
+.lu-create, .lu-settings-form, .lu-invite {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0.75rem 0 1rem;
+  max-width: 28rem;
+}
+.lu-create h2, .lu-settings h2, .lu-history h2 { font-size: 1.15rem; margin: 1.25rem 0 0.5rem; }
+.lu-create label, .lu-settings-form label, .lu-invite label, .lu-switch, .lu-add label {
+  display: grid;
+  gap: 0.25rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.lu-create input, .lu-settings-form input, .lu-invite select, .lu-switch select, .lu-add select {
+  font: inherit;
+  font-size: 16px;
+  min-height: 44px;
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  color-scheme: light dark;
+}
+.lu-switch { margin: 0 0 0.75rem; max-width: 20rem; }
+.lu-history-item, .lu-history-item .lu-actions { align-items: stretch; }
+.lu-history-item > div { display: grid; gap: 0.15rem; min-width: 0; }
+.lu-history-item .lu-actions .btn, .lu-create .btn, .lu-settings .btn, .lu-invite .btn { min-height: 44px; }
+.lu-invite-link { overflow-wrap: anywhere; }
+.lu-invite-link a { font-weight: 700; }
+@media (max-width: 759px) {
+  .lu-item { flex-direction: column; align-items: stretch; }
+  .lu-actions .btn { flex: 1 1 auto; }
+}
+@media (prefers-color-scheme: dark) {
+  .lu-star-label b, .lu-star-sum b, .lu-post-view .lu-star-row b { color: #e6c35c; }
+  .lu-star-row select.set { border-color: #e6c35c; }
+}
 @media print { .lu-post.lu-post-view { display: block !important; border: 0; padding: 0; } }
 .lu-post-view .lu-star-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.4rem; }
 .lu-post-view .lu-star-row > * { display: inline; margin: 0; }

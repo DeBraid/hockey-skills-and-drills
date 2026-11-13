@@ -36,9 +36,14 @@ export function devMagicLinkEnabled(): boolean {
   return process.env.EMAIL_DELIVERY === "console" && !process.env.VERCEL_ENV
 }
 
+// RESEND_API_KEY is the name to set. AUTH_RESEND_KEY still works if it is already set.
+export function resendApiKey(): string {
+  return (process.env.RESEND_API_KEY || process.env.AUTH_RESEND_KEY || "").trim()
+}
+
 export function emailReady(): boolean {
   if (devMagicLinkEnabled()) return true
-  return Boolean(process.env.AUTH_RESEND_KEY && process.env.EMAIL_FROM)
+  return Boolean(resendApiKey() && process.env.EMAIL_FROM)
 }
 
 export function peekMagicLink(): MagicLink | null {
@@ -53,6 +58,7 @@ export async function handleAuth(request: Request): Promise<Response> {
     const publicUrl = resolvePublicUrl(request)
     const raw = request.method === "POST" ? await request.arrayBuffer() : undefined
     if (request.method === "POST" && /\/signin\/resend\/?$/.test(publicUrl.url.pathname)) {
+      if (!emailReady()) return json({ error: "Email sign-in is not available." }, 404)
       const gate = await emailSignInGate(emailFromSignIn(raw, request.headers.get("content-type") || ""), clientIp(request))
       if (gate === "limited") return json({ error: "Too many sign-in emails. Try again later." }, 429)
       if (gate === "unavailable") return json({ error: "Sign-in is unavailable right now." }, 503)
@@ -256,7 +262,7 @@ function providers() {
   if (emailReady()) {
     list.push(
       Resend({
-        apiKey: process.env.AUTH_RESEND_KEY || "console",
+        apiKey: resendApiKey() || "console",
         from: process.env.EMAIL_FROM || "Hockey Skills & Drills <plans@localhost>",
         sendVerificationRequest: sendMagicLink,
       })
@@ -279,7 +285,7 @@ async function sendMagicLink(params: {
   if (process.env.EMAIL_DELIVERY === "console") {
     throw new Error("Email sign-in is not configured")
   }
-  const apiKey = provider.apiKey || process.env.AUTH_RESEND_KEY
+  const apiKey = provider.apiKey || resendApiKey()
   const from = provider.from || process.env.EMAIL_FROM
   if (!apiKey || !from) throw new Error("Email sign-in is not configured")
   const response = await fetch("https://api.resend.com/emails", {
