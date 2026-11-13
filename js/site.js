@@ -8,8 +8,56 @@
   var accountState = { ready: false, enabled: false, google: false, email: false, user: null };
   var accountReady = [];
 
+  var WHEN_KEY = "hsd-plan-when";
+
   function emptyPlan() {
-    return { title: "", notes: "", savedId: "", items: [] };
+    return { title: "", notes: "", date: "", start: "", savedId: "", items: [] };
+  }
+
+  function validDate(value) {
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return "";
+    var parts = value.split("-");
+    var y = Number(parts[0]);
+    var m = Number(parts[1]);
+    var d = Number(parts[2]);
+    if (y < 2000 || y > 2100) return "";
+    var dt = new Date(y, m - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return "";
+    return value;
+  }
+
+  function validTime(value) {
+    if (typeof value !== "string") return "";
+    var match = /^(\d{2}):(\d{2})(?::\d{2})?$/.exec(value.trim());
+    if (!match) return "";
+    var h = Number(match[1]);
+    var min = Number(match[2]);
+    if (h > 23 || min > 59) return "";
+    return (h < 10 ? "0" : "") + h + ":" + (min < 10 ? "0" : "") + min;
+  }
+
+  function rememberWhen(plan) {
+    if (!plan || !plan.savedId) return;
+    try {
+      var all = JSON.parse(localStorage.getItem(WHEN_KEY) || "{}");
+      if (!all || typeof all !== "object" || Array.isArray(all)) all = {};
+      all[plan.savedId] = { date: plan.date || "", start: plan.start || "" };
+      localStorage.setItem(WHEN_KEY, JSON.stringify(all));
+    } catch (error) {
+      return;
+    }
+  }
+
+  function recallWhen(savedId) {
+    if (!savedId) return { date: "", start: "" };
+    try {
+      var all = JSON.parse(localStorage.getItem(WHEN_KEY) || "{}");
+      var row = all && all[savedId];
+      if (!row || typeof row !== "object") return { date: "", start: "" };
+      return { date: validDate(row.date), start: validTime(row.start) };
+    } catch (error) {
+      return { date: "", start: "" };
+    }
   }
 
   function normalizeMinutes(value) {
@@ -42,7 +90,14 @@
     if (data && typeof data.savedId === "string" && /^[0-9a-f-]{36}$/i.test(data.savedId)) {
       savedId = data.savedId;
     }
-    return { title: title, notes: notes, savedId: savedId, items: items };
+    return {
+      title: title,
+      notes: notes,
+      date: validDate(data && data.date),
+      start: validTime(data && data.start),
+      savedId: savedId,
+      items: items
+    };
   }
 
   function readPlan() {
@@ -60,9 +115,12 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         title: plan.title || "",
         notes: plan.notes || "",
+        date: plan.date || "",
+        start: plan.start || "",
         savedId: plan.savedId || "",
         items: plan.items || []
       }));
+      rememberWhen(plan);
       return true;
     } catch (error) {
       return false;
@@ -188,7 +246,7 @@
     var page = document.body ? document.body.getAttribute("data-page") || "other" : "other";
     var drill = document.body ? document.body.getAttribute("data-drill") : "";
     if (page === "drill" && drill) track("drill_view", { drill: drill });
-    else track("page_view", { page: page });
+    else if (page !== "practice") track("page_view", { page: page });
   }
 
   document.addEventListener("click", function (event) {
@@ -208,8 +266,6 @@
     if (refreshPlan) refreshPlan();
     else syncToggles(readPlan());
   });
-
-  var frames = document.querySelectorAll(".drill-anim");
 
   function fitAnim(frame) {
     var doc;
@@ -237,8 +293,24 @@
     });
   }
 
-  frames.forEach(function (frame) {
+  function watchAnim(frame) {
+    if (!frame || frame.getAttribute("data-anim-watch")) return;
+    frame.setAttribute("data-anim-watch", "1");
     frame.addEventListener("load", function () {
+      var media = frame.closest(".practice-media");
+      if (media) {
+        var loaded = null;
+        try {
+          loaded = frame.contentDocument;
+        } catch (error) {
+          loaded = null;
+        }
+        if (!loaded || !loaded.querySelector(".drill")) {
+          media.classList.add("is-fallback");
+          return;
+        }
+        media.classList.add("is-live");
+      }
       fitAfterLayout(frame);
       try {
         var fonts = frame.contentDocument.fonts;
@@ -251,9 +323,15 @@
         return;
       }
     });
-  });
+    frame.addEventListener("error", function () {
+      var media = frame.closest(".practice-media");
+      if (media) media.classList.add("is-fallback");
+    });
+  }
+
+  document.querySelectorAll(".drill-anim").forEach(watchAnim);
   window.addEventListener("resize", function () {
-    frames.forEach(fitAfterLayout);
+    document.querySelectorAll(".drill-anim").forEach(fitAfterLayout);
   });
 
   var buttons = document.querySelectorAll("[data-filter]");
@@ -289,7 +367,7 @@
 
   // Menu first, and each feature isolated, so one failure (e.g. storage
   // blocked in an in-app browser) can never hide the phone menu.
-  [initMobileMenu, initPlanPage, initPlansPage, initAccountPage, initAccounts, trackPageView].forEach(function (fn) {
+  [initMobileMenu, initPlanPage, initPracticePage, initPlansPage, initAccountPage, initAccounts, trackPageView].forEach(function (fn) {
     try { fn(); } catch (error) { if (window.console) console.error(error); }
   });
 
@@ -314,6 +392,10 @@
     var bannerText = document.getElementById("plan-shared-text");
     var loadBtn = document.getElementById("plan-load");
     var titleInput = document.getElementById("plan-title");
+    var dateInput = document.getElementById("plan-date");
+    var startInput = document.getElementById("plan-start");
+    var practiceLink = document.getElementById("plan-practice");
+    var sharedPracticeLink = document.getElementById("plan-shared-practice");
     var printTitle = document.getElementById("plan-print-title");
     var shareBtn = document.getElementById("plan-share");
     var printBtn = document.getElementById("plan-print");
@@ -376,6 +458,19 @@
       total.textContent = drills + " \u00b7 " + minutes + " min";
       printTitle.textContent = plan.title.trim();
       if (printNotes) printNotes.textContent = (plan.notes || "").trim();
+      syncPracticeLinks();
+    }
+
+    function syncPracticeLinks() {
+      var href = plan.items.length ? buildPracticeUrl(plan) : new URL("practice/", rootUrl).href;
+      if (practiceLink) practiceLink.href = href;
+      if (sharedPracticeLink) sharedPracticeLink.href = href;
+    }
+
+    function blockEmptyPractice(event) {
+      if (plan.items.length) return;
+      event.preventDefault();
+      status.textContent = "Add a drill before opening the practice page.";
     }
 
     function applyChrome() {
@@ -385,6 +480,10 @@
       titleInput.readOnly = shared;
       if (document.activeElement !== titleInput) titleInput.value = plan.title;
       titleInput.placeholder = shared ? "" : "Tuesday practice";
+      if (dateInput && document.activeElement !== dateInput) dateInput.value = plan.date || "";
+      if (startInput && document.activeElement !== startInput) startInput.value = plan.start || "";
+      if (dateInput) dateInput.readOnly = shared;
+      if (startInput) startInput.readOnly = shared;
       if (notesInput) {
         notesInput.readOnly = shared;
         if (document.activeElement !== notesInput) notesInput.value = plan.notes || "";
@@ -593,6 +692,7 @@
         var notePrint = row.querySelector(".plan-print-note");
         if (notePrint) notePrint.textContent = item.note.trim();
         savePlan(plan);
+        syncPracticeLinks();
       }
     });
 
@@ -615,6 +715,7 @@
       plan.title = titleInput.value.slice(0, 80);
       savePlan(plan);
       printTitle.textContent = plan.title.trim();
+      syncPracticeLinks();
     });
 
     shareBtn.addEventListener("click", function () {
@@ -623,11 +724,11 @@
         fallback.hidden = true;
         return;
       }
-      var url = shared ? cleanPageUrl(window.location.href) : buildShareUrl(plan);
+      var url = buildPracticeUrl(plan);
       track("plan_share", { drills: plan.items.length });
       copyText(url).then(function () {
         fallback.hidden = true;
-        status.textContent = "Share link copied.";
+        status.textContent = "Share link copied. Open the practice page for the QR code.";
       }, function () {
         status.textContent = "Select the link below to copy it.";
         fallback.hidden = false;
@@ -644,7 +745,7 @@
 
     clearBtn.addEventListener("click", function () {
       if (shared) return;
-      if (!plan.items.length && !plan.title.trim() && !(plan.notes || "").trim()) {
+      if (!plan.items.length && !plan.title.trim() && !(plan.notes || "").trim() && !plan.date && !plan.start) {
         status.textContent = "The plan is already empty.";
         return;
       }
@@ -652,6 +753,8 @@
       plan = emptyPlan();
       savePlan(plan);
       titleInput.value = "";
+      if (dateInput) dateInput.value = "";
+      if (startInput) startInput.value = "";
       if (notesInput) notesInput.value = "";
       status.textContent = "Plan cleared.";
       fallback.hidden = true;
@@ -670,11 +773,13 @@
     loadBtn.addEventListener("click", function () {
       if (!shared || !plan.items.length) return;
       var existing = readPlan();
-      var hasExisting = existing.items.length > 0 || existing.title.trim() || (existing.notes || "").trim();
+      var hasExisting = existing.items.length > 0 || existing.title.trim() || (existing.notes || "").trim() || existing.date || existing.start;
       if (hasExisting && !window.confirm("Replace your saved practice plan with this one?")) return;
       var loaded = {
         title: plan.title,
-        notes: "",
+        notes: plan.notes || "",
+        date: plan.date || "",
+        start: plan.start || "",
         savedId: "",
         items: plan.items.map(function (item) {
           return { slug: item.slug, minutes: item.minutes, note: item.note };
@@ -702,8 +807,32 @@
         savePlan(plan);
         if (printNotes) printNotes.textContent = plan.notes.trim();
         updateAccountChrome();
+        syncPracticeLinks();
       });
     }
+
+    if (dateInput) {
+      dateInput.addEventListener("change", function () {
+        if (shared) return;
+        plan.date = validDate(dateInput.value);
+        dateInput.value = plan.date;
+        savePlan(plan);
+        syncPracticeLinks();
+      });
+    }
+
+    if (startInput) {
+      startInput.addEventListener("change", function () {
+        if (shared) return;
+        plan.start = validTime(startInput.value);
+        startInput.value = plan.start;
+        savePlan(plan);
+        syncPracticeLinks();
+      });
+    }
+
+    if (practiceLink) practiceLink.addEventListener("click", blockEmptyPractice);
+    if (sharedPracticeLink) sharedPracticeLink.addEventListener("click", blockEmptyPractice);
 
     titleInput.addEventListener("input", function () {
       updateAccountChrome();
@@ -840,11 +969,399 @@
     render();
   }
 
+  function initPracticePage() {
+    var list = document.getElementById("practice-list");
+    var catalogNode = document.getElementById("drill-catalog");
+    if (!list || !catalogNode) return;
+    if (/\/shell\.html$/.test(window.location.pathname)) {
+      var redirected = new URL(window.location.href);
+      redirected.pathname = redirected.pathname.replace(/\/shell\.html$/, "/");
+      window.location.replace(redirected.href);
+      return;
+    }
+
+    var catalog = [];
+    try {
+      catalog = JSON.parse(catalogNode.textContent);
+    } catch (error) {
+      catalog = [];
+    }
+    var bySlug = {};
+    catalog.forEach(function (drill) {
+      bySlug[drill.slug] = drill;
+    });
+
+    var params = new URLSearchParams(window.location.search);
+    var parsed = params.has("d") ? parseShare(params, bySlug) : { skipped: 0, plan: emptyPlan() };
+    var plan = parsed.plan;
+    var skipped = parsed.skipped;
+    track("practice_view", { drills: plan.items.length });
+
+    var titleNode = document.getElementById("practice-title");
+    var summary = document.getElementById("practice-summary");
+    var planNotes = document.getElementById("practice-plan-notes");
+    var empty = document.getElementById("practice-empty");
+    var skippedNode = document.getElementById("practice-skipped");
+    var status = document.getElementById("practice-status");
+    var editLink = document.getElementById("practice-edit");
+    var dialog = document.getElementById("practice-qr-dialog");
+    var qrMount = document.getElementById("practice-qr-code");
+    var qrUrl = document.getElementById("practice-qr-url");
+    var qrStatus = document.getElementById("practice-qr-status");
+    var pageTitle = plan.title.trim() || "Practice";
+    document.title = pageTitle + " · Hockey Skills & Drills";
+    if (titleNode) titleNode.textContent = pageTitle;
+
+    var totalMinutes = 0;
+    var allTimed = plan.items.length > 0;
+    plan.items.forEach(function (item) {
+      if (item.minutes === "") allTimed = false;
+      else totalMinutes += item.minutes;
+    });
+    var cursor = startMinutes(plan.start);
+    var parts = [];
+    var dateLabel = formatPlanDate(plan.date);
+    if (dateLabel) parts.push(dateLabel);
+    if (cursor !== null && allTimed) parts.push(clockLabel(cursor) + "\u2013" + clockLabel(cursor + totalMinutes));
+    else if (cursor !== null) parts.push("Starts " + clockLabel(cursor));
+    var drillLabel = plan.items.length === 1 ? "1 drill" : plan.items.length + " drills";
+    if (plan.items.length) parts.push(drillLabel);
+    if (plan.items.length) parts.push(totalMinutes + " min");
+    if (summary) summary.textContent = parts.join(" \u00b7 ");
+    if (planNotes) {
+      var noteText = (plan.notes || "").trim();
+      planNotes.hidden = !noteText;
+      planNotes.textContent = noteText;
+    }
+    if (skipped && skippedNode && plan.items.length) {
+      skippedNode.hidden = false;
+      skippedNode.textContent = skipped + (skipped === 1 ? " drill in the link is not" : " drills in the link are not") + " in the library.";
+    }
+    if (editLink) editLink.href = plan.items.length ? buildShareUrl(plan) : new URL("plan/", rootUrl).href;
+    applyPracticeSocial(plan, totalMinutes, plan.items.length ? bySlug[plan.items[0].slug] : null);
+
+    if (!plan.items.length) {
+      if (empty) {
+        empty.hidden = false;
+        empty.textContent = params.has("d")
+          ? "Nothing in this link matched a drill in the library."
+          : "Build a plan, tap Share, then open the practice page.";
+      }
+    } else {
+      plan.items.forEach(function (item, index) {
+        list.appendChild(practiceCard(item, bySlug[item.slug], index));
+      });
+      armAnimations(list);
+    }
+
+    var pageUrl = function () { return cleanPageUrl(window.location.href); };
+    var copyBtn = document.getElementById("practice-copy");
+    var shareBtn = document.getElementById("practice-share");
+    var qrCopy = document.getElementById("practice-qr-copy");
+    var qrShare = document.getElementById("practice-qr-share");
+    var canShare = !!(navigator.share);
+    if (shareBtn) shareBtn.hidden = !canShare;
+    if (qrShare) qrShare.hidden = !canShare;
+
+    function copyPageLink(statusNode) {
+      track("practice_share", { drills: plan.items.length });
+      copyText(pageUrl()).then(function () {
+        var message = "Link copied.";
+        if (status) status.textContent = message;
+        if (statusNode) statusNode.textContent = message;
+      }, function () {
+        var message = "Select the address bar to copy this page.";
+        if (status) status.textContent = message;
+        if (statusNode) statusNode.textContent = message;
+      });
+    }
+
+    function sharePage() {
+      track("practice_share", { drills: plan.items.length });
+      var url = pageUrl();
+      if (!navigator.share) {
+        copyPageLink(qrStatus);
+        return;
+      }
+      navigator.share({ title: document.title, url: url }).catch(function () {});
+    }
+
+    if (copyBtn) copyBtn.addEventListener("click", function () { copyPageLink(status); });
+    if (qrCopy) qrCopy.addEventListener("click", function () { copyPageLink(qrStatus); });
+    if (shareBtn) shareBtn.addEventListener("click", sharePage);
+    if (qrShare) qrShare.addEventListener("click", sharePage);
+
+    var qrBtn = document.getElementById("practice-qr");
+    var closeBtn = document.getElementById("practice-qr-close");
+    if (qrBtn) {
+      qrBtn.addEventListener("click", function () {
+        var url = pageUrl();
+        if (qrUrl) qrUrl.textContent = url;
+        if (qrStatus) qrStatus.textContent = "";
+        if (qrMount) {
+          qrMount.textContent = "";
+          var svg = makeQr(url);
+          if (svg) qrMount.innerHTML = svg;
+          else qrMount.textContent = "This link is too long for a QR code. Copy it instead.";
+        }
+        track("practice_qr", { drills: plan.items.length });
+        if (dialog && dialog.showModal) dialog.showModal();
+      });
+    }
+    if (closeBtn && dialog) closeBtn.addEventListener("click", function () { dialog.close(); });
+    if (dialog) {
+      dialog.addEventListener("click", function (event) {
+        var rect = dialog.getBoundingClientRect();
+        var inside = event.clientX >= rect.left && event.clientX <= rect.right &&
+          event.clientY >= rect.top && event.clientY <= rect.bottom;
+        if (!inside) dialog.close();
+      });
+    }
+
+    function practiceCard(item, drill, index) {
+      var li = document.createElement("li");
+      li.className = "practice-card";
+      var schedule = document.createElement("p");
+      schedule.className = "practice-schedule";
+      if (item.minutes !== "") {
+        var mins = document.createElement("span");
+        mins.className = "practice-mins";
+        mins.textContent = item.minutes + " min";
+        schedule.appendChild(mins);
+      }
+      if (cursor !== null) {
+        var clock = document.createElement("span");
+        clock.className = "practice-clock";
+        if (item.minutes === "") clock.textContent = clockLabel(cursor);
+        else {
+          clock.textContent = clockLabel(cursor) + "\u2013" + clockLabel(cursor + item.minutes);
+          cursor += item.minutes;
+        }
+        schedule.appendChild(clock);
+      }
+      if (schedule.childNodes.length) li.appendChild(schedule);
+      if (drill.series) {
+        var series = document.createElement("p");
+        series.className = "practice-kicker";
+        series.textContent = drill.series;
+        li.appendChild(series);
+      }
+      var heading = document.createElement("h2");
+      var indexLabel = document.createElement("span");
+      indexLabel.className = "plan-index";
+      indexLabel.textContent = String(index + 1);
+      heading.appendChild(indexLabel);
+      heading.appendChild(document.createTextNode(" " + drill.title));
+      li.appendChild(heading);
+      if (item.note && item.note.trim()) {
+        var note = document.createElement("p");
+        note.className = "practice-note";
+        note.textContent = item.note.trim();
+        li.appendChild(note);
+      }
+      li.appendChild(practiceMedia(drill, index));
+      if (drill.points && drill.points.length) {
+        var pointsHeading = document.createElement("h3");
+        pointsHeading.className = "practice-points-heading";
+        pointsHeading.textContent = "Coaching points";
+        li.appendChild(pointsHeading);
+        var points = document.createElement("ul");
+        points.className = "points";
+        drill.points.forEach(function (point) {
+          var pointItem = document.createElement("li");
+          pointItem.textContent = point;
+          points.appendChild(pointItem);
+        });
+        li.appendChild(points);
+      }
+      var more = document.createElement("p");
+      more.className = "practice-more";
+      var link = document.createElement("a");
+      link.href = drill.page;
+      link.textContent = "Full drill page";
+      more.appendChild(link);
+      li.appendChild(more);
+      return li;
+    }
+
+    function practiceMedia(drill, index) {
+      var media = document.createElement("div");
+      media.className = "practice-media";
+      var img = document.createElement("img");
+      img.className = "practice-still";
+      img.src = drill.png;
+      img.alt = drill.alt || "";
+      media.appendChild(img);
+      if (!drill.anim || !drill.animW || !drill.animH) {
+        media.classList.add("is-fallback");
+        return media;
+      }
+      var frame = document.createElement("div");
+      frame.className = "anim-frame";
+      frame.style.setProperty("--anim-w", String(drill.animW));
+      frame.style.setProperty("--anim-h", String(drill.animH));
+      var iframe = document.createElement("iframe");
+      iframe.className = "drill-anim";
+      iframe.setAttribute("data-src", drill.anim);
+      iframe.title = "Animation of " + drill.title;
+      iframe.style.aspectRatio = drill.animW + " / " + drill.animH;
+      iframe.setAttribute("scrolling", "no");
+      iframe.setAttribute("data-anim-w", String(drill.animW));
+      iframe.setAttribute("data-anim-h", String(drill.animH));
+      if (index === 0) iframe.setAttribute("data-eager", "1");
+      frame.appendChild(iframe);
+      media.appendChild(frame);
+      return media;
+    }
+
+    function armAnimations(root) {
+      var frames = [].slice.call(root.querySelectorAll(".drill-anim"));
+      frames.forEach(watchAnim);
+      function loadFrame(frame) {
+        var src = frame.getAttribute("data-src");
+        if (!src || frame.getAttribute("src")) return;
+        frame.src = src;
+      }
+      if (!("IntersectionObserver" in window)) {
+        frames.forEach(loadFrame);
+        return;
+      }
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          loadFrame(entry.target);
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: "600px 0px" });
+      frames.forEach(function (frame) {
+        if (frame.getAttribute("data-eager") === "1") loadFrame(frame);
+        else observer.observe(frame);
+      });
+    }
+
+    function applyPracticeSocial(source, minutes, first) {
+      var label = source.items.length === 1 ? "1 drill" : source.items.length + " drills";
+      var description = source.items.length ? label + " \u00b7 " + minutes + " min" : "A shared practice plan with the diagrams, times, and coaching points.";
+      var socialTitle = (source.title.trim() || "Practice plan") + " \u00b7 Hockey Skills & Drills";
+      setMeta("name", "description", description);
+      setMeta("property", "og:title", socialTitle);
+      setMeta("property", "og:description", description);
+      setMeta("name", "twitter:title", socialTitle);
+      setMeta("name", "twitter:description", description);
+      var pageLink = cleanPageUrl(window.location.href);
+      setMeta("property", "og:url", pageLink);
+      var canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute("href", pageLink);
+      if (!first || !first.png) return;
+      var image = new URL(first.png, window.location.href).href;
+      setMeta("property", "og:image", image);
+      setMeta("name", "twitter:image", image);
+      if (first.alt) setMeta("property", "og:image:alt", first.alt);
+    }
+
+    function setMeta(attr, key, value) {
+      var node = document.querySelector("meta[" + attr + '="' + key + '"]');
+      if (node) node.setAttribute("content", value);
+    }
+  }
+
+  function startMinutes(value) {
+    var match = /^(\d{2}):(\d{2})$/.exec(value || "");
+    if (!match) return null;
+    return Number(match[1]) * 60 + Number(match[2]);
+  }
+
+  function clockLabel(total) {
+    var mins = ((total % 1440) + 1440) % 1440;
+    var h = Math.floor(mins / 60);
+    var m = mins % 60;
+    var suffix = h >= 12 ? "PM" : "AM";
+    var h12 = h % 12;
+    if (h12 === 0) h12 = 12;
+    return h12 + ":" + (m < 10 ? "0" : "") + m + " " + suffix;
+  }
+
+  function formatPlanDate(iso) {
+    var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+    if (!match) return "";
+    var dt = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    try {
+      return dt.toLocaleDateString("en-CA", { weekday: "short", month: "short", day: "numeric" });
+    } catch (error) {
+      return iso;
+    }
+  }
+
+  function makeQr(url) {
+    if (typeof qrcode !== "function") return "";
+    var levels = ["M", "L"];
+    for (var i = 0; i < levels.length; i += 1) {
+      try {
+        var qr = qrcode(0, levels[i]);
+        qr.addData(url);
+        qr.make();
+        return qr.createSvgTag({
+          cellSize: 4,
+          margin: 16,
+          scalable: true,
+          alt: "QR code for this practice page",
+          title: "Practice page"
+        });
+      } catch (error) {
+        continue;
+      }
+    }
+    return "";
+  }
+
+  // Share query. The plan page has always used d (slugs), m (minutes) and t (title).
+  // The practice page adds n (per-drill notes, encodeURIComponent, joined by %1F),
+  // pn (practice notes), date (YYYY-MM-DD) and start (HH:MM). Old links omit the new fields.
+  function shareQuery(plan) {
+    var slugs = [];
+    var minutes = [];
+    var notes = [];
+    var anyMinutes = false;
+    var anyNotes = false;
+    plan.items.forEach(function (item) {
+      slugs.push(item.slug);
+      if (item.minutes === "" || item.minutes === null || item.minutes === undefined) minutes.push("");
+      else {
+        minutes.push(String(item.minutes));
+        anyMinutes = true;
+      }
+      var note = typeof item.note === "string" ? item.note.slice(0, 140).replace(/\u001f/g, "") : "";
+      notes.push(note);
+      if (note.trim()) anyNotes = true;
+    });
+    while (minutes.length && minutes[minutes.length - 1] === "") minutes.pop();
+    while (notes.length && notes[notes.length - 1] === "") notes.pop();
+    var params = new URLSearchParams();
+    params.set("d", slugs.join(","));
+    if (anyMinutes && minutes.length) params.set("m", minutes.join(","));
+    var title = (plan.title || "").trim().slice(0, 80);
+    if (title) params.set("t", title);
+    var practiceNotes = (plan.notes || "").slice(0, 2000);
+    if (practiceNotes.trim()) params.set("pn", practiceNotes);
+    if (plan.date) params.set("date", plan.date);
+    if (plan.start) params.set("start", plan.start);
+    var query = params.toString();
+    if (anyNotes && notes.length) {
+      query += (query ? "&" : "") + "n=" + notes.map(function (note) {
+        return encodeURIComponent(note);
+      }).join("%1F");
+    }
+    return query;
+  }
+
   function parseShare(params, bySlug) {
     var raw = params.get("d") || "";
     var minutes = params.has("m") ? params.get("m").split(",") : null;
+    var noteParts = params.has("n") ? params.get("n").split("\u001f") : null;
     var title = params.get("t") || "";
     if (title.length > 80) title = title.slice(0, 80);
+    var practiceNotes = params.get("pn") || "";
+    if (practiceNotes.length > 2000) practiceNotes = practiceNotes.slice(0, 2000);
     var slugs = raw.split(",");
     var seen = {};
     var items = [];
@@ -860,32 +1377,31 @@
       seen[slug] = true;
       var minutesValue = "";
       if (minutes && index < minutes.length) minutesValue = normalizeMinutes(minutes[index]);
-      items.push({ slug: slug, minutes: minutesValue, note: "" });
+      var note = "";
+      if (noteParts && index < noteParts.length && typeof noteParts[index] === "string") {
+        note = noteParts[index].replace(/\u001f/g, "").slice(0, 140);
+      }
+      items.push({ slug: slug, minutes: minutesValue, note: note });
     });
     return {
       skipped: unknown,
-      plan: { title: title, notes: "", savedId: "", items: items }
+      plan: {
+        title: title,
+        notes: practiceNotes,
+        date: validDate(params.get("date")),
+        start: validTime(params.get("start")),
+        savedId: "",
+        items: items
+      }
     };
   }
 
   function buildShareUrl(plan) {
-    var slugs = [];
-    var minutes = [];
-    var anyMinutes = false;
-    plan.items.forEach(function (item) {
-      slugs.push(item.slug);
-      if (item.minutes === "") minutes.push("");
-      else {
-        minutes.push(String(item.minutes));
-        anyMinutes = true;
-      }
-    });
-    while (minutes.length && minutes[minutes.length - 1] === "") minutes.pop();
-    var query = "d=" + slugs.join(",");
-    if (anyMinutes && minutes.length) query += "&m=" + minutes.join(",");
-    var title = plan.title.trim();
-    if (title) query += "&t=" + encodeURIComponent(title);
-    return new URL("plan/?" + query, rootUrl).href;
+    return new URL("plan/?" + shareQuery(plan), rootUrl).href;
+  }
+
+  function buildPracticeUrl(plan) {
+    return new URL("practice/?" + shareQuery(plan), rootUrl).href;
   }
 
   function copyText(text) {
@@ -976,8 +1492,8 @@
   }
 
   function plansDiffer(a, b) {
-    return JSON.stringify({ title: a.title, notes: a.notes || "", items: a.items }) !==
-      JSON.stringify({ title: b.title, notes: b.notes || "", items: b.items });
+    return JSON.stringify({ title: a.title, notes: a.notes || "", date: a.date || "", start: a.start || "", items: a.items }) !==
+      JSON.stringify({ title: b.title, notes: b.notes || "", date: b.date || "", start: b.start || "", items: b.items });
   }
 
   function planPayload(plan) {
@@ -995,7 +1511,7 @@
   }
 
   function planFromApi(record, bySlug) {
-    return sanitize({
+    var plan = sanitize({
       title: record.title || "",
       notes: record.notes || "",
       savedId: record.id || "",
@@ -1007,6 +1523,12 @@
         };
       })
     }, bySlug);
+    if (plan.savedId) {
+      var when = recallWhen(plan.savedId);
+      if (!plan.date) plan.date = when.date;
+      if (!plan.start) plan.start = when.start;
+    }
+    return plan;
   }
 
   function importSeen(userId) {

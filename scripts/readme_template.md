@@ -8,7 +8,7 @@ On GitHub, open a drill note below. The diagram, the steps, and the file links r
 
 The phone-friendly pages live in [`index.html`](index.html). Each drill page embeds the HTML animation and keeps the PNG as the still diagram and the home-page thumbnail. Clone the repo and open `index.html`, or from the repo root run `python3 -m http.server` and visit the site in a browser.
 
-[`plan/index.html`](plan/index.html) is the practice plan. Add drills from the home page or a drill page. The plan stays in the browser. Copy share link builds a URL with the drill list, optional minutes, and an optional title. Opening that link does not replace a plan already saved in the browser until you choose Load into my plan. Share links work without an account.
+[`plan/index.html`](plan/index.html) is the practice plan. Add drills from the home page or a drill page. The plan stays in the browser. Share copies a link to the practice page ([`practice/index.html`](practice/index.html)) with the drill list, optional minutes, title, date, start time, and notes. That page plays each drill and shows a QR code. An older `/plan/?d=` link still opens the plan in the builder and does not replace a plan already saved in the browser until you choose Load into my plan. Share links work without an account.
 
 ## Accounts
 

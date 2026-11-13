@@ -8,12 +8,13 @@
   "scripts": {
     "build": "python3 scripts/build_site.py",
     "migrate": "node scripts/migrate.mjs",
-    "test": "tsx scripts/test_schedule.ts && tsx scripts/test_accounts.ts"
+    "test": "tsx scripts/test_practice_meta.ts && tsx scripts/test_schedule.ts && tsx scripts/test_accounts.ts"
   },
   "dependencies": {
     "@auth/core": "0.41.3",
     "@auth/neon-adapter": "1.11.3",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "qrcode-generator": "^1.4.4"
   },
   "devDependencies": {
     "@types/jsdom": "^30.0.0",

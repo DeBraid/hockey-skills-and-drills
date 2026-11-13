@@ -190,7 +190,15 @@ def asset_version(rel: str) -> str:
     return hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()[:10]
 
 
-def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: str = "") -> str:
+def page_shell(
+    title: str,
+    prefix: str,
+    body: str,
+    page: str = "other",
+    drill: str = "",
+    extra_head: str = "",
+    extra_scripts: str = "",
+) -> str:
     drill_attr = f' data-drill="{esc(drill)}"' if drill else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -204,7 +212,7 @@ def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: s
   <link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{prefix}css/styles.css?v={asset_version("css/styles.css")}">
 {ANALYTICS_SNIPPET}
-</head>
+{extra_head}</head>
 <body data-page="{page}"{drill_attr}>
   <a class="skip" href="#content">Skip to content</a>
   <header class="site-header">
@@ -229,7 +237,7 @@ def page_shell(title: str, prefix: str, body: str, page: str = "other", drill: s
       <p class="footer-links"><a href="{prefix}privacy/">Privacy</a> · <a href="{prefix}terms/">Terms</a></p>
     </div>
   </footer>
-  <script src="{prefix}js/site.js?v={asset_version("js/site.js")}"></script>
+{extra_scripts}  <script src="{prefix}js/site.js?v={asset_version("js/site.js")}"></script>
 </body>
 </html>
 """
@@ -483,10 +491,11 @@ def write_readme(drills: list[dict], labels: dict[str, str]) -> None:
     (ROOT / "README.md").write_text(readme, encoding="utf-8")
 
 
-def write_plan(data: dict, labels: dict[str, str]) -> None:
+def plan_catalog(data: dict, labels: dict[str, str]) -> str:
     catalog = []
     for drill in data["drills"]:
         slug = drill["slug"]
+        width, height = anim_size(anim_path(slug))
         catalog.append(
             {
                 "slug": slug,
@@ -494,21 +503,52 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
                 "series": drill.get("series") or "",
                 "tags": [labels[tag] for tag in drill["tags"]],
                 "png": f"../{media_rel(slug, 'png')}",
+                "anim": f"../{anim_rel(slug)}",
+                "animW": width,
+                "animH": height,
                 "page": f"../drills/{slug}/",
                 "alt": drill["diagramAlt"],
                 "points": drill["coachingPoints"],
             }
         )
-    blob = json.dumps(catalog, ensure_ascii=False).replace("<", "\\u003c")
+    return json.dumps(catalog, ensure_ascii=False).replace("<", "\\u003c")
+
+
+def social_block(title: str, description: str, image: str, image_alt: str, url: str) -> str:
+    def meta(attr: str, key: str, value: str) -> str:
+        return f'  <meta {attr}="{esc(key)}" content="{esc(value)}">'
+
+    lines = [
+        meta("name", "description", description),
+        meta("property", "og:type", "website"),
+        meta("property", "og:title", title),
+        meta("property", "og:description", description),
+        meta("property", "og:url", url),
+        meta("property", "og:image", image),
+        meta("property", "og:image:alt", image_alt),
+        meta("name", "twitter:card", "summary_large_image"),
+        meta("name", "twitter:title", title),
+        meta("name", "twitter:description", description),
+        meta("name", "twitter:image", image),
+        f'  <link rel="canonical" href="{esc(url)}">',
+    ]
+    return "<!--practice-social-->\n" + "\n".join(lines) + "\n<!--/practice-social-->"
+
+
+def write_plan(data: dict, labels: dict[str, str]) -> None:
+    blob = plan_catalog(data, labels)
     body = f"""  <main id="content" class="wrap plan-page">
     <header class="drill-head">
       <p class="kicker">On-ice coaching</p>
       <h1>Practice plan</h1>
-      <p class="lede plan-lede">Add drills from the library, set a time for each, and print the sheet for the bench. A share link sends the drills, times, and title. Notes stay with the plan in this browser, and in your account when you save.</p>
+      <p class="lede plan-lede">Add drills, set a time for each, and share a practice page for the phone at the rink. Share copies the link. Open the practice page for the QR code. Notes on each drill go with that link.</p>
     </header>
     <div class="plan-banner" id="plan-shared" hidden>
       <p id="plan-shared-text"></p>
-      <button class="btn primary" type="button" id="plan-load">Load into my plan</button>
+      <div class="plan-actions">
+        <a class="btn primary" id="plan-shared-practice" href="../practice/">Open practice page</a>
+        <button class="btn" type="button" id="plan-load">Load into my plan</button>
+      </div>
     </div>
     <div class="plan-banner" id="plan-import" hidden>
       <p id="plan-import-text">Save the practice plan in this browser to your account?</p>
@@ -527,6 +567,15 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
       <label class="plan-title-label" for="plan-title">Plan title
         <input id="plan-title" type="text" maxlength="80" placeholder="Tuesday practice" autocomplete="off">
       </label>
+      <div class="plan-when">
+        <label class="plan-title-label" for="plan-date">Date
+          <input class="plan-when-input" id="plan-date" type="date">
+        </label>
+        <label class="plan-title-label" for="plan-start">Start time
+          <input class="plan-when-input" id="plan-start" type="time" step="60">
+        </label>
+      </div>
+      <p class="plan-hint">Optional. A date and start time show a running clock on the practice page.</p>
       <label class="plan-title-label" for="plan-notes">Practice notes
         <textarea id="plan-notes" maxlength="2000" rows="3" placeholder="Optional, for the bench"></textarea>
       </label>
@@ -536,10 +585,12 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
       </div>
       <p class="plan-account-state" id="plan-account-state" hidden></p>
       <div class="plan-actions">
-        <button class="btn primary" type="button" id="plan-share">Copy share link</button>
+        <button class="btn primary" type="button" id="plan-share">Share</button>
+        <a class="btn" id="plan-practice" href="../practice/">Open practice page</a>
         <button class="btn" type="button" id="plan-print">Print</button>
         <button class="btn danger" type="button" id="plan-clear">Clear plan</button>
       </div>
+      <p class="plan-hint">Share copies the practice-page link. Open that page for a QR code to put on the bench or in the parent chat.</p>
       <p class="plan-status" id="plan-status" role="status"></p>
       <input class="plan-share-fallback" id="plan-share-fallback" type="text" readonly hidden>
     </div>
@@ -554,6 +605,93 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
     out.mkdir(parents=True, exist_ok=True)
     title = "Practice plan · Hockey Skills & Drills"
     (out / "index.html").write_text(page_shell(title, "../", body, page="plan"), encoding="utf-8")
+
+
+def write_practice(data: dict, labels: dict[str, str]) -> None:
+    blob = plan_catalog(data, labels)
+    first = data["drills"][0]
+    image = "https://hockey.derekbraid.com/" + media_rel(first["slug"], "png")
+    head = social_block(
+        "Practice · Hockey Skills & Drills",
+        "A shared practice plan with the diagrams, times, and coaching points.",
+        image,
+        first["diagramAlt"],
+        "https://hockey.derekbraid.com/practice/",
+    )
+    prefix = "../"
+    scripts = f'  <script src="{prefix}js/qrcode.js?v={asset_version("js/qrcode.js")}"></script>\n'
+    body = f"""  <main id="content" class="wrap practice-page">
+    <header class="drill-head practice-head">
+      <p class="kicker">Practice</p>
+      <h1 id="practice-title">Practice</h1>
+      <p class="practice-summary" id="practice-summary"></p>
+      <p class="practice-plan-notes" id="practice-plan-notes" hidden></p>
+      <div class="practice-toolbar">
+        <button class="btn primary" type="button" id="practice-qr">QR code</button>
+        <button class="btn" type="button" id="practice-copy">Copy link</button>
+        <button class="btn" type="button" id="practice-share" hidden>Share</button>
+      </div>
+      <p class="plan-status" id="practice-status" role="status"></p>
+    </header>
+    <p class="practice-skipped" id="practice-skipped" hidden></p>
+    <p class="empty" id="practice-empty" hidden></p>
+    <ol class="practice-list" id="practice-list" aria-label="Drills in this practice"></ol>
+    <section class="practice-cta" aria-labelledby="practice-cta-heading">
+      <h2 id="practice-cta-heading">Build your own plan free</h2>
+      <p>Pick the drills, set the times, and share a practice page like this one. No account needed.</p>
+      <a class="btn primary" href="../plan/">Build your own plan free</a>
+    </section>
+    <p class="practice-edit"><a id="practice-edit" href="../plan/">Edit this plan in the builder</a></p>
+  </main>
+  <dialog class="practice-qr-dialog" id="practice-qr-dialog" aria-labelledby="practice-qr-heading">
+    <h2 id="practice-qr-heading">Scan this practice</h2>
+    <div class="practice-qr-pad" id="practice-qr-code"></div>
+    <p class="practice-qr-url" id="practice-qr-url"></p>
+    <div class="practice-qr-actions">
+      <button class="btn" type="button" id="practice-qr-copy">Copy link</button>
+      <button class="btn" type="button" id="practice-qr-share" hidden>Share</button>
+      <button class="btn" type="button" id="practice-qr-close">Close</button>
+    </div>
+    <p class="plan-status" id="practice-qr-status" role="status"></p>
+  </dialog>
+  <script type="application/json" id="drill-catalog">{blob}</script>
+"""
+    text = page_shell(
+        "Practice · Hockey Skills & Drills",
+        prefix,
+        body,
+        page="practice",
+        extra_head=head + "\n",
+        extra_scripts=scripts,
+    )
+    out = ROOT / "practice"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "index.html").write_text(text, encoding="utf-8")
+    (out / "shell.html").write_text(text, encoding="utf-8")
+
+
+def write_practice_drills(data: dict) -> None:
+    drills = {}
+    for drill in data["drills"]:
+        slug = drill["slug"]
+        drills[slug] = {
+            "title": drill["title"],
+            "png": "/" + media_rel(slug, "png"),
+            "alt": drill["diagramAlt"],
+        }
+    payload = json.dumps(drills, ensure_ascii=False, indent=2).replace("<", "\\u003c")
+    text = (
+        "// Generated by scripts/build_site.py. Do not edit.\n"
+        "export interface PracticeDrill {\n"
+        "  title: string\n"
+        "  png: string\n"
+        "  alt: string\n"
+        "}\n\n"
+        "export const PRACTICE_DRILLS: Record<string, PracticeDrill> = "
+        + payload
+        + "\n"
+    )
+    (ROOT / "lib" / "practice-drills.ts").write_text(text, encoding="utf-8")
 
 
 def write_plans() -> None:
@@ -625,7 +763,7 @@ def write_account() -> None:
     </div>
     <section class="account-privacy">
       <h2>Privacy</h2>
-      <p>An account stores the name, email address, and profile photo from the sign-in provider, plus the practice plans you save. Share links do not include your notes. Saved plans are visible only to you. Delete account removes that profile and every plan saved to it.</p>
+      <p>An account stores the name, email address, and profile photo from the sign-in provider, plus the practice plans you save. A practice-page link includes the drills, times, and any notes you put on that plan. It does not include your account. Saved plans are visible only to you. Delete account removes that profile and every plan saved to it.</p>
       <p>To see which drills get used, the site counts page views and plan actions with a random ID kept in this browser. It does not use cookies for this and does not record your email, IP address, or device details.</p>
     </section>
     <p class="plan-status" id="account-status" role="status"></p>
@@ -639,19 +777,20 @@ def write_account() -> None:
 
 CONTACT_EMAIL = "derekbraid@mail.grokbot.com"
 LEGAL_EFFECTIVE = "October 9, 2026"
+PRIVACY_EFFECTIVE = "November 13, 2026"
 
 PRIVACY_BODY = f"""  <main id="content" class="wrap-read legal-page">
     <header class="drill-head">
       <p class="kicker">Hockey Skills &amp; Drills</p>
       <h1>Privacy policy</h1>
-      <p class="lede">Effective {LEGAL_EFFECTIVE}. This page explains what the site collects, why, and how to delete it.</p>
+      <p class="lede">Effective {PRIVACY_EFFECTIVE}. This page explains what the site collects, why, and how to delete it.</p>
     </header>
 
     <h2>Who runs this site</h2>
     <p>Hockey Skills &amp; Drills (hockey.derekbraid.com) is a free drill library run by Derek Braid in Ontario, Canada. Questions: <a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a>.</p>
 
     <h2>You can use the site without an account</h2>
-    <p>Browsing drills and building a practice plan do not need an account. A plan you build without signing in stays in your browser's local storage. Share links contain the drill list, times, and plan title, but not your notes.</p>
+    <p>Browsing drills and building a practice plan do not need an account. A plan you build without signing in stays in your browser's local storage. A practice-page link contains the drills, times, title, and any date, start time, or notes you included. It does not include your account, email, or saved-plan id. Anyone with the link can open that practice page.</p>
 
     <h2>If you sign in</h2>
     <p>You can sign in with Google or, when it is turned on, with a sign-in link sent to your email. When you sign in we store:</p>
@@ -668,7 +807,7 @@ PRIVACY_BODY = f"""  <main id="content" class="wrap-read legal-page">
     <h2>Usage statistics</h2>
     <ul>
       <li><strong>Vercel Web Analytics</strong> counts page views in aggregate (pages, referring sites, country, device type). It sets no cookies.</li>
-      <li><strong>Our own event log</strong> counts actions like viewing a drill, adding a drill to a plan, saving, sharing, or printing a plan, and signing in. Each event has a random ID kept in your browser's local storage, and your account ID if you are signed in. We do not use cookies for this, and the log does not store your email, IP address, or browser details.</li>
+      <li><strong>Our own event log</strong> counts actions like viewing a drill, opening a practice page, showing its QR code, adding a drill to a plan, saving, sharing, or printing a plan, and signing in. Each event has a random ID kept in your browser's local storage, and your account ID if you are signed in. We do not use cookies for this, and the log does not store your email, IP address, or browser details.</li>
     </ul>
 
     <h2>Security and abuse limits</h2>
@@ -754,6 +893,7 @@ def check_output(drills: list[dict]) -> None:
         ROOT / "index.html",
         ROOT / "README.md",
         ROOT / "plan" / "index.html",
+        ROOT / "practice" / "index.html",
         ROOT / "plans" / "index.html",
         ROOT / "account" / "index.html",
         ROOT / "privacy" / "index.html",
@@ -829,11 +969,14 @@ def check_output(drills: list[dict]) -> None:
     for item in catalog:
         if not item.get("points"):
             raise SystemExit(f"plan catalog is missing coaching points for {item['slug']}")
+        if not item.get("anim"):
+            raise SystemExit(f"plan catalog is missing the animation for {item['slug']}")
         png = (ROOT / "plan" / item["png"]).resolve()
+        anim = (ROOT / "plan" / item["anim"]).resolve()
         page = (ROOT / "plan" / item["page"]).resolve()
         if page.is_dir():
             page = page / "index.html"
-        if not png.is_file() or not page.is_file():
+        if not png.is_file() or not anim.is_file() or not page.is_file():
             raise SystemExit(f"plan catalog has a missing file for {item['slug']}")
     if "Fork or star" in plan_text or "Add a drill" in plan_text:
         raise SystemExit("plan page should stay read-only")
@@ -857,9 +1000,23 @@ def check_output(drills: list[dict]) -> None:
         raise SystemExit("account page should hide sign-in until the API is available")
     if "Privacy" not in account or 'id="account-delete"' not in account:
         raise SystemExit("account page is missing the privacy note or delete button")
+    practice = (ROOT / "practice" / "index.html").read_text(encoding="utf-8")
+    if 'id="practice-qr"' not in practice or 'id="practice-list"' not in practice:
+        raise SystemExit("practice page is missing the QR button or the drill list")
+    if 'href="../plan/"' not in practice or "Build your own plan free" not in practice:
+        raise SystemExit("practice page is missing the plan builder call to action")
+    if "<!--practice-social-->" not in practice or 'property="og:image"' not in practice:
+        raise SystemExit("practice page is missing social preview tags")
+    if 'src="../js/qrcode.js' not in practice:
+        raise SystemExit("practice page is missing the QR code library")
+    shell = (ROOT / "practice" / "shell.html").read_text(encoding="utf-8")
+    if shell != practice:
+        raise SystemExit("practice shell is out of date")
     html_pages = [
         ROOT / "index.html",
         ROOT / "plan" / "index.html",
+        ROOT / "practice" / "index.html",
+        ROOT / "practice" / "shell.html",
         ROOT / "plans" / "index.html",
         ROOT / "account" / "index.html",
         ROOT / "privacy" / "index.html",
@@ -891,7 +1048,7 @@ def publish_site() -> None:
         if source.is_file():
             shutil.copy2(source, SITE / name)
     shutil.copy2(ROOT / "index.html", SITE / "index.html")
-    for name in ("plan", "plans", "account", "privacy", "terms"):
+    for name in ("plan", "practice", "plans", "account", "privacy", "terms"):
         shutil.copytree(ROOT / name, SITE / name)
     drills = SITE / "drills"
     drills.mkdir()
@@ -925,6 +1082,9 @@ def publish_site() -> None:
     required = [
         SITE / "index.html",
         SITE / "plan" / "index.html",
+        SITE / "practice" / "index.html",
+        SITE / "practice" / "shell.html",
+        SITE / "js" / "qrcode.js",
         SITE / "plans" / "index.html",
         SITE / "account" / "index.html",
         SITE / "privacy" / "index.html",
@@ -952,6 +1112,8 @@ def main() -> None:
         write_drill_md(drill, by_slug, labels)
     write_readme(data["drills"], labels)
     write_plan(data, labels)
+    write_practice(data, labels)
+    write_practice_drills(data)
     write_plans()
     write_account()
     write_legal()

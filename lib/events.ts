@@ -4,14 +4,23 @@ import { getPool } from "./db.js"
 // Browsers may only send the CLIENT_EVENTS names below. Server-side actions
 // (sign-in, plan writes) are logged by the server so they cannot be faked.
 
-export const CLIENT_EVENTS = ["page_view", "drill_view", "drill_add_to_plan", "plan_share", "plan_print"] as const
+export const CLIENT_EVENTS = [
+  "page_view",
+  "drill_view",
+  "drill_add_to_plan",
+  "plan_share",
+  "plan_print",
+  "practice_view",
+  "practice_qr",
+  "practice_share",
+] as const
 export const SERVER_EVENTS = ["sign_in", "plan_create", "plan_save", "plan_delete"] as const
 
 export type ClientEventName = (typeof CLIENT_EVENTS)[number]
 export type EventName = ClientEventName | (typeof SERVER_EVENTS)[number]
 
 export const MAX_EVENT_BODY = 2048
-const PAGES = new Set(["home", "drill", "plan", "account", "privacy", "terms", "other"])
+const PAGES = new Set(["home", "drill", "plan", "practice", "account", "privacy", "terms", "other"])
 const ANON_RE = /^[A-Za-z0-9_-]{16,64}$/
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -44,7 +53,13 @@ export function parseClientEvent(input: unknown): EventRecord | null {
     const page = typeof body.page === "string" && PAGES.has(body.page) ? body.page : "other"
     event.props = { page }
   }
-  if (name === "plan_share" || name === "plan_print") {
+  if (
+    name === "plan_share" ||
+    name === "plan_print" ||
+    name === "practice_view" ||
+    name === "practice_qr" ||
+    name === "practice_share"
+  ) {
     const drills = Number(body.drills)
     if (Number.isInteger(drills) && drills >= 0 && drills <= 60) event.props = { drills }
   }
