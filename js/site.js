@@ -11,7 +11,7 @@
   var WHEN_KEY = "hsd-plan-when";
 
   function emptyPlan() {
-    return { title: "", notes: "", date: "", start: "", savedId: "", items: [] };
+    return { title: "", notes: "", date: "", start: "", savedId: "", teamId: "", items: [] };
   }
 
   function validDate(value) {
@@ -90,12 +90,15 @@
     if (data && typeof data.savedId === "string" && /^[0-9a-f-]{36}$/i.test(data.savedId)) {
       savedId = data.savedId;
     }
+    var teamId = "";
+    if (data && typeof data.teamId === "string" && /^[a-z0-9-]{1,32}$/.test(data.teamId)) teamId = data.teamId;
     return {
       title: title,
       notes: notes,
       date: validDate(data && data.date),
       start: validTime(data && data.start),
       savedId: savedId,
+      teamId: teamId,
       items: items
     };
   }
@@ -118,6 +121,7 @@
         date: plan.date || "",
         start: plan.start || "",
         savedId: plan.savedId || "",
+        teamId: plan.teamId || "",
         items: plan.items || []
       }));
       rememberWhen(plan);
@@ -244,6 +248,8 @@
 
   function trackPageView() {
     var page = document.body ? document.body.getAttribute("data-page") || "other" : "other";
+    // Team pages stay quiet: no roster or lineup details in the usage log.
+    if (page === "lineups") return;
     var drill = document.body ? document.body.getAttribute("data-drill") : "";
     if (page === "drill" && drill) track("drill_view", { drill: drill });
     else if (page !== "practice") track("page_view", { page: page });
@@ -481,6 +487,14 @@
       if (document.activeElement !== titleInput) titleInput.value = plan.title;
       titleInput.placeholder = shared ? "" : "Tuesday practice";
       if (dateInput && document.activeElement !== dateInput) dateInput.value = plan.date || "";
+      var teamSelect = document.getElementById("plan-team");
+      if (teamSelect && document.activeElement !== teamSelect && plan.teamId) {
+        var hasTeam = false;
+        for (var ti = 0; ti < teamSelect.options.length; ti += 1) {
+          if (teamSelect.options[ti].value === plan.teamId) hasTeam = true;
+        }
+        if (hasTeam) teamSelect.value = plan.teamId;
+      }
       if (startInput && document.activeElement !== startInput) startInput.value = plan.start || "";
       if (dateInput) dateInput.readOnly = shared;
       if (startInput) startInput.readOnly = shared;
@@ -843,9 +857,24 @@
     if (importYes) importYes.addEventListener("click", function () { importLocalPlan(importBanner); });
     if (importNo) importNo.addEventListener("click", function () { dismissImport(importBanner); });
 
+    var teamSelect = document.getElementById("plan-team");
+    if (teamSelect) {
+      teamSelect.addEventListener("change", function () {
+        if (shared) return;
+        plan.teamId = /^[a-z0-9-]{1,32}$/.test(teamSelect.value) ? teamSelect.value : "";
+        savePlan(plan);
+      });
+    }
+
     whenAccountReady(function () {
       if (signinLink) signinLink.href = signInHref();
       updateAccountChrome();
+      loadTeamChoices();
+      var preset = params.get("team");
+      if (!shared && preset && /^[a-z0-9-]{1,32}$/.test(preset) && !params.get("saved")) {
+        plan.teamId = preset;
+        savePlan(plan);
+      }
       var saved = params.get("saved");
       if (!shared && saved) {
         if (accountState.user) loadSavedPlan(saved);
@@ -887,6 +916,46 @@
       if (importSeen(accountState.user.id)) return;
       importBanner.hidden = false;
       importBanner.dataset.done = "show";
+    }
+
+    function loadTeamChoices() {
+      var label = document.getElementById("plan-team-label");
+      var select = document.getElementById("plan-team");
+      var hint = document.getElementById("plan-team-hint");
+      if (!label || !select || !accountState.user) {
+        if (label) label.hidden = true;
+        if (hint) hint.hidden = true;
+        return;
+      }
+      fetchJson(apiUrl("api/teams")).then(function (result) {
+        var teams = result.ok && result.data && Array.isArray(result.data.teams) ? result.data.teams : [];
+        var current = plan.teamId || "";
+        select.textContent = "";
+        var personal = document.createElement("option");
+        personal.value = "";
+        personal.textContent = "Just me";
+        select.appendChild(personal);
+        teams.forEach(function (team) {
+          if (!team || typeof team.id !== "string" || !/^[a-z0-9-]{1,32}$/.test(team.id)) return;
+          var option = document.createElement("option");
+          option.value = team.id;
+          option.textContent = String(team.name || "Team").slice(0, 60);
+          select.appendChild(option);
+        });
+        var known = false;
+        for (var i = 0; i < select.options.length; i += 1) {
+          if (select.options[i].value === current) known = true;
+        }
+        select.value = known ? current : "";
+        if (!known) plan.teamId = "";
+        else plan.teamId = current;
+        var show = teams.length > 0;
+        label.hidden = !show;
+        if (hint) hint.hidden = !show;
+      }, function () {
+        label.hidden = true;
+        if (hint) hint.hidden = true;
+      });
     }
 
     function saveCurrent(asNew) {
@@ -1492,14 +1561,15 @@
   }
 
   function plansDiffer(a, b) {
-    return JSON.stringify({ title: a.title, notes: a.notes || "", date: a.date || "", start: a.start || "", items: a.items }) !==
-      JSON.stringify({ title: b.title, notes: b.notes || "", date: b.date || "", start: b.start || "", items: b.items });
+    return JSON.stringify({ title: a.title, notes: a.notes || "", date: a.date || "", start: a.start || "", teamId: a.teamId || "", items: a.items }) !==
+      JSON.stringify({ title: b.title, notes: b.notes || "", date: b.date || "", start: b.start || "", teamId: b.teamId || "", items: b.items });
   }
 
   function planPayload(plan) {
-    return {
+    var payload = {
       title: plan.title || "",
       notes: plan.notes || "",
+      practiceDate: plan.date || null,
       items: (plan.items || []).map(function (item) {
         return {
           slug: item.slug,
@@ -1508,12 +1578,19 @@
         };
       })
     };
+    var label = document.getElementById("plan-team-label");
+    var select = document.getElementById("plan-team");
+    if (select && label && !label.hidden) payload.teamId = select.value || null;
+    else if (plan.teamId) payload.teamId = plan.teamId;
+    return payload;
   }
 
   function planFromApi(record, bySlug) {
     var plan = sanitize({
       title: record.title || "",
       notes: record.notes || "",
+      date: record.practiceDate || "",
+      teamId: record.teamId || "",
       savedId: record.id || "",
       items: (record.items || []).map(function (item) {
         return {
@@ -1617,7 +1694,8 @@
   }
 
 
-  // Mobile menu: Drills, Plans, and (admin only, after a server check) Lineups.
+  // Mobile menu: Drills, Plans, and (any signed-in coach) Lineups and Rosters.
+  // Admin is a separate check and stays limited to ADMIN_EMAILS.
   function initMobileMenu() {
     var inner = document.querySelector(".site-header .header-inner");
     if (!inner || inner.querySelector(".menu-btn")) return;
@@ -1686,11 +1764,10 @@
       }
       foot.appendChild(a);
       if (!state.user) return;
-      // Server-side ADMIN_EMAILS gate: 200 only for the admin, 404 for everyone else. HEAD, so no data.
-      fetch(new URL("lineups/", rootUrl).href, { method: "HEAD", credentials: "same-origin" }).then(function (res) {
+      item("Lineups", new URL("lineups/", rootUrl).href);
+      item("Rosters", new URL("lineups/rosters/", rootUrl).href);
+      fetch(new URL("admin/", rootUrl).href, { method: "HEAD", credentials: "same-origin" }).then(function (res) {
         if (!res.ok) return;
-        item("Lineups", new URL("lineups/", rootUrl).href);
-        item("Rosters", new URL("lineups/rosters/", rootUrl).href);
         item("Admin", new URL("admin/", rootUrl).href);
       }).catch(function () {});
     });
@@ -2097,7 +2174,13 @@
         var copyTitle = ("Copy of " + (source.title.trim() || "Untitled plan")).slice(0, 80);
         return fetchJson(apiUrl("api/plans"), {
           method: "POST",
-          body: JSON.stringify({ title: copyTitle, notes: source.notes || "", items: source.items || [] })
+          body: JSON.stringify({
+            title: copyTitle,
+            notes: source.notes || "",
+            items: source.items || [],
+            teamId: source.teamId || null,
+            practiceDate: source.practiceDate || null
+          })
         });
       }).then(function (result) {
         duplicate.disabled = false;

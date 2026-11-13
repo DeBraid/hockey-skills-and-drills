@@ -82,7 +82,7 @@ Google is one way in. The other way is a link sent by email. [Resend](https://re
 2. Add the domain **derekbraid.com**.
 3. Resend shows DNS records (usually a TXT record for SPF or DKIM, and a CNAME). Add those records wherever derekbraid.com’s DNS is managed (often Vercel DNS, or the registrar). Copy the name and value exactly. Do not invent the values. They are different for every account.
 4. Wait until Resend shows the domain as **Verified**. This can take a few minutes, sometimes longer.
-5. Create an **API key**. Copy it. That is `AUTH_RESEND_KEY`.
+5. Create an **API key**. Copy it. That is `RESEND_API_KEY`. If `AUTH_RESEND_KEY` is already set from an older setup, that name still works. Set one of them, not both.
 6. Choose a from address on that domain, for example `plans@derekbraid.com`. The env value needs a name and the address:
 
    `Hockey Skills & Drills <plans@derekbraid.com>`
@@ -111,10 +111,10 @@ In the Vercel project: **Settings → Environment Variables**. Add each name for
 | `AUTH_SECRET` | The random string from step 5 | a long random line |
 | `AUTH_GOOGLE_ID` | Google client ID from step 3 | `123-abc.apps.googleusercontent.com` |
 | `AUTH_GOOGLE_SECRET` | Google client secret from step 3 | `GOCSPX-…` |
-| `AUTH_RESEND_KEY` | Resend API key from step 4 | `re_…` |
+| `RESEND_API_KEY` | Resend API key from step 4. If this is missing, email sign-in is hidden. `AUTH_RESEND_KEY` is accepted as an older name. | `re_…` |
 | `EMAIL_FROM` | A from address on the verified domain | `Hockey Skills & Drills <plans@derekbraid.com>` |
 | `CANONICAL_HOST` | Type this exactly | `hockey.derekbraid.com` |
-| `ADMIN_EMAILS` | Your sign-in email. Only these accounts can open `/admin`. Separate several with commas. Production only. | `you@gmail.com` |
+| `ADMIN_EMAILS` | Your sign-in email. Only these accounts can open `/admin`. It does not grant access to other coaches' teams. Separate several with commas. Production only. | `you@gmail.com` |
 
 Do **not** add `BASE_PATH`. The site is the whole address `hockey.derekbraid.com`, not a folder on derekbraid.com. If `BASE_PATH` is already set, delete it and redeploy.
 
@@ -127,7 +127,7 @@ You do not need `AUTH_URL`. Leaving it unset lets both `hockey.derekbraid.com` a
 ### Usage stats
 
 - **Vercel Web Analytics** (page views, referrers, devices) is on in **Analytics** for this project. Every page loads `/_vercel/insights/script.js`. It sets no cookies.
-- **Lineups (private)**: `db/migrations/004_lineups.sql` adds `players` and `lineups` tables. Run `npm run migrate` (or paste the file in the Neon SQL editor) once. The roster is entered on `/lineups/roster/` and lives only in the database, never in this repo. Store number, first name, and last initial only. `/lineups/`, the editor, the roster, and every lineup API answer 404 unless the visitor is signed in with an `ADMIN_EMAILS` address. The only public page is a lineup's optional read-only share link (`/lineups/v/<token>/`, 32-character random token, noindex, no-store). **Regenerate link** replaces the token and the old link stops working. New lineups pre-fill their name from that team's public schedule feed in `teams.schedule_url`. U11 Stars is `https://westniagaraminorhockey.ca/webcal.ashx?IDs=2945`. U11 Select (2026-27 team page `/Teams/2897/`) is `https://westniagaraminorhockey.ca/webcal.ashx?IDs=2897`, set by `db/migrations/010_select_schedule.sql`. Run `npm run migrate` after deploy so the database column is filled. The app still uses that Select feed when the column is empty. `LINEUPS_SCHEDULE_ICS_URL` is only the legacy fallback when no team URL is passed; it does not point Select at the Stars feed.
+- **Lineups (private to each team)**: migrations `004` through `011` add players, lineups, teams, coach membership, invites, and team practice plans. Apply them in numeric order (`npm run migrate`, or paste each file in the Neon SQL editor), then deploy. `011_coach_teams.sql` attaches existing teams to the admin account by id. It does not contain names or emails. Any signed-in coach can create a team. Rosters store a first name and a one- or two-letter last initial only. A team's pages and APIs answer 404 unless the visitor is a coach on that team. `ADMIN_EMAILS` gates `/admin` only. The only public page is a lineup's optional read-only share link (`/lineups/v/<token>/`, 32-character random token, noindex, no-store). **Regenerate link** replaces the token and the old link stops working. New lineups pre-fill their name from that team's public schedule feed in `teams.schedule_url`. U11 Stars is `https://westniagaraminorhockey.ca/webcal.ashx?IDs=2945`. U11 Select (2026-27 team page `/Teams/2897/`) is `https://westniagaraminorhockey.ca/webcal.ashx?IDs=2897`, set by `db/migrations/010_select_schedule.sql`. The app still uses that Select feed when the column is empty. `LINEUPS_SCHEDULE_ICS_URL` is only the legacy fallback when no team URL is passed; it does not point Select at the Stars feed.
 - **Event log**: `db/migrations/003_events.sql` adds an `events` table. Run `npm run migrate` (or paste the file in the Neon SQL editor) once. Pages send `page_view`, `drill_view`, `drill_add_to_plan`, `plan_share`, and `plan_print` to `POST /api/event`. The server logs `sign_in`, `plan_create`, `plan_save`, and `plan_delete` itself. Rows hold a random browser ID and the account ID, never an email, IP address, or device details.
 - **Dashboard**: sign in, then open `/admin`. Anyone not listed in `ADMIN_EMAILS` gets a 404. Nothing on the public site links to it.
 

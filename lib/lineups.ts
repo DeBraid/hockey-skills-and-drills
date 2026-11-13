@@ -3,8 +3,8 @@ import { getPool } from "./db.js"
 import { isUuid } from "./plans.js"
 import { resolveTeamScheduleUrl } from "./schedule.js"
 
-// Private team lineups. Only ADMIN_EMAILS users reach these functions for
-// listing and writing (see lib/lineup-routes.ts). The one public read is
+// Private team lineups. Callers must already know the viewer is a member of
+// the team (see lib/lineup-routes.ts). The one public read is
 // getSharedLineup(token), which returns a single lineup and only the players
 // placed in it, as number + first name + last initial.
 
@@ -19,31 +19,45 @@ const MAX_LINEUPS = 300
 const MAX_PLAYERS = 60
 const TOKEN_RE = /^[A-Za-z0-9_-]{32,64}$/
 const NAME_RE = /^[\p{L}][\p{L} .'-]{0,23}$/u
-const INITIAL_RE = /^[A-Z]?$/
+const INITIAL_RE = /^[A-Z]{0,2}$/
+const POSITION_RE = /^(F|D|G)$/
 
 export interface Team {
   id: string
   name: string
   scheduleUrl: string | null
+  ageGroup: string
+  season: string
 }
 
 const TEAM_RE = /^[a-z0-9-]{1,32}$/
 
 export async function listTeams(): Promise<Team[]> {
-  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams ORDER BY sort, name`)
+  const result = await getPool().query(
+    `SELECT id, name, schedule_url, age_group, season FROM teams ORDER BY sort, name`
+  )
   return result.rows.map(toTeam)
 }
 
 export async function getTeam(id: string): Promise<Team | null> {
   if (!TEAM_RE.test(id)) return null
-  const result = await getPool().query(`SELECT id, name, schedule_url FROM teams WHERE id = $1`, [id])
+  const result = await getPool().query(
+    `SELECT id, name, schedule_url, age_group, season FROM teams WHERE id = $1`,
+    [id]
+  )
   return result.rows[0] ? toTeam(result.rows[0]) : null
 }
 
-function toTeam(row: Record<string, unknown>): Team {
+export function toTeam(row: Record<string, unknown>): Team {
   const id = String(row.id)
   const stored = row.schedule_url ? String(row.schedule_url) : null
-  return { id, name: String(row.name ?? ""), scheduleUrl: resolveTeamScheduleUrl(id, stored) }
+  return {
+    id,
+    name: String(row.name ?? ""),
+    scheduleUrl: resolveTeamScheduleUrl(id, stored),
+    ageGroup: String(row.age_group ?? ""),
+    season: String(row.season ?? ""),
+  }
 }
 
 export interface Player {
@@ -55,6 +69,7 @@ export interface Player {
   active: boolean
   preferred: string
   practiceNumber: number | null
+  position: string
 }
 
 export interface Lineup {
@@ -102,7 +117,7 @@ export function emptySlots(): Slots {
 
 export async function listPlayers(teamId: string, includeInactive = false): Promise<Player[]> {
   const result = await getPool().query(
-    `SELECT id, number, first_name, last_initial, goalie, active, preferred_positions, practice_number
+    `SELECT id, number, first_name, last_initial, goalie, active, preferred_positions, practice_number, position
      FROM players
      WHERE team_id = $1 ${includeInactive ? "" : "AND active"}
      ORDER BY goalie, number, first_name`,
@@ -116,17 +131,21 @@ export async function addPlayer(teamId: string, input: unknown): Promise<Player>
   const number = cleanNumber(body.number)
   const firstName = cleanName(body.firstName)
   const lastInitial = cleanInitial(body.lastInitial)
-  const goalie = body.goalie === true
+  let position = cleanPosition(body.position)
+  const goalie = body.goalie === true || position === "G"
+  if (goalie) position = "G"
+  const practiceNumber = cleanOptionalNumber(body.practiceNumber)
+  const preferred = cleanPreferred(body.preferred)
   const pool = getPool()
   const count = await pool.query(`SELECT count(*)::int AS n FROM players WHERE active AND team_id = $1`, [teamId])
   if (Number(count.rows[0]?.n || 0) >= MAX_PLAYERS) throw new LineupInputError("The roster is full.")
   const taken = await pool.query(`SELECT 1 FROM players WHERE active AND team_id = $2 AND number = $1`, [number, teamId])
   if (taken.rowCount) throw new LineupInputError(`Number ${number} is already on the roster.`)
   const result = await pool.query(
-    `INSERT INTO players (number, first_name, last_initial, goalie, team_id)
-     VALUES ($1, $2, $3, $4, $5)
-     RETURNING id, number, first_name, last_initial, goalie, active, preferred_positions, practice_number`,
-    [number, firstName, lastInitial, goalie, teamId]
+    `INSERT INTO players (number, first_name, last_initial, goalie, team_id, practice_number, position, preferred_positions)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     RETURNING id, number, first_name, last_initial, goalie, active, preferred_positions, practice_number, position`,
+    [number, firstName, lastInitial, goalie, teamId, practiceNumber, position, preferred]
   )
   return toPlayer(result.rows[0])
 }
@@ -186,7 +205,7 @@ export async function getLineup(id: string): Promise<Lineup | null> {
 export async function createLineup(teamId: string, input: unknown): Promise<Lineup> {
   const body = asObject(input, "Could not read that lineup.")
   const pool = getPool()
-  const count = await pool.query(`SELECT count(*)::int AS n FROM lineups`)
+  const count = await pool.query(`SELECT count(*)::int AS n FROM lineups WHERE team_id = $1`, [teamId])
   if (Number(count.rows[0]?.n || 0) >= MAX_LINEUPS) {
     throw new LineupInputError(`You can keep up to ${MAX_LINEUPS} lineups. Delete an old one first.`)
   }
@@ -386,9 +405,33 @@ function cleanName(value: unknown): string {
 }
 
 function cleanInitial(value: unknown): string {
-  const initial = typeof value === "string" ? value.trim().replace(/\./g, "").slice(0, 1).toUpperCase() : ""
-  if (!INITIAL_RE.test(initial)) throw new LineupInputError("Last initial: one letter only, no full last names.")
+  const initial = typeof value === "string" ? value.trim().replace(/\./g, "").toUpperCase() : ""
+  if (!INITIAL_RE.test(initial)) throw new LineupInputError("Last initial: one or two letters, no full last names.")
   return initial
+}
+
+function cleanOptionalNumber(value: unknown): number | null {
+  if (value === undefined || value === null || value === "") return null
+  return cleanNumber(value)
+}
+
+function cleanPosition(value: unknown): string | null {
+  if (value === undefined || value === null || value === "") return null
+  if (typeof value !== "string" || !POSITION_RE.test(value.trim().toUpperCase())) {
+    throw new LineupInputError("Position needs to be F, D, or G.")
+  }
+  return value.trim().toUpperCase()
+}
+
+function cleanPreferred(value: unknown): string | null {
+  if (value === undefined || value === null || value === "") return null
+  if (typeof value !== "string") throw new LineupInputError("Preferred positions: use C, W, D, G, or F, like C/W.")
+  const codes = value.toUpperCase().split(/[^A-Z]+/).filter(Boolean)
+  if (!codes.length) return null
+  if (codes.some((code) => !["C", "W", "D", "G", "F", "LW", "RW", "LD", "RD"].includes(code)) || codes.length > 3) {
+    throw new LineupInputError("Preferred positions: use C, W, D, G, or F, like C/W.")
+  }
+  return codes.join("/")
 }
 
 function asObject(value: unknown, message: string): Record<string, unknown> {
@@ -417,6 +460,7 @@ function toPlayer(row: Record<string, unknown>): Player {
     active: Boolean(row.active),
     preferred: String(row.preferred_positions ?? ""),
     practiceNumber: row.practice_number == null ? null : Number(row.practice_number),
+    position: String(row.position ?? ""),
   }
 }
 

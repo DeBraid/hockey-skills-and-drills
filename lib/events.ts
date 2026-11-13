@@ -14,7 +14,7 @@ export const CLIENT_EVENTS = [
   "practice_qr",
   "practice_share",
 ] as const
-export const SERVER_EVENTS = ["sign_in", "plan_create", "plan_save", "plan_delete"] as const
+export const SERVER_EVENTS = ["sign_in", "plan_create", "plan_save", "plan_delete", "team_created", "invite_accepted"] as const
 
 export type ClientEventName = (typeof CLIENT_EVENTS)[number]
 export type EventName = ClientEventName | (typeof SERVER_EVENTS)[number]

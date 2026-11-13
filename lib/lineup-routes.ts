@@ -1,5 +1,7 @@
 import { isAdmin, notFound } from "./admin.js"
+import { isAdminEmail } from "./admins.js"
 import { readSession, type AccountUser } from "./auth.js"
+import { logEvent } from "./events.js"
 import { clientIp, json } from "./http.js"
 import {
   addPlayer,
@@ -10,7 +12,6 @@ import {
   getLineup,
   getSharedLineup,
   getTeam,
-  listTeams,
   isShareToken,
   LineupInputError,
   listLineups,
@@ -18,19 +19,34 @@ import {
   removePlayer,
   updateLineup,
   setPreferred,
+  type Lineup,
+  type Team,
 } from "./lineups.js"
-import { renderEditor, renderList, renderMessage, renderRoster, renderShared, renderRosters, renderTeams } from "./lineup-pages.js"
+import { listTeamPlans } from "./plans.js"
+import { renderEditor, renderList, renderMessage, renderRoster, renderShared, renderRosters, renderTeams, renderJoin } from "./lineup-pages.js"
 import { consumeLimit } from "./rate-limit.js"
 import { upcomingGames } from "./schedule.js"
+import {
+  acceptInvite,
+  claimLegacyTeams,
+  createInvite,
+  createTeam,
+  deleteTeam,
+  listInvites,
+  listMemberTeams,
+  listMembers,
+  previewInvite,
+  removeMember,
+  revokeInvite,
+  teamRole,
+  updateTeam,
+  type TeamRole,
+} from "./teams.js"
 import { originAllowed } from "./routes.js"
 
-// Single serverless function for every lineup page and API (vercel.json rewrites
-// pass the route in __lu). Everything requires an ADMIN_EMAILS session and
-// answers a plain 404 otherwise, except the read-only share link
-// (/lineups/v/<token>), which shows one lineup to anyone holding the token.
-//
-// To add view-only coaches later, add a VIEWER_EMAILS allowlist and let
-// canView() accept it for the GET routes. Writes stay on isAdmin().
+// Lineups, rosters, and team APIs are private to that team's coaches.
+// Anyone else, signed in or not, gets a plain 404. The read-only share link
+// (/lineups/v/<token>) is the only public page. ADMIN_EMAILS is not a bypass.
 
 const MAX_BODY = 16 * 1024
 const ID_RE = /^[0-9a-f-]{36}$/i
@@ -42,12 +58,20 @@ type Route =
   | "rosters"
   | "roster"
   | "view"
+  | "join"
   | "api-collection"
   | "api-item"
   | "api-share"
   | "api-roster"
   | "api-player"
   | "api-view"
+  | "api-my-teams"
+  | "api-team"
+  | "api-members"
+  | "api-member"
+  | "api-invites"
+  | "api-invite"
+  | "api-join"
 
 const ROUTES = new Set<Route>([
   "teams",
@@ -56,12 +80,20 @@ const ROUTES = new Set<Route>([
   "rosters",
   "roster",
   "view",
+  "join",
   "api-collection",
   "api-item",
   "api-share",
   "api-roster",
   "api-player",
   "api-view",
+  "api-my-teams",
+  "api-team",
+  "api-members",
+  "api-member",
+  "api-invites",
+  "api-invite",
+  "api-join",
 ])
 
 export async function handleLineups(request: Request): Promise<Response> {
@@ -75,85 +107,57 @@ export async function handleLineups(request: Request): Promise<Response> {
   try {
     if (route === "view" || route === "api-view") return await sharedView(request, route, token)
     const user = await readSession(request)
-    if (!canView(user)) return notFound()
-    const admin = user as AccountUser
+    if (!user?.id) {
+      if (route === "join") return await joinPage(request, token, null)
+      return notFound()
+    }
+    if (isAdmin(user)) await claimLegacyTeams(user.id)
     const method = request.method
     const write = method !== "GET" && method !== "HEAD"
+    if (route === "join" || route === "api-join") return await joinRoute(request, route, token, user, write)
+    if (route === "api-my-teams") return await myTeams(request, user, write)
     if (write) {
-      if (!isAdmin(user)) return notFound()
-      const blocked = await writeGuard(request, admin.id)
+      const blocked = await writeGuard(request, user.id)
       if (blocked) return blocked
     }
-    // Old single-team addresses (/lineups/<id>/, /lineups/roster/, /lineups/new/) redirect to the Stars team.
     if (teamParam === null && (route === "list" || route === "edit" || route === "roster")) {
+      return await legacyRedirect(route, id, user.id, write)
+    }
+    if (route === "rosters" || route === "teams") {
       if (write) return notFound()
-      if (route === "edit" && id !== "new" && !ID_RE.test(id)) return notFound()
-      const suffix = route === "list" ? "" : route === "roster" ? "roster/" : `${id}/`
-      if (route === "edit" && id !== "new") {
-        const old = await getLineup(id)
-        if (!old) return notFound()
-        return redirect(`/lineups/team/${old.teamId}/${id}/`)
+      const teams = await listMemberTeams(user.id)
+      if (route === "rosters") {
+        const counts = await Promise.all(teams.map((team) => listPlayers(team.id).then((players) => players.length)))
+        return html(renderRosters(teams.map((team, index) => ({ team, count: counts[index] })), user))
       }
-      return redirect(`/lineups/team/stars/${suffix}`)
+      return html(renderTeams(teams, user))
     }
-    if (route === "rosters") {
-      if (write) return notFound()
-      const teams = await listTeams()
-      const counts = await Promise.all(teams.map((t) => listPlayers(t.id).then((p) => p.length)))
-      return html(renderRosters(teams.map((t, i) => ({ team: t, count: counts[i] })), admin))
-    }
-    if (route === "teams") {
-      if (write) return notFound()
-      return html(renderTeams(await listTeams(), admin))
-    }
-    // API calls without a team (older pages) act on the Stars team.
-    const team = await getTeam(teamParam ?? "stars")
-    if (!team) return notFound()
+    if (route === "api-item" || route === "api-share") return await lineupItem(request, route, id, teamParam, user, method)
+    const teamId = teamParam ?? "stars"
+    const access = await requireMember(user.id, teamId)
+    if (access instanceof Response) return access
+    const { team, role } = access
     switch (route) {
       case "list":
         if (write) return notFound()
-        return html(renderList(team, await listLineups(team.id), admin, await listPlayers(team.id, true)))
+        return html(await teamHome(team, role, user))
       case "roster":
         if (write) return notFound()
-        return html(renderRoster(team, await listPlayers(team.id), admin))
+        return html(renderRoster(team, await listPlayers(team.id), user, await listMemberTeams(user.id)))
       case "edit": {
         if (write) return notFound()
         const players = await listPlayers(team.id, true)
-        if (id === "new") return html(renderEditor(team, null, players, admin, await upcomingGames(team.scheduleUrl)))
+        const teams = await listMemberTeams(user.id)
+        if (id === "new") return html(renderEditor(team, null, players, user, await upcomingGames(team.scheduleUrl), teams))
         if (!ID_RE.test(id)) return notFound()
         const lineup = await getLineup(id)
         if (!lineup || lineup.teamId !== team.id) return notFound()
-        return html(renderEditor(team, lineup, players, admin))
+        return html(renderEditor(team, lineup, players, user, [], teams))
       }
       case "api-collection":
         if (method === "GET") return json({ lineups: await listLineups(team.id) })
         if (method === "POST") return json({ lineup: await createLineup(team.id, await readBody(request)) }, 201)
         return json({ error: "Method not allowed." }, 405)
-      case "api-item": {
-        if (method === "GET") {
-          const lineup = await getLineup(id)
-          return lineup ? json({ lineup }) : json({ error: "Lineup not found." }, 404)
-        }
-        if (method === "PATCH") {
-          const lineup = await updateLineup(id, await readBody(request))
-          return lineup ? json({ lineup }) : json({ error: "Lineup not found." }, 404)
-        }
-        if (method === "DELETE") {
-          return (await deleteLineup(id)) ? json({ ok: true }) : json({ error: "Lineup not found." }, 404)
-        }
-        return json({ error: "Method not allowed." }, 405)
-      }
-      case "api-share": {
-        if (method === "POST") {
-          const body = (await readBody(request)) as { regenerate?: unknown }
-          const shareToken = await ensureShareToken(id, body?.regenerate === true)
-          return shareToken ? json({ shareToken }) : json({ error: "Lineup not found." }, 404)
-        }
-        if (method === "DELETE") {
-          return (await clearShareToken(id)) ? json({ ok: true }) : json({ error: "Lineup not found." }, 404)
-        }
-        return json({ error: "Method not allowed." }, 405)
-      }
       case "api-roster":
         if (method === "GET") return json({ players: await listPlayers(team.id) })
         if (method === "POST") return json({ player: await addPlayer(team.id, await readBody(request)) }, 201)
@@ -166,8 +170,34 @@ export async function handleLineups(request: Request): Promise<Response> {
           return (await removePlayer(team.id, id)) ? json({ ok: true }) : json({ error: "Player not found." }, 404)
         }
         return json({ error: "Method not allowed." }, 405)
+      case "api-team":
+        if (method === "PATCH") {
+          const updated = await updateTeam(team.id, await readBody(request))
+          return updated ? json({ team: { ...updated, role } }) : notFound()
+        }
+        if (method === "DELETE") {
+          if (role !== "owner") return notFound()
+          return (await deleteTeam(team.id)) ? json({ ok: true }) : notFound()
+        }
+        if (method === "GET") return json({ team: { ...team, role } })
+        return json({ error: "Method not allowed." }, 405)
+      case "api-members":
+        if (method !== "GET") return json({ error: "Method not allowed." }, 405)
+        return json({ members: await listMembers(team.id) })
+      case "api-member":
+        if (method !== "DELETE" || role !== "owner") return notFound()
+        return (await removeMember(team.id, id)) ? json({ ok: true }) : json({ error: "Coach not found." }, 404)
+      case "api-invites":
+        if (role !== "owner") return notFound()
+        if (method === "GET") return json({ invites: await listInvites(team.id) })
+        if (method === "POST") return json({ invite: await createInvite(team.id, user.id, await readBody(request)) }, 201)
+        return json({ error: "Method not allowed." }, 405)
+      case "api-invite":
+        if (role !== "owner" || method !== "DELETE") return notFound()
+        return (await revokeInvite(team.id, id)) ? json({ ok: true }) : json({ error: "Invite not found." }, 404)
+      default:
+        return notFound()
     }
-    return notFound()
   } catch (error) {
     if (error instanceof LineupInputError) return json({ error: error.message }, 400)
     console.error("lineups failed", error instanceof Error ? error.message : error)
@@ -176,8 +206,110 @@ export async function handleLineups(request: Request): Promise<Response> {
   }
 }
 
-function canView(user: AccountUser | null): boolean {
-  return isAdmin(user)
+async function myTeams(request: Request, user: AccountUser, write: boolean): Promise<Response> {
+  if (request.method === "GET" || request.method === "HEAD") {
+    const teams = await listMemberTeams(user.id)
+    return json({ teams: teams.map((team) => ({ id: team.id, name: team.name, ageGroup: team.ageGroup, season: team.season, role: team.role })) })
+  }
+  if (request.method !== "POST") return json({ error: "Method not allowed." }, 405)
+  const blocked = await writeGuard(request, user.id)
+  if (blocked) return blocked
+  const team = await createTeam(user.id, await readBody(request))
+  await logEvent({ name: "team_created", userId: user.id, props: adminProps(user) })
+  return json({ team }, 201)
+}
+
+async function teamHome(team: Team, role: TeamRole, user: AccountUser): Promise<string> {
+  const [lineups, players, teams, plans, members] = await Promise.all([
+    listLineups(team.id),
+    listPlayers(team.id, true),
+    listMemberTeams(user.id),
+    listTeamPlans(user.id, team.id),
+    listMembers(team.id),
+  ])
+  const invites = role === "owner" ? await listInvites(team.id) : []
+  return renderList(team, lineups, user, players, { teams, role, plans, members, invites })
+}
+
+async function lineupItem(
+  request: Request,
+  route: "api-item" | "api-share",
+  id: string,
+  teamParam: string | null,
+  user: AccountUser,
+  method: string
+): Promise<Response> {
+  if (!ID_RE.test(id)) return notFound()
+  const lineup = await getLineup(id)
+  if (!lineup) return notFound()
+  if (teamParam && teamParam !== lineup.teamId) return notFound()
+  const role = await teamRole(user.id, lineup.teamId)
+  if (!role) return notFound()
+  if (route === "api-share") return shareItem(request, lineup, method)
+  if (method === "GET") return json({ lineup })
+  if (method === "PATCH") {
+    const updated = await updateLineup(id, await readBody(request))
+    return updated ? json({ lineup: updated }) : notFound()
+  }
+  if (method === "DELETE") return (await deleteLineup(id)) ? json({ ok: true }) : notFound()
+  return json({ error: "Method not allowed." }, 405)
+}
+
+async function shareItem(request: Request, lineup: Lineup, method: string): Promise<Response> {
+  if (method === "POST") {
+    const body = (await readBody(request)) as { regenerate?: unknown }
+    const shareToken = await ensureShareToken(lineup.id, body?.regenerate === true)
+    return shareToken ? json({ shareToken }) : notFound()
+  }
+  if (method === "DELETE") return (await clearShareToken(lineup.id)) ? json({ ok: true }) : notFound()
+  return json({ error: "Method not allowed." }, 405)
+}
+
+async function legacyRedirect(route: "list" | "edit" | "roster", id: string, userId: string, write: boolean): Promise<Response> {
+  if (write) return notFound()
+  if (route === "edit" && id !== "new") {
+    if (!ID_RE.test(id)) return notFound()
+    const lineup = await getLineup(id)
+    if (!lineup) return notFound()
+    if (!(await teamRole(userId, lineup.teamId))) return notFound()
+    return redirect(`/lineups/team/${lineup.teamId}/${id}/`)
+  }
+  const teams = await listMemberTeams(userId)
+  const target = teams.find((team) => team.id === "stars") || teams[0]
+  if (!target) return redirect("/lineups/")
+  if (route === "edit") return redirect(`/lineups/team/${target.id}/new/`)
+  if (route === "roster") return redirect(`/lineups/team/${target.id}/roster/`)
+  return redirect(`/lineups/team/${target.id}/`)
+}
+
+async function joinPage(request: Request, token: string, user: AccountUser | null): Promise<Response> {
+  if (request.method !== "GET" && request.method !== "HEAD") return notFound()
+  const invite = await previewInvite(token)
+  if (!invite) return notFound()
+  return html(renderJoin(invite, user, token), 200, request.method === "HEAD")
+}
+
+async function joinRoute(request: Request, route: "join" | "api-join", token: string, user: AccountUser, write: boolean): Promise<Response> {
+  if (!write) return joinPage(request, token, user)
+  const blocked = await writeGuard(request, user.id)
+  if (blocked) return blocked
+  const joined = await acceptInvite(user.id, token)
+  if (!joined) return notFound()
+  if (joined.joined) await logEvent({ name: "invite_accepted", userId: user.id, props: adminProps(user) })
+  if (route === "api-join") return json({ teamId: joined.teamId, joined: joined.joined })
+  return redirect(`/lineups/team/${joined.teamId}/`, 303)
+}
+
+async function requireMember(userId: string, teamId: string): Promise<{ team: Team; role: TeamRole } | Response> {
+  const team = await getTeam(teamId)
+  if (!team) return notFound()
+  const role = await teamRole(userId, team.id)
+  if (!role) return notFound()
+  return { team, role }
+}
+
+function adminProps(user: AccountUser): { admin?: true } {
+  return isAdminEmail(user.email) ? { admin: true } : {}
 }
 
 async function sharedView(request: Request, route: Route, token: string): Promise<Response> {
@@ -189,7 +321,7 @@ async function sharedView(request: Request, route: Route, token: string): Promis
   if (!lineup) return notFound()
   if (route === "api-view") {
     const response = json({ lineup })
-    for (const [k, v] of Object.entries(privateHeaders())) if (k !== "content-type") response.headers.set(k, v)
+    for (const [key, value] of Object.entries(privateHeaders())) if (key !== "content-type") response.headers.set(key, value)
     return response
   }
   return html(renderShared(lineup), 200, request.method === "HEAD")
@@ -224,8 +356,8 @@ function privateHeaders(type = "text/html; charset=utf-8"): Record<string, strin
   }
 }
 
-function redirect(location: string): Response {
-  return new Response(null, { status: 308, headers: { location, "cache-control": "private, no-store", "referrer-policy": "no-referrer" } })
+function redirect(location: string, status = 308): Response {
+  return new Response(null, { status, headers: { location, "cache-control": "private, no-store", "referrer-policy": "no-referrer" } })
 }
 
 function html(body: string, status = 200, head = false): Response {

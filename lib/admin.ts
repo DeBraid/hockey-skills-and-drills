@@ -105,7 +105,9 @@ export async function loadStats(includeAdmin = false): Promise<Stats> {
        count(e.id) FILTER (WHERE e.name = 'plan_print') AS prints,
        count(e.id) FILTER (WHERE e.name = 'practice_view') AS practice_views,
        count(e.id) FILTER (WHERE e.name = 'practice_qr') AS practice_qr,
-       count(e.id) FILTER (WHERE e.name = 'practice_share') AS practice_shares
+       count(e.id) FILTER (WHERE e.name = 'practice_share') AS practice_shares,
+       count(e.id) FILTER (WHERE e.name = 'team_created') AS team_created,
+       count(e.id) FILTER (WHERE e.name = 'invite_accepted') AS invite_accepted
      FROM (VALUES (7), (30)) AS w (days)
      LEFT JOIN ev e ON e.created_at >= now() - make_interval(days => w.days)
      GROUP BY w.days
@@ -204,6 +206,8 @@ export function renderDashboard(stats: Stats, viewer: AccountUser): string {
     ["Practice pages opened", "practice_views"],
     ["Practice QR codes", "practice_qr"],
     ["Practice links shared", "practice_shares"],
+    ["Teams created", "team_created"],
+    ["Invites accepted", "invite_accepted"],
   ]
   const totalsRows = metrics
     .map(([label, key]) => `<tr><th scope="row">${esc(label)}</th><td>${num(week[key])}</td><td>${num(month[key])}</td></tr>`)

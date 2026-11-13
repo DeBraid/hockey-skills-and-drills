@@ -17,6 +17,12 @@ export async function deleteUserAccount(userId: string): Promise<boolean> {
     if (typeof email === "string" && email) {
       await client.query(`DELETE FROM verification_token WHERE identifier = $1`, [email])
     }
+    await client.query(
+      `DELETE FROM teams WHERE id IN (
+         SELECT team_id FROM team_members WHERE user_id = $1 AND role = 'owner'
+       )`,
+      [userId]
+    )
     await client.query(`DELETE FROM users WHERE id = $1`, [userId])
     await client.query("COMMIT")
     return true

@@ -576,6 +576,12 @@ def write_plan(data: dict, labels: dict[str, str]) -> None:
         </label>
       </div>
       <p class="plan-hint">Optional. A date and start time show a running clock on the practice page.</p>
+      <label class="plan-title-label" id="plan-team-label" for="plan-team" hidden>Save to
+        <select id="plan-team">
+          <option value="">Just me</option>
+        </select>
+      </label>
+      <p class="plan-hint" id="plan-team-hint" hidden>Just me keeps this plan private. A team shares it with that team's coaches.</p>
       <label class="plan-title-label" for="plan-notes">Practice notes
         <textarea id="plan-notes" maxlength="2000" rows="3" placeholder="Optional, for the bench"></textarea>
       </label>
@@ -763,7 +769,7 @@ def write_account() -> None:
     </div>
     <section class="account-privacy">
       <h2>Privacy</h2>
-      <p>An account stores the name, email address, and profile photo from the sign-in provider, plus the practice plans you save. A practice-page link includes the drills, times, and any notes you put on that plan. It does not include your account. Saved plans are visible only to you. Delete account removes that profile and every plan saved to it.</p>
+      <p>An account stores the name, email address, and profile photo from the sign-in provider, plus the practice plans you save. A practice-page link includes the drills, times, and any notes you put on that plan. It does not include your account. A plan saved to a team is visible to that team's coaches. A plan saved as "Just me" is visible only to you. Delete account removes that profile, the teams you own, and every plan saved to your account.</p>
       <p>To see which drills get used, the site counts page views and plan actions with a random ID kept in this browser. It does not use cookies for this and does not record your email, IP address, or device details.</p>
     </section>
     <p class="plan-status" id="account-status" role="status"></p>
@@ -798,7 +804,8 @@ PRIVACY_BODY = f"""  <main id="content" class="wrap-read legal-page">
       <li>Your name, email address, and profile photo link from Google (or just your email address if you use an email link).</li>
       <li>The account link Google returns at sign-in, including its sign-in tokens. We do not use them to access anything else in your Google account.</li>
       <li>A session record and a secure sign-in cookie so you stay signed in, for up to 30 days.</li>
-      <li>The practice plans you save: titles, drills, times, and notes. Saved plans are visible only to you.</li>
+      <li>The practice plans you save: titles, drills, times, notes, an optional practice date, and an optional team. A plan with no team is visible only to you. A plan saved to a team is visible to the coaches on that team.</li>
+      <li>Teams you create or join: the team name, age group, season, and schedule link, plus the roster (first name, a one- or two-letter last initial, jersey numbers, and position). No full last names and no parent or guardian details. Rosters and lineups are visible only to coaches on that team. A lineup share link, if you turn one on, shows the players placed on that lineup to anyone with the link.</li>
     </ul>
 
     <h2>Google user data</h2>
@@ -819,7 +826,7 @@ PRIVACY_BODY = f"""  <main id="content" class="wrap-read legal-page">
     <h2>Who processes data for us</h2>
     <ul>
       <li><strong>Vercel</strong> hosts the site and runs the sign-in and plan features. Like any web host, it handles IP addresses to serve pages.</li>
-      <li><strong>Neon</strong> hosts the Postgres database that holds accounts, saved plans, and the event log.</li>
+      <li><strong>Neon</strong> hosts the Postgres database that holds accounts, teams, rosters, lineups, saved plans, and the event log.</li>
       <li><strong>Google</strong> handles Google sign-in.</li>
       <li><strong>Resend</strong> will send email sign-in links once email sign-in is turned on. It receives only your email address and the link.</li>
     </ul>
@@ -850,7 +857,7 @@ TERMS_BODY = f"""  <main id="content" class="wrap-read legal-page">
     <p>Drills are for general information only. Coaches are responsible for on-ice safety and supervision, and for choosing drills that suit their players' age, skill, and equipment. Follow your league's and Hockey Canada's safety rules.</p>
 
     <h2>Accounts</h2>
-    <p>An account is optional and only saves your practice plans. Keep it to your own use. Accounts may be removed for abuse, such as attacking the site or using it to send spam. You can delete your account at any time from <a href="../account/">My plans</a>.</p>
+    <p>An account is optional. It saves your practice plans and, if you create one, your teams. Keep it to your own use. Accounts may be removed for abuse, such as attacking the site or using it to send spam. You can delete your account at any time from <a href="../account/">My plans</a>.</p>
 
     <h2>Content</h2>
     <p>The drills, diagrams, and animations are owned by Derek Braid. You may use them, print them, and share links to them for coaching your own teams. Please do not republish or sell them without permission.</p>
