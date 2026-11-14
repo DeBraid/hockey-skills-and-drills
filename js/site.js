@@ -5,6 +5,7 @@
   var ANON_KEY = "hsd-anon-id";
   var EXCLUDE_KEY = "hsd-exclude-stats";
   var IMPORT_KEY = "hsd-import-offered";
+  var SORT_KEY = "hsd-drill-sort";
   var accountState = { ready: false, enabled: false, google: false, email: false, user: null };
   var accountReady = [];
 
@@ -341,16 +342,80 @@
   });
 
   var buttons = document.querySelectorAll("[data-filter]");
-  if (buttons.length) {
-    var cards = document.querySelectorAll(".card");
+  var sortButtons = document.querySelectorAll("[data-sort]");
+  var grid = document.querySelector(".grid");
+  if (grid && (buttons.length || sortButtons.length)) {
+    var original = Array.prototype.filter.call(grid.children, function (node) {
+      return node.classList && node.classList.contains("card");
+    });
     var empty = document.getElementById("empty-filter");
     var count = document.getElementById("drill-count");
+    var activeTag = "all";
+    var NEW_DAYS = 14;
 
-    function apply(tag) {
+    function readDrillSort() {
+      try {
+        return localStorage.getItem(SORT_KEY) === "recent" ? "recent" : "default";
+      } catch (error) {
+        return "default";
+      }
+    }
+
+    var activeSort = readDrillSort();
+
+    function addedTime(card) {
+      var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(card.getAttribute("data-added") || "");
+      if (!match) return null;
+      return Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    }
+
+    function isNew(card) {
+      var added = addedTime(card);
+      if (added === null) return false;
+      var now = new Date();
+      var today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+      var days = Math.round((today - added) / 86400000);
+      return days >= 0 && days <= NEW_DAYS;
+    }
+
+    function markNew() {
+      original.forEach(function (card) {
+        var media = card.querySelector(".card-media");
+        if (!media) return;
+        var badge = media.querySelector(".new-badge");
+        if (!isNew(card)) {
+          if (badge) badge.remove();
+          return;
+        }
+        if (badge) return;
+        badge = document.createElement("span");
+        badge.className = "new-badge";
+        badge.textContent = "New";
+        media.appendChild(badge);
+      });
+    }
+
+    function orderCards() {
+      var ordered = activeSort === "recent"
+        ? original.slice().sort(function (a, b) {
+          var at = addedTime(a);
+          var bt = addedTime(b);
+          if (at === bt) return 0;
+          if (at === null) return 1;
+          if (bt === null) return -1;
+          return bt - at;
+        })
+        : original;
+      ordered.forEach(function (card) {
+        grid.appendChild(card);
+      });
+    }
+
+    function apply() {
       var shown = 0;
-      cards.forEach(function (card) {
+      original.forEach(function (card) {
         var tags = (card.getAttribute("data-tags") || "").split(/\s+/);
-        var visible = tag === "all" || tags.indexOf(tag) !== -1;
+        var visible = activeTag === "all" || tags.indexOf(activeTag) !== -1;
         card.hidden = !visible;
         if (visible) shown += 1;
       });
@@ -359,16 +424,40 @@
         count.textContent = shown + (shown === 1 ? " drill" : " drills");
       }
       buttons.forEach(function (button) {
-        var pressed = button.getAttribute("data-filter") === tag;
+        var pressed = button.getAttribute("data-filter") === activeTag;
+        button.setAttribute("aria-pressed", pressed ? "true" : "false");
+      });
+      sortButtons.forEach(function (button) {
+        var pressed = button.getAttribute("data-sort") === activeSort;
         button.setAttribute("aria-pressed", pressed ? "true" : "false");
       });
     }
 
     buttons.forEach(function (button) {
       button.addEventListener("click", function () {
-        apply(button.getAttribute("data-filter"));
+        activeTag = button.getAttribute("data-filter") || "all";
+        apply();
       });
     });
+
+    sortButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var next = button.getAttribute("data-sort");
+        if (next !== "default" && next !== "recent") return;
+        activeSort = next;
+        try {
+          localStorage.setItem(SORT_KEY, activeSort);
+        } catch (error) {
+          // Sorting still applies for this visit when storage is blocked.
+        }
+        orderCards();
+        apply();
+      });
+    });
+
+    markNew();
+    orderCards();
+    apply();
   }
 
   // Menu first, and each feature isolated, so one failure (e.g. storage

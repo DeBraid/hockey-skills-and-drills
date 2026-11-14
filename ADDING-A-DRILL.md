@@ -21,6 +21,7 @@ Keep the exported sizes. The slug is lowercase words separated by hyphens, for e
 Add an object to the `drills` array:
 
 - `slug` matches the folder and the file names.
+- `added` is the day the drill joins the library, as an ISO date (`YYYY-MM-DD`). Use today's date. The home page sorts by it ("Most recent") and marks drills from the last 14 days with a New badge. Dates already in git history can be filled with `python3 scripts/backfill_added_dates.py`. That script stores the calendar day only. Do not add a name, an email, or any other identity.
 - `title`, `subtitle`, `blurb`, and `diagramAlt` are the words on the card and the drill page.
 - `tags` is a list of ids from the top-level `tags` array (`full-ice`, `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`, `skating`, `breakout`, `small-area-game`). Add a new tag there first if you need a new chip on the home page. The home-page filters are generated from that list.
 - `series` is optional. Set it to `"Low-to-high"` when the drill uses that same zone entry.
@@ -56,6 +57,6 @@ Open `index.html` in a browser, or from the repo root run:
 python3 -m http.server
 ```
 
-Confirm the new card, the tag filters, the still diagram, and the download links. The Watch section embeds `<slug>-anim.html`, Pause and Replay work, and the full-screen link opens that animation page. The PNG stays the thumbnail and the still image. Leave `excalidrawUrl` as `null` when there is no public Excalidraw share; the page then omits that link.
+Confirm the new card, the tag filters, the sort control (Default keeps the registry order, Most recent puts the new drill first), the still diagram, and the download links. The Watch section embeds `<slug>-anim.html`, Pause and Replay work, and the full-screen link opens that animation page. The PNG stays the thumbnail and the still image. Leave `excalidrawUrl` as `null` when there is no public Excalidraw share; the page then omits that link.
 
 Commit `media/<slug>/`, `drills.json`, and the generated pages together.
