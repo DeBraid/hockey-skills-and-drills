@@ -300,5 +300,10 @@ export const PRACTICE_DRILLS: Record<string, PracticeDrill> = {
     "title": "Special One II",
     "png": "/media/special-one-ii/special-one-ii.png",
     "alt": "Full-ice diagram of Special One II. D lines sit in both top corners and forward lines sit at both blue lines on the bottom boards and in the bottom-right corner, with pucks at centre ice and in two corners. On the left, a forward takes a lead pass, carries around the centre circle, passes to the D, loops high and gets a return pass from behind the net. On the right, the corner forward carries around the bottom circle, passes to the D, gets it back in the slot and relays it to a forward skating up from the blue line. That forward attacks the left net 1-on-1 against the D who stays in to defend, while the left forward and the slot forward attack the right net 2-on-1 against the recovering D."
+  },
+  "circle-bump-passes": {
+    "title": "Circle Bump Passes",
+    "png": "/media/circle-bump-passes/circle-bump-passes.png",
+    "alt": "Half-ice diagram of Circle Bump Passes. Both end-zone circles are used at once. A passer stands on each faceoff dot with a few pucks, and 4 pylons sit on each circle at the top, bottom, left and right. A line of skaters waits beside each circle, toward the blue line. In step 1 the skater does one lap counter-clockwise just outside the pylons, and at each pylon gets a pass from the passer and bumps it straight back, for 4 forehand touches. In step 2 the skater reverses and does a lap clockwise just inside the pylons, receiving and bumping on the backhand at each pylon. Then the skater goes to the back of the line. Passes are dashed arrows and skating is a solid arrow."
   }
 }
