@@ -494,6 +494,14 @@ A busy full-ice timing drill with two pucks going at once. At the left end, a fo
 
 [Note](drills/special-one-ii.md) · [Drill page](drills/special-one-ii/) · [Animation](media/special-one-ii/special-one-ii-anim.html) · [PNG](media/special-one-ii/special-one-ii.png) · [Excalidraw](media/special-one-ii/special-one-ii.excalidraw)
 
+### [Circle Bump Passes](drills/circle-bump-passes.md)
+
+A passing and edges drill that runs in both end-zone circles at once. A passer stands on each faceoff dot with pucks, and 4 pylons sit around each circle. The skater, without a puck, does one lap counter-clockwise: at each pylon they take a pass from the middle and bump it straight back. That's 4 forehand touches. Then they reverse and do a lap clockwise with 4 more touches on the backhand. Two laps, both directions, 8 touches. Then back of the line and the next skater goes.
+
+**Tags:** `skating`, `passing`
+
+[Note](drills/circle-bump-passes.md) · [Drill page](drills/circle-bump-passes/) · [Animation](media/circle-bump-passes/circle-bump-passes-anim.html) · [PNG](media/circle-bump-passes/circle-bump-passes.png) · [Excalidraw](media/circle-bump-passes/circle-bump-passes.excalidraw)
+
 
 ## Add a drill
 

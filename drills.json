@@ -1710,6 +1710,39 @@
         "two-line-2-on-0-flow",
         "full-ice-5-on-0-breakout"
       ]
+    },
+    {
+      "slug": "circle-bump-passes",
+      "title": "Circle Bump Passes",
+      "subtitle": "One lap around the circle with 4 forehand bump passes to the middle, then reverse for 4 on the backhand.",
+      "blurb": "A passing and edges drill that runs in both end-zone circles at once. A passer stands on each faceoff dot with pucks, and 4 pylons sit around each circle. The skater, without a puck, does one lap counter-clockwise: at each pylon they take a pass from the middle and bump it straight back. That's 4 forehand touches. Then they reverse and do a lap clockwise with 4 more touches on the backhand. Two laps, both directions, 8 touches. Then back of the line and the next skater goes.",
+      "diagramAlt": "Half-ice diagram of Circle Bump Passes. Both end-zone circles are used at once. A passer stands on each faceoff dot with a few pucks, and 4 pylons sit on each circle at the top, bottom, left and right. A line of skaters waits beside each circle, toward the blue line. In step 1 the skater does one lap counter-clockwise just outside the pylons, and at each pylon gets a pass from the passer and bumps it straight back, for 4 forehand touches. In step 2 the skater reverses and does a lap clockwise just inside the pylons, receiving and bumping on the backhand at each pylon. Then the skater goes to the back of the line. Passes are dashed arrows and skating is a solid arrow.",
+      "tags": [
+        "skating",
+        "passing"
+      ],
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Knees bent the whole time. Stay low through every touch.",
+        "Crossovers all the way around the lap. Don't glide into the pylon.",
+        "Soft hands: give with the puck as it hits your stick.",
+        "Head up: look at the passer before the puck comes.",
+        "Quick bump: one touch back to the middle, on the forehand and on the backhand.",
+        "Passer: lead the skater a little so the puck meets them at the pylon.",
+        "Lap 1 is the forehand lap. For a left shot that's counter-clockwise; right shots can start clockwise so lap 1 is still the forehand.",
+        "Coach note: the diagram draws lap 2 just inside the pylons so both laps show. On the ice, both laps go around the pylons."
+      ],
+      "steps": [
+        "Setup: use both end-zone circles. A passer stands on each faceoff dot with a few pucks. Put 4 pylons on each circle, at the top, bottom, left and right. A line of skaters waits beside each circle, toward the blue line.",
+        "Forehand lap: the skater (no puck) does one lap around the circle. At each pylon, take a pass from the middle and bump it straight back. That's 4 touches on the forehand.",
+        "Reverse: turn around and do a lap the other way. At each pylon, receive and bump back on the backhand. 4 more touches.",
+        "Go to the back of the line. The next skater goes. Rotate the passers every few turns."
+      ],
+      "related": [
+        "crossover-circles-pivots",
+        "crossover-circles",
+        "stationary-partner-passing"
+      ]
     }
   ]
 }
