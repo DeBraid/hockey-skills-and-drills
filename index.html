@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0c141c" media="(prefers-color-scheme: dark)">
   <title>Hockey Skills &amp; Drills</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/styles.css?v=527e537bbe">
+  <link rel="stylesheet" href="css/styles.css?v=68817519a3">
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     (function () {
@@ -44,7 +44,13 @@
       <p class="lede">Diagrams, animations, and bench-side steps. Each drill page plays a looping HTML animation. The PNG is the card thumbnail and the still diagram.</p>
     </section>
     <div class="toolbar">
-      <p class="drill-count" id="drill-count">60 drills</p>
+      <div class="toolbar-row">
+        <p class="drill-count" id="drill-count">60 drills</p>
+        <div class="sort" role="group" aria-label="Sort drills">
+          <button class="filter" type="button" data-sort="default" aria-pressed="true">Default</button>
+          <button class="filter" type="button" data-sort="recent" aria-pressed="false">Most recent</button>
+        </div>
+      </div>
       <div class="filters" role="group" aria-label="Filter drills by tag">
         <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
         <button class="filter" type="button" data-filter="full-ice" aria-pressed="false">Full ice</button>
@@ -61,7 +67,7 @@
     </div>
     <p class="empty" id="empty-filter" hidden>No drills use that tag.</p>
     <div class="grid">
-      <article class="card" data-tags="full-ice passing shooting">
+      <article class="card" data-tags="full-ice passing shooting" data-added="2026-10-06">
         <a class="card-link" href="drills/follow-the-pass/">
           <span class="card-media">
             <img src="media/follow-the-pass/follow-the-pass.png" alt="">
@@ -80,7 +86,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="follow-the-pass" data-plan-title="Follow the Pass" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice zone-entry passing shooting defence">
+      <article class="card" data-tags="half-ice zone-entry passing shooting defence" data-added="2026-10-06">
         <a class="card-link" href="drills/low-to-high-shot/">
           <span class="card-media">
             <img src="media/low-to-high-shot/low-to-high-shot.png" alt="">
@@ -102,7 +108,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="low-to-high-shot" data-plan-title="Low-to-High: D Shot" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice zone-entry passing shooting defence">
+      <article class="card" data-tags="half-ice zone-entry passing shooting defence" data-added="2026-10-06">
         <a class="card-link" href="drills/low-to-high-give-and-go/">
           <span class="card-media">
             <img src="media/low-to-high-give-and-go/low-to-high-give-and-go.png" alt="">
@@ -124,7 +130,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="low-to-high-give-and-go" data-plan-title="Low-to-High: Give-and-Go" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice zone-entry passing shooting defence">
+      <article class="card" data-tags="half-ice zone-entry passing shooting defence" data-added="2026-10-06">
         <a class="card-link" href="drills/low-to-high-d-to-d/">
           <span class="card-media">
             <img src="media/low-to-high-d-to-d/low-to-high-d-to-d.png" alt="">
@@ -146,7 +152,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="low-to-high-d-to-d" data-plan-title="Low-to-High: D-to-D" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="defence small-area-game">
+      <article class="card" data-tags="defence small-area-game" data-added="2026-10-07">
         <a class="card-link" href="drills/one-up-one-down/">
           <span class="card-media">
             <img src="media/one-up-one-down/one-up-one-down.png" alt="">
@@ -164,7 +170,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="one-up-one-down" data-plan-title="1 Up / 1 Down" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice breakout passing shooting">
+      <article class="card" data-tags="half-ice breakout passing shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/olympic-breakout-pass/">
           <span class="card-media">
             <img src="media/olympic-breakout-pass/olympic-breakout-pass.png" alt="">
@@ -184,7 +190,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="olympic-breakout-pass" data-plan-title="Olympic Breakout to 2-on-1" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="passing breakout">
+      <article class="card" data-tags="passing breakout" data-added="2026-10-07">
         <a class="card-link" href="drills/zone-exit-bounce-pass/">
           <span class="card-media">
             <img src="media/zone-exit-bounce-pass/zone-exit-bounce-pass.png" alt="">
@@ -202,7 +208,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="zone-exit-bounce-pass" data-plan-title="Zone Exits: Bounce Pass" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="shooting">
+      <article class="card" data-tags="shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/tip-and-dig-shooting/">
           <span class="card-media">
             <img src="media/tip-and-dig-shooting/tip-and-dig-shooting.png" alt="">
@@ -219,7 +225,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="tip-and-dig-shooting" data-plan-title="Tip-and-Dig Shooting" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice skating shooting">
+      <article class="card" data-tags="full-ice skating shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/four-lane-warmup/">
           <span class="card-media">
             <img src="media/four-lane-warmup/four-lane-warmup.png" alt="">
@@ -238,7 +244,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="four-lane-warmup" data-plan-title="4-Lane Warm-up" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating defence shooting">
+      <article class="card" data-tags="skating defence shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/crossover-circles/">
           <span class="card-media">
             <img src="media/crossover-circles/crossover-circles.png" alt="">
@@ -257,7 +263,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="crossover-circles" data-plan-title="Crossover Circles Race" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating passing shooting">
+      <article class="card" data-tags="skating passing shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/crossover-circles-pivots/">
           <span class="card-media">
             <img src="media/crossover-circles-pivots/crossover-circles-pivots.png" alt="">
@@ -276,7 +282,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="crossover-circles-pivots" data-plan-title="Crossover Circles: Pivot Race" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating full-ice">
+      <article class="card" data-tags="skating full-ice" data-added="2026-10-07">
         <a class="card-link" href="drills/stops-and-starts/">
           <span class="card-media">
             <img src="media/stops-and-starts/stops-and-starts.png" alt="">
@@ -294,7 +300,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="stops-and-starts" data-plan-title="Stops and Starts" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating">
+      <article class="card" data-tags="skating" data-added="2026-10-07">
         <a class="card-link" href="drills/cone-weave/">
           <span class="card-media">
             <img src="media/cone-weave/cone-weave.png" alt="">
@@ -311,7 +317,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="cone-weave" data-plan-title="Edges: Cone Weave" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating">
+      <article class="card" data-tags="skating" data-added="2026-10-07">
         <a class="card-link" href="drills/lateral-step-overs/">
           <span class="card-media">
             <img src="media/lateral-step-overs/lateral-step-overs.png" alt="">
@@ -328,7 +334,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="lateral-step-overs" data-plan-title="Lateral Step-overs with Pivots" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating passing">
+      <article class="card" data-tags="skating passing" data-added="2026-10-07">
         <a class="card-link" href="drills/cone-relay-with-pucks/">
           <span class="card-media">
             <img src="media/cone-relay-with-pucks/cone-relay-with-pucks.png" alt="">
@@ -346,7 +352,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="cone-relay-with-pucks" data-plan-title="Cone Relay with Pucks" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game shooting defence">
+      <article class="card" data-tags="small-area-game shooting defence" data-added="2026-10-07">
         <a class="card-link" href="drills/two-v-two-point-shot/">
           <span class="card-media">
             <img src="media/two-v-two-point-shot/two-v-two-point-shot.png" alt="">
@@ -365,7 +371,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="two-v-two-point-shot" data-plan-title="2v2 Point Shot Small Area Game" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game passing defence">
+      <article class="card" data-tags="small-area-game passing defence" data-added="2026-10-07">
         <a class="card-link" href="drills/two-v-two-hard-rim/">
           <span class="card-media">
             <img src="media/two-v-two-hard-rim/two-v-two-hard-rim.png" alt="">
@@ -384,7 +390,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="two-v-two-hard-rim" data-plan-title="2v2 Hard Rim" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game passing shooting">
+      <article class="card" data-tags="small-area-game passing shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/three-v-three-circle-game/">
           <span class="card-media">
             <img src="media/three-v-three-circle-game/three-v-three-circle-game.png" alt="">
@@ -403,7 +409,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="three-v-three-circle-game" data-plan-title="3v3 Circle Game" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game half-ice defence">
+      <article class="card" data-tags="small-area-game half-ice defence" data-added="2026-10-07">
         <a class="card-link" href="drills/half-ice-3v3/">
           <span class="card-media">
             <img src="media/half-ice-3v3/half-ice-3v3.png" alt="">
@@ -422,7 +428,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="half-ice-3v3" data-plan-title="Half-ice 3v3" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game defence">
+      <article class="card" data-tags="small-area-game defence" data-added="2026-10-07">
         <a class="card-link" href="drills/defend-the-cone/">
           <span class="card-media">
             <img src="media/defend-the-cone/defend-the-cone.png" alt="">
@@ -440,7 +446,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="defend-the-cone" data-plan-title="Defend the Cone" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice passing shooting defence">
+      <article class="card" data-tags="half-ice passing shooting defence" data-added="2026-10-07">
         <a class="card-link" href="drills/one-on-one-shooting-to-two-on-one/">
           <span class="card-media">
             <img src="media/one-on-one-shooting-to-two-on-one/one-on-one-shooting-to-two-on-one.png" alt="">
@@ -460,7 +466,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="one-on-one-shooting-to-two-on-one" data-plan-title="Corner Pass to Half-Ice 1-on-1" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game defence">
+      <article class="card" data-tags="small-area-game defence" data-added="2026-10-07">
         <a class="card-link" href="drills/mirror-angling-2v1/">
           <span class="card-media">
             <img src="media/mirror-angling-2v1/mirror-angling-2v1.png" alt="">
@@ -478,7 +484,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="mirror-angling-2v1" data-plan-title="Mirror Angling 2v1" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game defence passing">
+      <article class="card" data-tags="small-area-game defence passing" data-added="2026-10-07">
         <a class="card-link" href="drills/puck-race-1v1-to-2v1/">
           <span class="card-media">
             <img src="media/puck-race-1v1-to-2v1/puck-race-1v1-to-2v1.png" alt="">
@@ -497,7 +503,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="puck-race-1v1-to-2v1" data-plan-title="1v1 Puck Race to 2v1" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="shooting">
+      <article class="card" data-tags="shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/rebounds-in-tight/">
           <span class="card-media">
             <img src="media/rebounds-in-tight/rebounds-in-tight.png" alt="">
@@ -514,7 +520,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="rebounds-in-tight" data-plan-title="Rebounds: In-tight Hands" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game shooting">
+      <article class="card" data-tags="small-area-game shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/goalie-rebound-game/">
           <span class="card-media">
             <img src="media/goalie-rebound-game/goalie-rebound-game.png" alt="">
@@ -532,7 +538,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="goalie-rebound-game" data-plan-title="Goalie Rebound Game" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="passing small-area-game">
+      <article class="card" data-tags="passing small-area-game" data-added="2026-10-07">
         <a class="card-link" href="drills/rondo-passing/">
           <span class="card-media">
             <img src="media/rondo-passing/rondo-passing.png" alt="">
@@ -550,7 +556,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="rondo-passing" data-plan-title="Rondo Passing Progressions" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="zone-entry half-ice passing shooting">
+      <article class="card" data-tags="zone-entry half-ice passing shooting" data-added="2026-10-07">
         <a class="card-link" href="drills/zone-entry-delay/">
           <span class="card-media">
             <img src="media/zone-entry-delay/zone-entry-delay.png" alt="">
@@ -570,7 +576,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="zone-entry-delay" data-plan-title="Zone Entries: Delay" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice passing shooting">
+      <article class="card" data-tags="half-ice passing shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/give-and-go-shot/">
           <span class="card-media">
             <img src="media/give-and-go-shot/give-and-go-shot.png" alt="">
@@ -589,7 +595,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="give-and-go-shot" data-plan-title="Give-and-Go to Shot" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="passing">
+      <article class="card" data-tags="passing" data-added="2026-10-08">
         <a class="card-link" href="drills/stationary-partner-passing/">
           <span class="card-media">
             <img src="media/stationary-partner-passing/stationary-partner-passing.png" alt="">
@@ -606,7 +612,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="stationary-partner-passing" data-plan-title="Stationary Partner Passing" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice breakout passing defence">
+      <article class="card" data-tags="half-ice breakout passing defence" data-added="2026-10-08">
         <a class="card-link" href="drills/d-to-wall-breakout/">
           <span class="card-media">
             <img src="media/d-to-wall-breakout/d-to-wall-breakout.png" alt="">
@@ -626,7 +632,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="d-to-wall-breakout" data-plan-title="Breakout: D to the Wall" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice breakout passing defence shooting">
+      <article class="card" data-tags="half-ice breakout passing defence shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/d-to-wall-breakout-2-on-1/">
           <span class="card-media">
             <img src="media/d-to-wall-breakout-2-on-1/d-to-wall-breakout-2-on-1.png" alt="">
@@ -647,7 +653,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="d-to-wall-breakout-2-on-1" data-plan-title="D-to-Wall Breakout to 2-on-1" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice breakout passing">
+      <article class="card" data-tags="half-ice breakout passing" data-added="2026-10-08">
         <a class="card-link" href="drills/controlled-skating-breakout/">
           <span class="card-media">
             <img src="media/controlled-skating-breakout/controlled-skating-breakout.png" alt="">
@@ -666,7 +672,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="controlled-skating-breakout" data-plan-title="Controlled-Skating Breakout" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice zone-entry shooting">
+      <article class="card" data-tags="half-ice zone-entry shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/wide-entry-drive-net/">
           <span class="card-media">
             <img src="media/wide-entry-drive-net/wide-entry-drive-net.png" alt="">
@@ -685,7 +691,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="wide-entry-drive-net" data-plan-title="Wide Entry, Drive the Net" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice shooting">
+      <article class="card" data-tags="half-ice shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/three-lane-wave-shooting/">
           <span class="card-media">
             <img src="media/three-lane-wave-shooting/three-lane-wave-shooting.png" alt="">
@@ -703,7 +709,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="three-lane-wave-shooting" data-plan-title="Three-Lane Wave Shooting" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice zone-entry shooting">
+      <article class="card" data-tags="half-ice zone-entry shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/two-on-zero-wide-and-middle/">
           <span class="card-media">
             <img src="media/two-on-zero-wide-and-middle/two-on-zero-wide-and-middle.png" alt="">
@@ -722,7 +728,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="two-on-zero-wide-and-middle" data-plan-title="2-on-0 Wide and Middle" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating">
+      <article class="card" data-tags="skating" data-added="2026-10-08">
         <a class="card-link" href="drills/figure-8-pivots/">
           <span class="card-media">
             <img src="media/figure-8-pivots/figure-8-pivots.png" alt="">
@@ -739,7 +745,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="figure-8-pivots" data-plan-title="Figure-8s with Pivots" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice skating shooting">
+      <article class="card" data-tags="full-ice skating shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/full-ice-figure-8-shot/">
           <span class="card-media">
             <img src="media/full-ice-figure-8-shot/full-ice-figure-8-shot.png" alt="">
@@ -758,7 +764,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="full-ice-figure-8-shot" data-plan-title="Full-Ice Figure-8 Shooting" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice passing shooting">
+      <article class="card" data-tags="full-ice passing shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/two-line-2-on-0-flow/">
           <span class="card-media">
             <img src="media/two-line-2-on-0-flow/two-line-2-on-0-flow.png" alt="">
@@ -777,7 +783,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="two-line-2-on-0-flow" data-plan-title="Two-Line 2-on-0 Flow" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice breakout passing defence shooting">
+      <article class="card" data-tags="full-ice breakout passing defence shooting" data-added="2026-10-08">
         <a class="card-link" href="drills/breakout-to-1-on-1/">
           <span class="card-media">
             <img src="media/breakout-to-1-on-1/breakout-to-1-on-1.png" alt="">
@@ -798,7 +804,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="breakout-to-1-on-1" data-plan-title="Breakout to 1-on-1" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating stickhandling shooting">
+      <article class="card" data-tags="skating stickhandling shooting" data-added="2026-10-09">
         <a class="card-link" href="drills/stickhandling-obstacle-course/">
           <span class="card-media">
             <img src="media/stickhandling-obstacle-course/stickhandling-obstacle-course.png" alt="">
@@ -817,7 +823,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="stickhandling-obstacle-course" data-plan-title="Stickhandling Obstacle Course" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice skating">
+      <article class="card" data-tags="full-ice skating" data-added="2026-10-09">
         <a class="card-link" href="drills/tight-turns-dots/">
           <span class="card-media">
             <img src="media/tight-turns-dots/tight-turns-dots.png" alt="">
@@ -835,7 +841,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="tight-turns-dots" data-plan-title="Tight Turns Around the Dots" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating">
+      <article class="card" data-tags="skating" data-added="2026-10-09">
         <a class="card-link" href="drills/explosive-starts-race/">
           <span class="card-media">
             <img src="media/explosive-starts-race/explosive-starts-race.png" alt="">
@@ -852,7 +858,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="explosive-starts-race" data-plan-title="Explosive Starts Race" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice skating">
+      <article class="card" data-tags="full-ice skating" data-added="2026-10-09">
         <a class="card-link" href="drills/backward-c-cuts/">
           <span class="card-media">
             <img src="media/backward-c-cuts/backward-c-cuts.png" alt="">
@@ -870,7 +876,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="backward-c-cuts" data-plan-title="Backward C-Cuts" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice passing shooting">
+      <article class="card" data-tags="half-ice passing shooting" data-added="2026-10-09">
         <a class="card-link" href="drills/triangle-passing-on-the-move/">
           <span class="card-media">
             <img src="media/triangle-passing-on-the-move/triangle-passing-on-the-move.png" alt="">
@@ -889,7 +895,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="triangle-passing-on-the-move" data-plan-title="Triangle Passing on the Move" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice shooting">
+      <article class="card" data-tags="half-ice shooting" data-added="2026-10-09">
         <a class="card-link" href="drills/backhand-shooting/">
           <span class="card-media">
             <img src="media/backhand-shooting/backhand-shooting.png" alt="">
@@ -907,7 +913,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="backhand-shooting" data-plan-title="Backhand Shooting" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game defence stickhandling">
+      <article class="card" data-tags="small-area-game defence stickhandling" data-added="2026-10-09">
         <a class="card-link" href="drills/puck-protection-circle/">
           <span class="card-media">
             <img src="media/puck-protection-circle/puck-protection-circle.png" alt="">
@@ -926,7 +932,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="puck-protection-circle" data-plan-title="Puck Protection in the Circle" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="small-area-game stickhandling">
+      <article class="card" data-tags="small-area-game stickhandling" data-added="2026-10-09">
         <a class="card-link" href="drills/sharks-and-minnows/">
           <span class="card-media">
             <img src="media/sharks-and-minnows/sharks-and-minnows.png" alt="">
@@ -944,7 +950,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="sharks-and-minnows" data-plan-title="Sharks and Minnows" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating">
+      <article class="card" data-tags="skating" data-added="2026-10-13">
         <a class="card-link" href="drills/edge-work-boards/">
           <span class="card-media">
             <img src="media/edge-work-boards/edge-work-boards.png" alt="">
@@ -961,7 +967,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="edge-work-boards" data-plan-title="Edge Work Along the Boards" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice passing shooting">
+      <article class="card" data-tags="half-ice passing shooting" data-added="2026-10-13">
         <a class="card-link" href="drills/shooting-in-stride/">
           <span class="card-media">
             <img src="media/shooting-in-stride/shooting-in-stride.png" alt="">
@@ -980,7 +986,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="shooting-in-stride" data-plan-title="Shooting in Stride" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="passing">
+      <article class="card" data-tags="passing" data-added="2026-10-13">
         <a class="card-link" href="drills/saucer-pass-over-stick/">
           <span class="card-media">
             <img src="media/saucer-pass-over-stick/saucer-pass-over-stick.png" alt="">
@@ -997,7 +1003,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="saucer-pass-over-stick" data-plan-title="Saucer Pass Over a Stick" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice shooting defence">
+      <article class="card" data-tags="half-ice shooting defence" data-added="2026-10-13">
         <a class="card-link" href="drills/net-front-tips-screens/">
           <span class="card-media">
             <img src="media/net-front-tips-screens/net-front-tips-screens.png" alt="">
@@ -1016,7 +1022,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="net-front-tips-screens" data-plan-title="Net-Front Tips and Screens" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice passing breakout shooting">
+      <article class="card" data-tags="half-ice passing breakout shooting" data-added="2026-10-13">
         <a class="card-link" href="drills/nz-regroup-d-to-d/">
           <span class="card-media">
             <img src="media/nz-regroup-d-to-d/nz-regroup-d-to-d.png" alt="">
@@ -1036,7 +1042,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="nz-regroup-d-to-d" data-plan-title="Neutral-Zone Regroup: D to D to Swing" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice passing shooting defence">
+      <article class="card" data-tags="half-ice passing shooting defence" data-added="2026-10-13">
         <a class="card-link" href="drills/three-on-two-rush/">
           <span class="card-media">
             <img src="media/three-on-two-rush/three-on-two-rush.png" alt="">
@@ -1056,7 +1062,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="three-on-two-rush" data-plan-title="3-on-2 Rush" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice defence shooting">
+      <article class="card" data-tags="half-ice defence shooting" data-added="2026-10-13">
         <a class="card-link" href="drills/backcheck-2on1-to-2on2/">
           <span class="card-media">
             <img src="media/backcheck-2on1-to-2on2/backcheck-2on1-to-2on2.png" alt="">
@@ -1075,7 +1081,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="backcheck-2on1-to-2on2" data-plan-title="Backchecking: 2-on-1 to 2-on-2" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="shooting">
+      <article class="card" data-tags="shooting" data-added="2026-10-13">
         <a class="card-link" href="drills/goalie-warmup-sequence/">
           <span class="card-media">
             <img src="media/goalie-warmup-sequence/goalie-warmup-sequence.png" alt="">
@@ -1092,7 +1098,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="goalie-warmup-sequence" data-plan-title="Goalie Warm-up Shooting Sequence" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice skating passing shooting">
+      <article class="card" data-tags="half-ice skating passing shooting" data-added="2026-10-22">
         <a class="card-link" href="drills/circle-swing-double-shot/">
           <span class="card-media">
             <img src="media/circle-swing-double-shot/circle-swing-double-shot.png" alt="">
@@ -1112,7 +1118,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="circle-swing-double-shot" data-plan-title="Circle-Swing Pass and Drive" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="half-ice skating passing defence">
+      <article class="card" data-tags="half-ice skating passing defence" data-added="2026-10-23">
         <a class="card-link" href="drills/backward-transition-passing/">
           <span class="card-media">
             <img src="media/backward-transition-passing/backward-transition-passing.png" alt="">
@@ -1132,7 +1138,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="backward-transition-passing" data-plan-title="Backward Transition Passing" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice breakout passing defence shooting">
+      <article class="card" data-tags="full-ice breakout passing defence shooting" data-added="2026-10-25">
         <a class="card-link" href="drills/full-ice-5-on-0-breakout/">
           <span class="card-media">
             <img src="media/full-ice-5-on-0-breakout/full-ice-5-on-0-breakout.png" alt="">
@@ -1153,7 +1159,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="full-ice-5-on-0-breakout" data-plan-title="Full-Ice 5-on-0 Breakout" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="full-ice passing shooting defence">
+      <article class="card" data-tags="full-ice passing shooting defence" data-added="2026-11-10">
         <a class="card-link" href="drills/special-one-ii/">
           <span class="card-media">
             <img src="media/special-one-ii/special-one-ii.png" alt="">
@@ -1173,7 +1179,7 @@
           <button class="btn plan-toggle" type="button" data-plan-slug="special-one-ii" data-plan-title="Special One II" aria-pressed="false">Add to plan</button>
         </div>
       </article>
-      <article class="card" data-tags="skating passing">
+      <article class="card" data-tags="skating passing" data-added="2026-11-14">
         <a class="card-link" href="drills/circle-bump-passes/">
           <span class="card-media">
             <img src="media/circle-bump-passes/circle-bump-passes.png" alt="">
@@ -1200,6 +1206,6 @@
       <p class="footer-links"><a href="privacy/">Privacy</a> · <a href="terms/">Terms</a></p>
     </div>
   </footer>
-  <script src="js/site.js?v=4b622d9591"></script>
+  <script src="js/site.js?v=630f3a8854"></script>
 </body>
 </html>

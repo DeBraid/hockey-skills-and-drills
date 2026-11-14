@@ -15,6 +15,7 @@
   "drills": [
     {
       "slug": "follow-the-pass",
+      "added": "2026-10-06",
       "title": "Follow the Pass",
       "subtitle": "Pass, follow your pass to that spot. Catch it at cone 3, drive and shoot.",
       "blurb": "Full ice, two-sided. Lines along each goal line; the front player at the boards passes first. Catch at cone 3, drive, shoot, and join the other line.",
@@ -39,6 +40,7 @@
     },
     {
       "slug": "low-to-high-shot",
+      "added": "2026-10-06",
       "title": "Low-to-High: D Shot",
       "subtitle": "Carry in, drive to the dot, curl, pass up to the D. D shoots.",
       "blurb": "Half-ice zone entry. Carry in, drive to the dot, curl toward the boards, and pass up to the D. The D shoots and the forward drives the net.",
@@ -64,6 +66,7 @@
     },
     {
       "slug": "low-to-high-give-and-go",
+      "added": "2026-10-06",
       "title": "Low-to-High: Give-and-Go",
       "subtitle": "Carry in, drive to the dot, curl, pass up to the D. Give-and-go.",
       "blurb": "Same zone entry. After the low-to-high pass, the D gives it back to the forward cutting the slot, and the forward shoots.",
@@ -89,6 +92,7 @@
     },
     {
       "slug": "low-to-high-d-to-d",
+      "added": "2026-10-06",
       "title": "Low-to-High: D-to-D",
       "subtitle": "Carry in, drive to the dot, curl, pass up to the D. D-to-D, shot.",
       "blurb": "Same zone entry. The bottom D passes across to the top D, the top D shoots, and the forward screens.",
@@ -114,6 +118,7 @@
     },
     {
       "slug": "one-up-one-down",
+      "added": "2026-10-07",
       "title": "1 Up / 1 Down",
       "subtitle": "Gap and angling 1v1. D touches the goal line, F touches the blue line, then play it out.",
       "blurb": "Corner 1v1. On 'Go' the D touches the goal line and the F touches the blue line. The coach puts the puck in, the F attacks for a shot and a rebound, and the D gaps up and angles.",
@@ -138,6 +143,7 @@
     },
     {
       "slug": "olympic-breakout-pass",
+      "added": "2026-10-07",
       "title": "Olympic Breakout to 2-on-1",
       "subtitle": "3-on-0 breakout to the blue line, tight turn around the cone, then back in 2-on-1 against the same D.",
       "blurb": "A half-ice drill with three players: one D, a winger and a centre. The D gets the coach's rim and passes to the winger on the wall, who hits the centre curling low, and the forwards carry it up to the blue line while the D gaps up. The centre makes a tight turn around the cone on the blue line, the winger turns too, and they come back in on a 2-on-1 against the same D. Waiting lines stand in the neutral zone.",
@@ -174,6 +180,7 @@
     },
     {
       "slug": "zone-exit-bounce-pass",
+      "added": "2026-10-07",
       "title": "Zone Exits: Bounce Pass",
       "subtitle": "Bounce a self-pass off the boards around a cone, then a soft D, then a stretch pass past the D.",
       "blurb": "Defensive-zone exits from a line in each corner. Start with a self-pass off the boards around a cone, swap the cone for a coach as a soft D, then finish with a bounce stretch pass to a teammate past the D holding the line.",
@@ -199,6 +206,7 @@
     },
     {
       "slug": "tip-and-dig-shooting",
+      "added": "2026-10-07",
       "title": "Tip-and-Dig Shooting",
       "subtitle": "Tip the point shot into the empty net, dig it out, and shoot on the goalie.",
       "blurb": "Zone shooting with two nets: an empty net at the hash marks and the regular net with a goalie. Tip the point shot into the empty net, dig it out, and shoot on the goalie.",
@@ -222,6 +230,7 @@
     },
     {
       "slug": "four-lane-warmup",
+      "added": "2026-10-07",
       "title": "4-Lane Warm-up",
       "subtitle": "One line in the corner. Lane 1 inside edges, lane 2 crossovers, lanes 3 and 4 carry the puck and shoot.",
       "blurb": "Full-ice warm-up. Cones split the ice into four lanes and one line starts in the corner. Skate lane 1 on inside edges, lane 2 with crossovers, then carry a puck two-handed in lane 3 and one-handed in lane 4, with a shot at the end of each.",
@@ -246,6 +255,7 @@
     },
     {
       "slug": "crossover-circles",
+      "added": "2026-10-07",
       "title": "Crossover Circles Race",
       "subtitle": "In through your gate, crossovers around the circle, out the gate. Over the cones, tight turn to the puck. Winner attacks, loser plays D.",
       "blurb": "A skating race on the two end-zone faceoff circles. Each line stands on a neutral-zone faceoff dot near the blue line. Each circle has a two-cone gate at its top (the side nearest the blue line), and ONE puck sits in the middle of the ice between two cones, halfway between the blue line and the circles. Racers go in through their gate, skate around the circle with crossovers, and come out the same gate. Then they come over the top of the puck cones and tight-turn down to the puck. The first one there attacks; the loser plays D. 1-on-1 to the net and shoot. For the pivot version, see Crossover Circles: Pivot Race.",
@@ -282,6 +292,7 @@
     },
     {
       "slug": "crossover-circles-pivots",
+      "added": "2026-10-08",
       "title": "Crossover Circles: Pivot Race",
       "subtitle": "Race: one lap around the circle, pivot at every cone. Then race to the puck. First one there shoots.",
       "blurb": "The step-2 version of the Crossover Circles Race. Lines stand on the neutral-zone faceoff dots near the blue line, with one puck in the middle of the ice. Each racer skates into the zone and does ONE lap around the circle with a pivot at each of the 3 cones: forwards, backwards, forwards, backwards. Then turn forwards and race to the puck. First one there picks it up and shoots.",
@@ -316,6 +327,7 @@
     },
     {
       "slug": "stops-and-starts",
+      "added": "2026-10-07",
       "title": "Stops and Starts",
       "subtitle": "Goal line to far blue, stop, back to near blue, stop, then to the far dots. No pucks first, then with pucks.",
       "blurb": "Waves of skaters start on the goal line, sprint to the far blue line, stop hard, sprint back to the near blue line, stop, then finish at the far end-zone dots. The far net stays free for the goalies.",
@@ -339,6 +351,7 @@
     },
     {
       "slug": "cone-weave",
+      "added": "2026-10-07",
       "title": "Edges: Cone Weave",
       "subtitle": "Weave through a lane of cones from the blue line to the goal line on your edges. Theme: balance and edge work.",
       "blurb": "Three or four lanes of cones run from the blue line to the goal line. Skaters weave through their lane on deep edges, then return up the outside to their line.",
@@ -361,6 +374,7 @@
     },
     {
       "slug": "lateral-step-overs",
+      "added": "2026-10-07",
       "title": "Lateral Step-overs with Pivots",
       "subtitle": "Sideways crossover step-overs down a lane of cones, pivoting 180 degrees at each cone.",
       "blurb": "Skaters move sideways down a lane with crossover step-overs, pivoting at each cone so they face the benches, then away from the benches, then the benches again.",
@@ -384,6 +398,7 @@
     },
     {
       "slug": "cone-relay-with-pucks",
+      "added": "2026-10-07",
       "title": "Cone Relay with Pucks",
       "subtitle": "Relay race: at each cone, one pass and catch with your line. Alternate forwards (tight turn) and backwards (pivot).",
       "blurb": "Three or four lines race at once, each with 3 or 4 cones. At each cone the skater makes one pass to the next player in line and gets it back, alternating forwards with tight turns and backwards with pivots.",
@@ -407,6 +422,7 @@
     },
     {
       "slug": "two-v-two-point-shot",
+      "added": "2026-10-07",
       "title": "2v2 Point Shot Small Area Game",
       "subtitle": "2 on 2 in a corner with a point player. Dump in, battle, use the point for shots, regroup on a turnover.",
       "blurb": "Groups of five at each corner net: 2 O, 2 D and a point player. The point dumps the puck in and the 2v2 starts. The team with the puck can use the point for shots. On a change of possession, regroup up to the point.",
@@ -430,6 +446,7 @@
     },
     {
       "slug": "two-v-two-hard-rim",
+      "added": "2026-10-07",
       "title": "2v2 Hard Rim",
       "subtitle": "Rim it hard around the boards to your partner, then 2 on 2. D must touch the top of the circle first.",
       "blurb": "Two lines of forwards with pucks at the hash marks and two D at the dots. The first forward rims the puck hard behind the net to the partner on the far wall, and it's 2 on 2. The D must touch the top of the circle before they can defend.",
@@ -454,6 +471,7 @@
     },
     {
       "slug": "three-v-three-circle-game",
+      "added": "2026-10-07",
       "title": "3v3 Circle Game",
       "subtitle": "3 on 3 at a faceoff circle with two nets. Only one player per team inside the circle.",
       "blurb": "Two nets face each other inside a faceoff circle. It's 3 on 3, but only one player per team can be inside the circle. Outside players try to work a pass into their inside player, and they can shoot too.",
@@ -477,6 +495,7 @@
     },
     {
       "slug": "half-ice-3v3",
+      "added": "2026-10-07",
       "title": "Half-ice 3v3",
       "subtitle": "O tries to score. D must win the puck AND pass it to the coach at the blue line. Then O flips to D, fresh 3 on O.",
       "blurb": "3 on 3 in half the ice. The O try to score. The D try to win the puck and pass it to the coach at the blue line. Then the D come off, the O flip to D, and three fresh skaters come on as O.",
@@ -500,6 +519,7 @@
     },
     {
       "slug": "defend-the-cone",
+      "added": "2026-10-07",
       "title": "Defend the Cone",
       "subtitle": "1 on 1 at a faceoff circle: the attacker tries to touch the cone at the dot, the defender keeps body position.",
       "blurb": "A backup when you run out of nets: defend a cone instead. 1 on 1 around a faceoff circle with a cone on the dot. The attacker tries to touch the cone with the puck; the defender stays between the attacker and the cone.",
@@ -522,6 +542,7 @@
     },
     {
       "slug": "one-on-one-shooting-to-two-on-one",
+      "added": "2026-10-07",
       "title": "Corner Pass to Half-Ice 1-on-1",
       "subtitle": "Lines in both corners and at the centre cone. Centre passes to a corner, then defends. 1-on-1 in your half of the zone.",
       "blurb": "A half-ice 1-on-1 drill with three lines. Two lines stand against the boards in the corners, and one line stands in the middle of the ice at a cone level with the tops of the faceoff circles, with the pucks. The centre player passes to the front of a corner line, then steps in to defend. The corner player carries up the wall and attacks 1-on-1, staying in their half of the zone (split down the middle), and shoots. The next rep goes to the other corner.",
@@ -552,6 +573,7 @@
     },
     {
       "slug": "mirror-angling-2v1",
+      "added": "2026-10-07",
       "title": "Mirror Angling 2v1",
       "subtitle": "F loops the cones while the D mirrors around the dot, then a quick 2v1 rush. Both attackers drive the net.",
       "blurb": "A half-ice station. The F carries a loop around the cones while the D mirrors around the cone at the faceoff dot, working on angling. Then a second F joins and it's a quick 2v1 on net. Both attackers drive the net; the puck carrier can pass, shoot or delay on the wall. Uses 2 D and 4-6 F.",
@@ -576,6 +598,7 @@
     },
     {
       "slug": "puck-race-1v1-to-2v1",
+      "added": "2026-10-07",
       "title": "1v1 Puck Race to 2v1",
       "subtitle": "Two players race for the puck. The winner attacks with a low-to-high pass; the loser defends the 2v1.",
       "blurb": "Two players start side by side and race for a puck rimmed into the corner. The winner retrieves it and starts the attack with a low-to-high pass to a high player; the loser becomes the D. Then it's a 2v1 on net.",
@@ -600,6 +623,7 @@
     },
     {
       "slug": "rebounds-in-tight",
+      "added": "2026-10-07",
       "title": "Rebounds: In-tight Hands",
       "subtitle": "Small nets with a cone on each side. Bank the puck off the net, gather it in tight and shoot.",
       "blurb": "A net-front station with small nets. Two cones sit on either side of the net. Facing the net, the player banks the puck off the net, gathers it in tight and shoots. A coach or the next player in line can bank it instead. 2-3 players per net.",
@@ -624,6 +648,7 @@
     },
     {
       "slug": "goalie-rebound-game",
+      "added": "2026-10-07",
       "title": "Goalie Rebound Game",
       "subtitle": "The coach shoots on one goalie. That goalie tries to steer the rebound into the other goalie's net.",
       "blurb": "A goalie game for rebound control. Two nets sit side by side, each with a goalie. The coach shoots on one goalie, who tries to deflect the rebound into the other goalie's net. Switch nets after 5-10 shots and keep score.",
@@ -647,6 +672,7 @@
     },
     {
       "slug": "rondo-passing",
+      "added": "2026-10-07",
       "title": "Rondo Passing Progressions",
       "subtitle": "Groups of 5-7 in a small circle: passers keep the puck away from a defender in the middle. Steal it and you swap.",
       "blurb": "A small-area passing game. 4-5 passers around a 20x20 ft circle (a faceoff circle works) keep the puck away from 1-2 defenders in the middle. A defender who intercepts swaps with the passer. Rotate defenders every 30-60 seconds; points for 5+ passes in a row. Build it up through the progressions.",
@@ -671,6 +697,7 @@
     },
     {
       "slug": "zone-entry-delay",
+      "added": "2026-10-07",
       "title": "Zone Entries: Delay",
       "subtitle": "Carry in wide, delay on the wall, then attack (top) or hit a catcher streaking to the slot (bottom).",
       "blurb": "Two delay variations of the zone entry. Delay: carry in wide, stop and curl back up the wall to buy time, then attack the net. Delay, low-to-slot (dynamic): carry in and delay, then hit a catcher streaking to the net for a catch-and-shoot from the slot. The other two variations in this progression match Low-to-High: Give-and-Go and Low-to-High: D-to-D. Can also be run in the neutral zone or on small ice.",
@@ -696,6 +723,7 @@
     },
     {
       "slug": "give-and-go-shot",
+      "added": "2026-10-08",
       "title": "Give-and-Go to Shot",
       "skillGroup": "Combo",
       "subtitle": "Skate up the wall, give-and-go with the coach, round the pylon, take the return pass and drive in for a shot.",
@@ -721,6 +749,7 @@
     },
     {
       "slug": "stationary-partner-passing",
+      "added": "2026-10-08",
       "title": "Stationary Partner Passing",
       "skillGroup": "Passing",
       "subtitle": "Partners 10-13 ft apart pass back and forth: forehand, then backhand, then switch sides. Step back as passes get crisp.",
@@ -746,6 +775,7 @@
     },
     {
       "slug": "d-to-wall-breakout",
+      "added": "2026-10-08",
       "title": "Breakout: D to the Wall",
       "skillGroup": "Breakout",
       "subtitle": "F passes to the D and gets open on the wall. D skates it behind the net, hits the F, then steps up and defends 1-on-1.",
@@ -783,6 +813,7 @@
     },
     {
       "slug": "d-to-wall-breakout-2-on-1",
+      "added": "2026-10-08",
       "title": "D-to-Wall Breakout to 2-on-1",
       "skillGroup": "Breakout",
       "subtitle": "Same breakout: D skates it behind the net and hits the winger on the wall. The centre swings with him. 2-on-1 back in against the D.",
@@ -821,6 +852,7 @@
     },
     {
       "slug": "controlled-skating-breakout",
+      "added": "2026-10-08",
       "title": "Controlled-Skating Breakout",
       "skillGroup": "Breakout",
       "subtitle": "D skates the puck behind the net while the F glides through 4 spots, showing a target at each. D passes on time; F attacks 1-on-0.",
@@ -847,6 +879,7 @@
     },
     {
       "slug": "wide-entry-drive-net",
+      "added": "2026-10-08",
       "title": "Wide Entry, Drive the Net",
       "skillGroup": "Entry",
       "subtitle": "Carry in wide over the blue line, keep your feet moving around the cone, cut to the net and shoot.",
@@ -872,6 +905,7 @@
     },
     {
       "slug": "three-lane-wave-shooting",
+      "added": "2026-10-08",
       "title": "Three-Lane Wave Shooting",
       "skillGroup": "Shooting",
       "subtitle": "Three lanes go one after another: carry in, shoot, then clear out to the side so the next shooter has room.",
@@ -897,6 +931,7 @@
     },
     {
       "slug": "two-on-zero-wide-and-middle",
+      "added": "2026-10-08",
       "title": "2-on-0 Wide and Middle",
       "skillGroup": "Entry",
       "subtitle": "One goes wide with the puck, one drives the middle to the back post. Shoot (or pass), and both go to the net.",
@@ -922,6 +957,7 @@
     },
     {
       "slug": "figure-8-pivots",
+      "added": "2026-10-08",
       "title": "Figure-8s with Pivots",
       "skillGroup": "Skating",
       "subtitle": "Skate a figure-8 around the two circles: forwards around the top circle, pivot to backwards at the cone on the bottom circle, pivot back to forwards at the next cone.",
@@ -947,6 +983,7 @@
     },
     {
       "slug": "full-ice-figure-8-shot",
+      "added": "2026-10-08",
       "title": "Full-Ice Figure-8 Shooting",
       "subtitle": "Up the wall, swing through centre, curl around the far circle, cut to the net and shoot. Both corners go.",
       "blurb": "A full-ice skating drill with a puck and a shot. Each player carries up the wall, swings through centre ice, curls around the far circle and cuts to the net to shoot. Lines in opposite corners go at the same time, so the two paths make a figure-8 through the middle.",
@@ -980,6 +1017,7 @@
     },
     {
       "slug": "two-line-2-on-0-flow",
+      "added": "2026-10-08",
       "title": "Two-Line 2-on-0 Flow",
       "subtitle": "Partners pass back and forth all the way up the ice, then attack 2-on-0 and shoot. Both ends go.",
       "blurb": "Partners pass back and forth in two lanes the whole length of the ice, then attack 2-on-0: the winger passes to the centre in the middle for the shot and drives the net. A pair from the other end goes at the same time on the other half of the ice, so everyone stays busy.",
@@ -1012,6 +1050,7 @@
     },
     {
       "slug": "breakout-to-1-on-1",
+      "added": "2026-10-08",
       "title": "Breakout to 1-on-1",
       "subtitle": "D skates it out and hits the F on the wall, then pivots and skates backward. 1-on-1 the length of the ice.",
       "blurb": "A breakout pass that turns into a full-length 1-on-1. The D skates the puck out of the corner and passes to the forward on the wall, then pivots and skates backward. The forward carries up the ice and tries to beat the D for a shot on the far goalie.",
@@ -1047,6 +1086,7 @@
     },
     {
       "slug": "stickhandling-obstacle-course",
+      "added": "2026-10-09",
       "title": "Stickhandling Obstacle Course",
       "skillGroup": "Stickhandling",
       "subtitle": "Weave the cones, pull the puck through the gate, puck under the stick, then shoot.",
@@ -1081,6 +1121,7 @@
     },
     {
       "slug": "tight-turns-dots",
+      "added": "2026-10-09",
       "title": "Tight Turns Around the Dots",
       "skillGroup": "Skating",
       "subtitle": "Skate the length of the ice and tight-turn all the way around 5 faceoff dots. No pucks first, then with pucks.",
@@ -1114,6 +1155,7 @@
     },
     {
       "slug": "explosive-starts-race",
+      "added": "2026-10-09",
       "title": "Explosive Starts Race",
       "skillGroup": "Skating",
       "subtitle": "Race a partner from the goal line to the blue line. V-start first, then crossover start.",
@@ -1145,6 +1187,7 @@
     },
     {
       "slug": "backward-c-cuts",
+      "added": "2026-10-09",
       "title": "Backward C-Cuts",
       "skillGroup": "Skating",
       "subtitle": "Waves skate backwards with C-cuts from the goal line to the far blue line. Variation: forwards to red, pivot, backwards.",
@@ -1176,6 +1219,7 @@
     },
     {
       "slug": "triangle-passing-on-the-move",
+      "added": "2026-10-09",
       "title": "Triangle Passing on the Move",
       "skillGroup": "Passing",
       "subtitle": "Groups of 3 skate up the ice in a triangle: middle to wing, across to the far wing, back to the middle, shoot.",
@@ -1210,6 +1254,7 @@
     },
     {
       "slug": "backhand-shooting",
+      "added": "2026-10-09",
       "title": "Backhand Shooting",
       "skillGroup": "Shooting",
       "subtitle": "Backhands only: one from the slot, then drive the net and backhand it to the far post.",
@@ -1241,6 +1286,7 @@
     },
     {
       "slug": "puck-protection-circle",
+      "added": "2026-10-09",
       "title": "Puck Protection in the Circle",
       "skillGroup": "Stickhandling",
       "subtitle": "1-on-1 inside a faceoff circle. Protect the puck for 10 seconds with your body. The D tries to knock it out.",
@@ -1273,6 +1319,7 @@
     },
     {
       "slug": "sharks-and-minnows",
+      "added": "2026-10-09",
       "title": "Sharks and Minnows",
       "skillGroup": "Games",
       "subtitle": "Minnows with pucks try to cross the zone. Sharks knock pucks away. Lose your puck and you become a shark.",
@@ -1304,6 +1351,7 @@
     },
     {
       "slug": "edge-work-boards",
+      "added": "2026-10-13",
       "title": "Edge Work Along the Boards",
       "skillGroup": "Skating",
       "subtitle": "Snake on your edges along the boards, C-cuts around the corner, then a one-foot glide to the dot.",
@@ -1335,6 +1383,7 @@
     },
     {
       "slug": "shooting-in-stride",
+      "added": "2026-10-13",
       "title": "Shooting in Stride",
       "skillGroup": "Shooting",
       "subtitle": "Take a pass on the move and shoot without stopping.",
@@ -1368,6 +1417,7 @@
     },
     {
       "slug": "saucer-pass-over-stick",
+      "added": "2026-10-13",
       "title": "Saucer Pass Over a Stick",
       "skillGroup": "Passing",
       "subtitle": "Partners pass back and forth, lifting the puck over a stick laid on the ice.",
@@ -1398,6 +1448,7 @@
     },
     {
       "slug": "net-front-tips-screens",
+      "added": "2026-10-13",
       "title": "Net-Front Tips and Screens",
       "skillGroup": "Shooting",
       "subtitle": "D shoots low from the point. F stands at the net front to tip it or screen the goalie.",
@@ -1431,6 +1482,7 @@
     },
     {
       "slug": "nz-regroup-d-to-d",
+      "added": "2026-10-13",
       "title": "Neutral-Zone Regroup: D to D to Swing",
       "skillGroup": "Breakout",
       "subtitle": "D passes across to D, the forward swings through the middle, takes the pass and attacks.",
@@ -1465,6 +1517,7 @@
     },
     {
       "slug": "three-on-two-rush",
+      "added": "2026-10-13",
       "title": "3-on-2 Rush",
       "skillGroup": "Combo",
       "subtitle": "Three forwards attack two D. Puck wide, middle drives the net, far wing goes back post.",
@@ -1499,6 +1552,7 @@
     },
     {
       "slug": "backcheck-2on1-to-2on2",
+      "added": "2026-10-13",
       "title": "Backchecking: 2-on-1 to 2-on-2",
       "skillGroup": "Combo",
       "subtitle": "Two forwards attack one D. A backchecker starts late and hustles back to make it 2-on-2.",
@@ -1532,6 +1586,7 @@
     },
     {
       "slug": "goalie-warmup-sequence",
+      "added": "2026-10-13",
       "title": "Goalie Warm-up Shooting Sequence",
       "skillGroup": "Shooting",
       "subtitle": "Shooters take turns in a set order: slot, left angle, right angle, then in tight. Shoot to warm up the goalie, not to beat him.",
@@ -1564,6 +1619,7 @@
     },
     {
       "slug": "circle-swing-double-shot",
+      "added": "2026-10-22",
       "title": "Circle-Swing Pass and Drive",
       "skillGroup": "Shooting",
       "subtitle": "Twirl around the dot and pass to the red line. The receiver loops the centre cone and drives the net to score.",
@@ -1598,6 +1654,7 @@
     },
     {
       "slug": "backward-transition-passing",
+      "added": "2026-10-23",
       "title": "Backward Transition Passing",
       "skillGroup": "Skating",
       "subtitle": "Skate forward, pivot to backward, and one-touch passes with the coach while skating backward around the circle.",
@@ -1635,6 +1692,7 @@
     },
     {
       "slug": "full-ice-5-on-0-breakout",
+      "added": "2026-10-25",
       "title": "Full-Ice 5-on-0 Breakout",
       "subtitle": "Coach dumps in, five break out 5-on-0 and rush to the far net. On the whistle, the 3 F come back the other way with the other D pair.",
       "blurb": "The classic 5-on-0 breakout, run both ways. The coach dumps the puck in, the D retrieve and go D-to-D, then up the wall to the winger, who bumps it off the boards to the centre. All five rush the length of the ice to a shot on the far net. On the whistle the same three forwards come back the other way with the D pair from that end, and the first pair stays there.",
@@ -1672,6 +1730,7 @@
     },
     {
       "slug": "special-one-ii",
+      "added": "2026-11-10",
       "title": "Special One II",
       "subtitle": "Both ends go on one whistle: a forward and D trade passes at one end, three quick passes connect at the other, then a 1-on-1 one way and a 2-on-1 the other.",
       "blurb": "A busy full-ice timing drill with two pucks going at once. At the left end, a forward takes a lead pass, swings around the centre circle, passes to the D and gets it back after the D wheels the net. At the right end, a forward carries around the circle, passes to the D, gets it back in the slot and bumps it up to a forward heading the other way. Then one forward attacks the left net 1-on-1 against the D who stays in to defend, while the other two attack 2-on-1 against the D at the right end. Walk it through slowly the first time. Adapted from a drill by Oldrich Jindra (CoachThem).",
@@ -1713,6 +1772,7 @@
     },
     {
       "slug": "circle-bump-passes",
+      "added": "2026-11-14",
       "title": "Circle Bump Passes",
       "subtitle": "One lap around the circle with 4 forehand bump passes to the middle, then reverse for 4 on the backhand.",
       "blurb": "A passing and edges drill that runs in both end-zone circles at once. A passer stands on each faceoff dot with pucks, and 4 pylons sit around each circle. The skater, without a puck, does one lap counter-clockwise: at each pylon they take a pass from the middle and bump it straight back. That's 4 forehand touches. Then they reverse and do a lap clockwise with 4 more touches on the backhand. Two laps, both directions, 8 touches. Then back of the line and the next skater goes.",

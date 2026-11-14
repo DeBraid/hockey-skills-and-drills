@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import hashlib
 import html
 import json
@@ -15,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "public"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+ADDED_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 REQUIRED_MEDIA = ("png", "excalidraw")
 LINK_RE = re.compile(r"(?:href|src|poster)=\"([^\"]+)\"|\[[^\]]*\]\(([^)\s]+)\)")
 VIEWBOX_RE = re.compile(r"<svg\b[^>]*\bviewBox=\"([^\"]+)\"")
@@ -27,6 +29,16 @@ SERIES_NOTE = (
 
 def esc(value: str) -> str:
     return html.escape(value, quote=True)
+
+
+def valid_added(value: object) -> bool:
+    if not isinstance(value, str) or not ADDED_RE.match(value):
+        return False
+    try:
+        dt.date.fromisoformat(value)
+    except ValueError:
+        return False
+    return True
 
 
 def media_name(slug: str, ext: str) -> str:
@@ -93,6 +105,11 @@ def validate(data: dict) -> None:
         if not isinstance(slug, str) or not SLUG_RE.match(slug):
             raise SystemExit(f"Invalid slug: {slug!r}")
         slugs.append(slug)
+        if not valid_added(drill.get("added")):
+            raise SystemExit(
+                f"{slug} needs added as an ISO date (YYYY-MM-DD). "
+                "Set today's date, or run python3 scripts/backfill_added_dates.py"
+            )
         for key in ("title", "subtitle", "blurb", "diagramAlt"):
             if not isinstance(drill.get(key), str) or not drill[key].strip():
                 raise SystemExit(f"{slug} is missing {key}")
@@ -264,7 +281,7 @@ def write_index(data: dict, labels: dict[str, str]) -> None:
         if drill.get("series"):
             series = f'\n          <p class="series">{esc(drill["series"])}</p>'
         cards.append(
-            f"""      <article class="card" data-tags="{' '.join(drill['tags'])}">
+            f"""      <article class="card" data-tags="{' '.join(drill['tags'])}" data-added="{esc(drill['added'])}">
         <a class="card-link" href="drills/{slug}/">
           <span class="card-media">
             <img src="{media_rel(slug, 'png')}" alt="">
@@ -288,7 +305,13 @@ def write_index(data: dict, labels: dict[str, str]) -> None:
       <p class="lede">Diagrams, animations, and bench-side steps. Each drill page plays a looping HTML animation. The PNG is the card thumbnail and the still diagram.</p>
     </section>
     <div class="toolbar">
-      <p class="drill-count" id="drill-count">{count} drills</p>
+      <div class="toolbar-row">
+        <p class="drill-count" id="drill-count">{count} drills</p>
+        <div class="sort" role="group" aria-label="Sort drills">
+          <button class="filter" type="button" data-sort="default" aria-pressed="true">Default</button>
+          <button class="filter" type="button" data-sort="recent" aria-pressed="false">Most recent</button>
+        </div>
+      </div>
       <div class="filters" role="group" aria-label="Filter drills by tag">
 {chr(10).join(filters)}
       </div>
@@ -963,6 +986,10 @@ def check_output(drills: list[dict]) -> None:
     for drill in drills:
         if f'data-plan-slug="{drill["slug"]}"' not in home:
             raise SystemExit(f"home page is missing Add to plan for {drill['slug']}")
+        if f'data-added="{drill["added"]}"' not in home:
+            raise SystemExit(f"home page is missing the added date for {drill['slug']}")
+    if 'data-sort="default"' not in home or 'data-sort="recent"' not in home:
+        raise SystemExit("home page is missing the sort control")
     plan_text = (ROOT / "plan" / "index.html").read_text(encoding="utf-8")
     match = re.search(
         r'<script type="application/json" id="drill-catalog">(.*?)</script>',
