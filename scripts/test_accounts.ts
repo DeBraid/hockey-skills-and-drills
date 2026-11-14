@@ -219,16 +219,42 @@ async function page(
       } catch {
         // Share falls back to the text field when clipboard is missing.
       }
-      window.fetch = (async (input: RequestInfo | URL, init?: { method?: string }) => {
+      const writes: { method: string; url: string; body: Record<string, unknown> | null }[] = []
+      ;(window as unknown as { __hsdWrites: typeof writes }).__hsdWrites = writes
+      window.fetch = (async (input: RequestInfo | URL, init?: { method?: string; body?: string }) => {
         const target = String(input)
         const method = String(init?.method || "GET").toUpperCase()
         calls.push(target)
+        let parsed: Record<string, unknown> | null = null
+        if (typeof init?.body === "string" && init.body) {
+          try {
+            parsed = JSON.parse(init.body) as Record<string, unknown>
+          } catch {
+            parsed = null
+          }
+        }
+        if (target.includes("/api/plans") && method !== "GET") writes.push({ method, url: target, body: parsed })
         if (target.endsWith("/api/health")) {
           if (session === "down") return jsonResponse({ ok: false }, 404)
           return jsonResponse({ ok: true, accounts: true, google: true, email: true })
         }
         if (target.endsWith("/api/auth/session")) {
           return jsonResponse(session && session !== "down" ? { user: session } : null)
+        }
+        const planId = target.match(/\/api\/plans\/([0-9a-f-]{36})$/i)?.[1]
+        if (planId && session && session !== "down" && (method === "PATCH" || method === "DELETE")) {
+          if (method === "DELETE") return jsonResponse({ ok: true })
+          const body = parsed || {}
+          return jsonResponse({
+            plan: {
+              id: planId,
+              title: typeof body.title === "string" ? body.title : "",
+              notes: typeof body.notes === "string" ? body.notes : "",
+              items: Array.isArray(body.items) ? body.items : [],
+              practiceDate: typeof body.practiceDate === "string" ? body.practiceDate : null,
+              teamId: typeof body.teamId === "string" ? body.teamId : null,
+            },
+          })
         }
         if (target.endsWith("/api/plans") && session && session !== "down") {
           if (method === "GET") {
@@ -239,24 +265,32 @@ async function page(
                   title: "Older practice",
                   updatedAt: "2026-01-02T12:00:00.000Z",
                   createdAt: "2026-01-02T12:00:00.000Z",
+                  items: [],
+                  notes: "",
                 },
                 {
                   id: "123e4567-e89b-42d3-a456-426614174222",
                   title: "Thursday practice",
                   updatedAt: "2026-03-04T15:00:00.000Z",
                   createdAt: "2026-03-01T12:00:00.000Z",
+                  items: [{ slug: "cone-weave", minutes: 10, note: "edges" }],
+                  notes: "",
                 },
                 {
                   id: "123e4567-e89b-42d3-a456-426614174333",
                   title: "   ",
                   updatedAt: "2026-02-01T12:00:00.000Z",
                   createdAt: "2026-02-01T12:00:00.000Z",
+                  items: [],
+                  notes: "",
                 },
                 {
                   id: "123e4567-e89b-42d3-a456-426614174444",
                   title: '<img src=x onerror="alert(1)">',
                   updatedAt: "2026-02-15T12:00:00.000Z",
                   createdAt: "2026-02-15T12:00:00.000Z",
+                  items: [],
+                  notes: "",
                 },
                 {
                   id: "not-a-uuid",
@@ -267,12 +301,15 @@ async function page(
               ],
             })
           }
+          const body = parsed || {}
           return jsonResponse({
             plan: {
               id: "123e4567-e89b-42d3-a456-426614174000",
-              title: "Tuesday",
-              notes: "hips low",
-              items: [{ slug: "cone-weave", minutes: 10, note: "edges" }],
+              title: typeof body.title === "string" ? body.title : "Tuesday",
+              notes: typeof body.notes === "string" ? body.notes : "hips low",
+              items: Array.isArray(body.items) ? body.items : [{ slug: "cone-weave", minutes: 10, note: "edges" }],
+              practiceDate: typeof body.practiceDate === "string" ? body.practiceDate : null,
+              teamId: typeof body.teamId === "string" ? body.teamId : null,
             },
           }, 201)
         }
@@ -310,6 +347,14 @@ class LocalFiles extends ResourceLoader {
     }
     return Promise.resolve(Buffer.from(""))
   }
+}
+
+function planWrites(dom: JSDOM): { method: string; url: string; body: Record<string, unknown> | null }[] {
+  return (dom.window as unknown as { __hsdWrites: { method: string; url: string; body: Record<string, unknown> | null }[] }).__hsdWrites
+}
+
+function click(dom: JSDOM, el: Element): void {
+  el.dispatchEvent(new dom.window.MouseEvent("click", { bubbles: true }))
 }
 
 async function waitFor(check: () => boolean): Promise<void> {
@@ -1233,13 +1278,162 @@ async function main(): Promise<void> {
     const plansSignIn = plansOut.window.document.getElementById("plans-signin") as HTMLAnchorElement
     assert.match(plansSignIn.href, /\/account\/\?next=/)
     assert.match(decodeURIComponent(plansSignIn.href), /\/plans\/$/)
+    assert.equal(plansOut.window.document.getElementById("plans-local")?.hidden, true)
     plansOut.window.close()
 
     const plansDown = await page(plansSource, `${origin}/plans/index.html`, "down", [])
     await waitFor(() => plansDown.window.document.getElementById("plans-unavailable")?.hidden === false)
     assert.equal(plansDown.window.document.getElementById("plans-out")?.hidden, true)
     assert.equal(plansDown.window.document.getElementById("plans-in")?.hidden, true)
+    assert.equal(plansDown.window.document.getElementById("plans-local")?.hidden, true)
     plansDown.window.close()
+
+    const browserDrills = JSON.stringify({
+      title: "",
+      notes: "",
+      items: [
+        { slug: "cone-weave", minutes: "", note: "" },
+        { slug: "stops-and-starts", minutes: 8, note: "" },
+      ],
+    })
+    const plansGuest = await page(plansSource, `${origin}/plans/index.html`, null, [], {
+      "hsd-practice-plan": browserDrills,
+    })
+    await waitFor(() => plansGuest.window.document.getElementById("plans-local")?.hidden === false)
+    assert.match(plansGuest.window.document.body.textContent || "", /Unsaved plan, 2 drills/)
+    assert.match(plansGuest.window.document.body.textContent || "", /Sign in to save this plan/)
+    assert.match(plansGuest.window.document.getElementById("plans-out-text")?.textContent || "", /Sign in to save this plan/)
+    assert.equal(plansGuest.window.document.getElementById("plans-in")?.hidden, true)
+    const localLink = plansGuest.window.document.querySelector("#plans-local a") as HTMLAnchorElement
+    assert.match(localLink.href, /\/plan\/$/)
+    plansGuest.window.close()
+
+    const plansOffline = await page(plansSource, `${origin}/plans/index.html`, "down", [], {
+      "hsd-practice-plan": browserDrills,
+    })
+    await waitFor(() => plansOffline.window.document.getElementById("plans-unavailable")?.hidden === false)
+    assert.equal(plansOffline.window.document.getElementById("plans-local")?.hidden, false)
+    assert.match(plansOffline.window.document.body.textContent || "", /Unsaved plan, 2 drills/)
+    assert.match(plansOffline.window.document.body.textContent || "", /Only in this browser/)
+    assert.equal(plansOffline.window.document.getElementById("plans-out")?.hidden, true)
+    plansOffline.window.close()
+
+    const pendingPlan = JSON.stringify({
+      title: "Tuesday",
+      notes: "",
+      items: [{ slug: "cone-weave", minutes: 10, note: "" }],
+    })
+    const plansPending = await page(plansSource, `${origin}/plans/index.html`, user, [], {
+      "hsd-practice-plan": pendingPlan,
+    })
+    await waitFor(() => plansPending.window.document.getElementById("plans-import")?.hidden === false)
+    assert.match(plansPending.window.document.body.textContent || "", /Unsaved plan, 1 drill/)
+    assert.match(plansPending.window.document.body.textContent || "", /Not saved to your account yet/)
+    plansPending.window.document.getElementById("plans-import-yes")?.dispatchEvent(new plansPending.window.Event("click"))
+    await waitFor(() => plansPending.window.document.getElementById("plans-status")?.textContent === "Saved the browser plan to your account.")
+    assert.equal(plansPending.window.document.getElementById("plans-local")?.hidden, true)
+    const imported = JSON.parse(plansPending.window.localStorage.getItem("hsd-practice-plan") || "{}") as { savedId?: string }
+    assert.equal(imported.savedId, "123e4567-e89b-42d3-a456-426614174000")
+    const importPost = planWrites(plansPending).find((write) => write.method === "POST" && write.url.endsWith("/api/plans"))
+    assert.equal(importPost?.body?.title, "Tuesday")
+    assert.equal(Object.prototype.hasOwnProperty.call(importPost?.body || {}, "teamId"), false)
+    await waitFor(() => plansPending.window.document.querySelectorAll("#plans-list a").length === 4)
+    plansPending.window.close()
+
+    const indexHtml = fs.readFileSync(path.join(root, "index.html"), "utf8")
+    const adding = await page(indexHtml, `${origin}/index.html`, user, [])
+    const weave = adding.window.document.querySelector('[data-plan-slug="cone-weave"]') as HTMLButtonElement
+    const stops = adding.window.document.querySelector('[data-plan-slug="stops-and-starts"]') as HTMLButtonElement
+    const sharks = adding.window.document.querySelector('[data-plan-slug="sharks-and-minnows"]') as HTMLButtonElement
+    assert.ok(weave)
+    assert.ok(stops)
+    assert.ok(sharks)
+    const planPosts = () => planWrites(adding).filter((write) => write.method === "POST" && write.url.endsWith("/api/plans"))
+    const planPatches = () => planWrites(adding).filter((write) => write.method === "PATCH")
+    const chooser = () => adding.window.document.querySelector(".plan-chooser") as HTMLElement
+    const choices = () => [...adding.window.document.querySelectorAll(".plan-choice")] as HTMLButtonElement[]
+    const choiceNamed = (title: string) => choices().find((button) => button.querySelector(".plan-choice-title")?.textContent === title)
+    await waitFor(() => (weave.textContent || "").includes("In plan"))
+    assert.match(stops.textContent || "", /Add to plan/)
+    click(adding, stops)
+    await waitFor(() => chooser().hidden === false && choices().length === 3)
+    assert.equal(planPosts().length, 0)
+    assert.equal(planPatches().length, 0)
+    assert.equal(adding.window.document.querySelector("[data-plan-create]")?.textContent, "Create new plan")
+    assert.equal(chooser().querySelectorAll("img").length, 0)
+    assert.match(chooser().textContent || "", /<img src=x onerror="alert\(1\)">/)
+    assert.ok(choiceNamed("Thursday practice"))
+    assert.ok(choiceNamed("Untitled plan"))
+    assert.equal(choiceNamed("Older practice"), undefined)
+    assert.match(choiceNamed("Thursday practice")?.textContent || "", /1 drill/)
+    assert.equal(choiceNamed("Thursday practice")?.getAttribute("aria-pressed"), "false")
+    click(adding, adding.window.document.querySelector("[data-plan-create]") as HTMLButtonElement)
+    await waitFor(() => (stops.nextElementSibling?.textContent || "").includes("Added to Practice"))
+    assert.equal(planPosts().length, 1)
+    assert.equal(planPatches().length, 0)
+    assert.equal(Object.prototype.hasOwnProperty.call(planPosts()[0].body || {}, "teamId"), false)
+    assert.match(String(planPosts()[0].body?.title), /^Practice \u2013 [A-Z][a-z]{2} \d{1,2}, \d{4}$/)
+    assert.match(String(planPosts()[0].body?.practiceDate), /^\d{4}-\d{2}-\d{2}$/)
+    assert.deepEqual(planPosts()[0].body?.items, [{ slug: "stops-and-starts", minutes: null, note: "" }])
+    const opened = stops.nextElementSibling?.querySelector("a") as HTMLAnchorElement
+    assert.equal(opened.textContent, "Open plan")
+    assert.match(opened.href, /\/plan\/\?saved=123e4567-e89b-42d3-a456-426614174000$/)
+    assert.equal(adding.window.localStorage.getItem("hsd-practice-plan"), null)
+    assert.match(stops.textContent || "", /In plan/)
+    assert.equal(chooser().hidden, true)
+
+    click(adding, sharks)
+    await waitFor(() => chooser().hidden === false)
+    click(adding, adding.window.document.querySelector("[data-plan-create]") as HTMLButtonElement)
+    await waitFor(() => (sharks.nextElementSibling?.textContent || "").includes("Added to Practice"))
+    assert.equal(planPosts().length, 2)
+    assert.equal(planPatches().length, 0)
+    assert.deepEqual(planPosts()[1].body?.items, [{ slug: "sharks-and-minnows", minutes: null, note: "" }])
+    assert.equal(Object.prototype.hasOwnProperty.call(planPosts()[1].body || {}, "teamId"), false)
+    assert.equal(chooser().hidden, true)
+
+    click(adding, weave)
+    await waitFor(() => chooser().hidden === false && choiceNamed("Thursday practice")?.getAttribute("aria-pressed") === "true")
+    assert.match(choiceNamed("Thursday practice")?.textContent || "", /In plan/)
+    click(adding, choiceNamed("Thursday practice") as HTMLButtonElement)
+    await waitFor(() => (weave.nextElementSibling?.textContent || "").includes("Removed from Thursday practice"))
+    assert.equal(planPosts().length, 2)
+    assert.equal(planPatches().length, 1)
+    assert.equal(Object.prototype.hasOwnProperty.call(planPatches()[0].body || {}, "teamId"), false)
+    assert.deepEqual(planPatches()[0].body?.items, [])
+    assert.match(weave.textContent || "", /Add to plan/)
+    assert.equal(weave.getAttribute("aria-pressed"), "false")
+
+    click(adding, weave)
+    await waitFor(() => chooser().hidden === false && choiceNamed("Thursday practice")?.getAttribute("aria-pressed") === "false")
+    click(adding, choiceNamed("Thursday practice") as HTMLButtonElement)
+    await waitFor(() => (weave.nextElementSibling?.textContent || "").includes("Added to Thursday practice"))
+    assert.equal(planPosts().length, 2)
+    assert.equal(planPatches().length, 2)
+    assert.deepEqual(planPatches()[1].body?.items, [{ slug: "cone-weave", minutes: null, note: "" }])
+    assert.match(weave.textContent || "", /In plan/)
+    adding.window.close()
+
+    const guestDrill = await page(
+      fs.readFileSync(path.join(root, "drills/cone-weave/index.html"), "utf8"),
+      `${origin}/drills/cone-weave/index.html`,
+      null,
+      []
+    )
+    const guestButton = guestDrill.window.document.querySelector("[data-plan-slug]") as HTMLButtonElement
+    click(guestDrill, guestButton)
+    await waitFor(() => (guestButton.nextElementSibling?.textContent || "").includes("unsaved plan"))
+    const guestPlan = JSON.parse(guestDrill.window.localStorage.getItem("hsd-practice-plan") || "{}") as {
+      savedId: string
+      items: { slug: string }[]
+    }
+    assert.equal(guestPlan.savedId, "")
+    assert.deepEqual(guestPlan.items.map((item) => item.slug), ["cone-weave"])
+    assert.equal(planWrites(guestDrill).some((write) => write.url.includes("/api/plans")), false)
+    const guestOpen = guestButton.nextElementSibling?.querySelector("a") as HTMLAnchorElement
+    assert.equal(guestOpen.textContent, "Open plan")
+    assert.match(guestOpen.href, /\/plan\/$/)
+    guestDrill.window.close()
 
     const drillMenu = await page(
       fs.readFileSync(path.join(root, "drills/cone-weave/index.html"), "utf8"),

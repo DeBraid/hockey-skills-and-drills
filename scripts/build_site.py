@@ -728,17 +728,25 @@ def write_plans() -> None:
     <header class="drill-head">
       <p class="kicker">On-ice coaching</p>
       <h1>Plans</h1>
-      <p class="lede">Practice plans saved to your account, newest first. Open one to keep editing it.</p>
+      <p class="lede">Practice plans, newest first. Open one to keep editing it.</p>
     </header>
     <p class="plans-toolbar"><a class="btn primary" href="../plan/">New plan</a></p>
+    <div id="plans-local" hidden></div>
     <div id="plans-unavailable" hidden>
       <p>Saving plans to an account is not available on this copy of the site. You can still build a practice plan in this browser.</p>
     </div>
     <div id="plans-out" hidden>
-      <p>Sign in to see the practice plans saved to your account.</p>
+      <p id="plans-out-text">Sign in to see the practice plans saved to your account.</p>
       <p><a class="btn primary" id="plans-signin" href="../account/">Sign in</a></p>
     </div>
     <div id="plans-in" hidden>
+      <div class="plan-banner" id="plans-import" hidden>
+        <p>Save the practice plan in this browser to your account?</p>
+        <div class="plan-actions">
+          <button class="btn primary" type="button" id="plans-import-yes">Save it</button>
+          <button class="btn" type="button" id="plans-import-no">Not now</button>
+        </div>
+      </div>
       <p class="empty" id="plans-empty" hidden>No saved plans yet. Use New plan, then tap Save.</p>
       <ul class="plans-list" id="plans-list"></ul>
     </div>
