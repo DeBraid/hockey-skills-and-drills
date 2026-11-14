@@ -134,20 +134,32 @@
 
   function syncToggles(source) {
     var current = source || readPlan();
+    var signedIn = accountState.ready && accountState.enabled && !!accountState.user && !!savedPlansCache;
     var slugs = {};
-    current.items.forEach(function (item) {
-      slugs[item.slug] = true;
-    });
+    if (signedIn) {
+      savedPlansCache.forEach(function (plan) {
+        planDrillSlugs(plan).forEach(function (slug) { slugs[slug] = true; });
+      });
+    } else {
+      current.items.forEach(function (item) { slugs[item.slug] = true; });
+    }
     document.querySelectorAll("[data-plan-slug]").forEach(function (button) {
       var slug = button.getAttribute("data-plan-slug");
       var title = button.getAttribute("data-plan-title") || "this drill";
       var on = !!slugs[slug];
       button.setAttribute("aria-pressed", on ? "true" : "false");
       button.textContent = on ? "In plan \u2713" : "Add to plan";
-      button.setAttribute(
-        "aria-label",
-        on ? "Remove " + title + " from plan" : "Add " + title + " to plan"
-      );
+      if (signedIn) {
+        button.setAttribute(
+          "aria-label",
+          on ? title + " is in a plan. Choose a plan or remove it." : "Add " + title + " to a plan"
+        );
+      } else {
+        button.setAttribute(
+          "aria-label",
+          on ? "Remove " + title + " from plan" : "Add " + title + " to plan"
+        );
+      }
     });
     var count = "(" + current.items.length + ")";
     document.querySelectorAll("[data-plan-count]").forEach(function (node) {
@@ -161,17 +173,488 @@
     }
   }
 
-  function toggleSlug(slug) {
+  function toggleSlug(slug, button) {
+    if (!slug) return;
     var current = readPlan();
     var index = -1;
     current.items.forEach(function (item, i) {
       if (item.slug === slug) index = i;
     });
-    if (index === -1) current.items.push({ slug: slug, minutes: "", note: "" });
+    var adding = index === -1;
+    if (adding) current.items.push({ slug: slug, minutes: "", note: "" });
     else current.items.splice(index, 1);
-    if (!savePlan(current)) return;
+    if (!savePlan(current)) {
+      showPlanNote(button, "Could not store the plan in this browser.", "");
+      return;
+    }
     syncToggles(current);
-    if (index === -1) track("drill_add_to_plan", { drill: slug });
+    if (adding) track("drill_add_to_plan", { drill: slug });
+    showPlanNote(
+      button,
+      adding ? "Added to your unsaved plan." : "Removed from your unsaved plan.",
+      adding || current.items.length ? planOpenHref(current) : ""
+    );
+  }
+
+  var savedPlansCache = null;
+  var savedPlansRequest = null;
+  var planChooser = null;
+  var planChooserOpener = null;
+  var planChooserSlug = "";
+
+  function planDrillSlugs(plan) {
+    var slugs = [];
+    var items = plan && Array.isArray(plan.items) ? plan.items : [];
+    items.forEach(function (item) {
+      if (item && typeof item.slug === "string" && item.slug) slugs.push(item.slug);
+    });
+    if (slugs.length) return slugs;
+    var drills = plan && Array.isArray(plan.drills) ? plan.drills : [];
+    drills.forEach(function (slug) {
+      if (typeof slug === "string" && slug) slugs.push(slug);
+    });
+    return slugs;
+  }
+
+  function planHasDrill(plan, slug) {
+    return planDrillSlugs(plan).indexOf(slug) !== -1;
+  }
+
+  function planDrillCount(plan) {
+    var slugs = planDrillSlugs(plan);
+    if (slugs.length) return slugs.length;
+    if (plan && typeof plan.drillCount === "number" && isFinite(plan.drillCount)) return plan.drillCount;
+    return 0;
+  }
+
+  function savedPlanIdOk(id) {
+    return typeof id === "string" && /^[0-9a-f-]{36}$/i.test(id);
+  }
+
+  function normalizeSavedPlan(raw) {
+    if (!raw || !savedPlanIdOk(raw.id)) return null;
+    var items = [];
+    if (Array.isArray(raw.items)) {
+      raw.items.forEach(function (item) {
+        if (!item || typeof item.slug !== "string" || !item.slug) return;
+        var minutes = item.minutes;
+        if (minutes === "" || minutes === undefined) minutes = null;
+        items.push({
+          slug: item.slug,
+          minutes: minutes,
+          note: typeof item.note === "string" ? item.note : ""
+        });
+      });
+    } else if (Array.isArray(raw.drills)) {
+      raw.drills.forEach(function (slug) {
+        if (typeof slug === "string" && slug) items.push({ slug: slug, minutes: null, note: "" });
+      });
+    }
+    var updatedAt = typeof raw.updatedAt === "string" ? raw.updatedAt : "";
+    if (!updatedAt) updatedAt = new Date().toISOString();
+    return {
+      id: raw.id,
+      title: typeof raw.title === "string" ? raw.title : "",
+      notes: typeof raw.notes === "string" ? raw.notes : "",
+      practiceDate: typeof raw.practiceDate === "string" ? raw.practiceDate : "",
+      teamId: typeof raw.teamId === "string" ? raw.teamId : "",
+      items: items,
+      updatedAt: updatedAt,
+      createdAt: typeof raw.createdAt === "string" ? raw.createdAt : ""
+    };
+  }
+
+  function compareSavedPlans(a, b) {
+    var aTime = Date.parse((a && (a.updatedAt || a.createdAt)) || "");
+    var bTime = Date.parse((b && (b.updatedAt || b.createdAt)) || "");
+    if (isNaN(aTime)) aTime = 0;
+    if (isNaN(bTime)) bTime = 0;
+    if (aTime !== bTime) return bTime - aTime;
+    return String(b && b.id || "").localeCompare(String(a && a.id || ""));
+  }
+
+  function refreshSavedPlans() {
+    if (!accountState.user) return Promise.resolve(false);
+    if (savedPlansRequest) return savedPlansRequest;
+    savedPlansRequest = fetchJson(apiUrl("api/plans")).then(function (result) {
+      savedPlansRequest = null;
+      if (!result.ok || !result.data || !Array.isArray(result.data.plans)) return false;
+      savedPlansCache = result.data.plans.map(normalizeSavedPlan).filter(Boolean);
+      syncToggles(readPlan());
+      return true;
+    }, function () {
+      savedPlansRequest = null;
+      return false;
+    });
+    return savedPlansRequest;
+  }
+
+  function rememberSavedPlan(record) {
+    var plan = normalizeSavedPlan(record);
+    if (!plan) return;
+    var next = (savedPlansCache || []).filter(function (item) { return item.id !== plan.id; });
+    next.push(plan);
+    savedPlansCache = next;
+    syncToggles(readPlan());
+  }
+
+  function recentPlanChoices(slug) {
+    var plans = (savedPlansCache || []).slice().sort(compareSavedPlans);
+    var recent = plans.slice(0, 3);
+    var seen = {};
+    recent.forEach(function (plan) { seen[plan.id] = true; });
+    plans.forEach(function (plan) {
+      if (seen[plan.id] || !planHasDrill(plan, slug)) return;
+      recent.push(plan);
+    });
+    return recent;
+  }
+
+  function drillCountLabel(count) {
+    if (count === 1) return "1 drill";
+    return count + " drills";
+  }
+
+  function ensurePlanChooser() {
+    if (planChooser) return planChooser;
+    var root = document.createElement("div");
+    root.className = "plan-chooser";
+    root.hidden = true;
+    var scrim = document.createElement("button");
+    scrim.type = "button";
+    scrim.className = "plan-chooser-scrim";
+    scrim.setAttribute("aria-label", "Close");
+    var panel = document.createElement("div");
+    panel.className = "plan-chooser-panel";
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
+    panel.setAttribute("aria-labelledby", "plan-chooser-title");
+    var grab = document.createElement("div");
+    grab.className = "plan-chooser-grab";
+    grab.setAttribute("aria-hidden", "true");
+    var head = document.createElement("div");
+    head.className = "plan-chooser-head";
+    var titles = document.createElement("div");
+    var heading = document.createElement("h2");
+    heading.id = "plan-chooser-title";
+    heading.textContent = "Add to plan";
+    var drill = document.createElement("p");
+    drill.className = "plan-chooser-drill";
+    drill.setAttribute("data-plan-chooser-drill", "");
+    titles.appendChild(heading);
+    titles.appendChild(drill);
+    var closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "plan-chooser-close";
+    closeBtn.textContent = "Close";
+    head.appendChild(titles);
+    head.appendChild(closeBtn);
+    var status = document.createElement("p");
+    status.className = "plan-chooser-status";
+    status.setAttribute("data-plan-chooser-status", "");
+    status.setAttribute("role", "status");
+    var create = document.createElement("button");
+    create.type = "button";
+    create.className = "btn primary";
+    create.setAttribute("data-plan-create", "");
+    create.textContent = "Create new plan";
+    var empty = document.createElement("p");
+    empty.className = "plan-chooser-empty";
+    empty.setAttribute("data-plan-chooser-empty", "");
+    empty.hidden = true;
+    empty.textContent = "No saved plans yet.";
+    var recent = document.createElement("p");
+    recent.className = "plan-chooser-kicker";
+    recent.setAttribute("data-plan-chooser-recent", "");
+    recent.textContent = "Recent plans";
+    var list = document.createElement("ul");
+    list.className = "plan-chooser-list";
+    list.setAttribute("data-plan-chooser-list", "");
+    panel.appendChild(grab);
+    panel.appendChild(head);
+    panel.appendChild(status);
+    panel.appendChild(create);
+    panel.appendChild(empty);
+    panel.appendChild(recent);
+    panel.appendChild(list);
+    scrim.addEventListener("click", function () { closePlanChooser(); });
+    closeBtn.addEventListener("click", function () { closePlanChooser(); });
+    create.addEventListener("click", function () {
+      if (!planChooserSlug || !planChooserOpener) return;
+      createPlanWithDrill(planChooserSlug, planChooserOpener);
+    });
+    panel.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closePlanChooser();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      var focusable = panel.querySelectorAll("button:not(:disabled), a");
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    root.appendChild(scrim);
+    root.appendChild(panel);
+    document.body.appendChild(root);
+    window.addEventListener("resize", function () {
+      if (!root.hidden && planChooserOpener) placePlanChooser(planChooserOpener);
+    });
+    planChooser = root;
+    return root;
+  }
+
+  function placePlanChooser(button) {
+    if (!planChooser || !button) return;
+    var panel = planChooser.querySelector(".plan-chooser-panel");
+    if (!panel) return;
+    var wide = false;
+    try {
+      wide = !!(window.matchMedia && window.matchMedia("(min-width: 720px)").matches);
+    } catch (error) {
+      wide = false;
+    }
+    planChooser.classList.toggle("is-popover", wide);
+    if (!wide) {
+      panel.style.top = "";
+      panel.style.left = "";
+      panel.style.width = "";
+      return;
+    }
+    var rect = button.getBoundingClientRect();
+    var width = Math.min(352, window.innerWidth - 24);
+    panel.style.width = width + "px";
+    var left = rect.left;
+    if (left + width > window.innerWidth - 12) left = window.innerWidth - width - 12;
+    if (left < 12) left = 12;
+    var top = rect.bottom + 8;
+    var height = panel.offsetHeight || 280;
+    if (top + height > window.innerHeight - 12) {
+      var above = rect.top - height - 8;
+      top = above >= 12 ? above : 12;
+    }
+    panel.style.top = Math.round(top) + "px";
+    panel.style.left = Math.round(left) + "px";
+  }
+
+  function setChooserStatus(message) {
+    if (!planChooser) return;
+    var status = planChooser.querySelector("[data-plan-chooser-status]");
+    if (status) status.textContent = message || "";
+  }
+
+  function setChooserBusy(busy) {
+    if (!planChooser) return;
+    planChooser.querySelectorAll("[data-plan-create], .plan-choice").forEach(function (button) {
+      button.disabled = busy;
+    });
+  }
+
+  function renderPlanChooser(slug, drillTitle, loading) {
+    var root = ensurePlanChooser();
+    var drill = root.querySelector("[data-plan-chooser-drill]");
+    if (drill) drill.textContent = drillTitle;
+    var list = root.querySelector("[data-plan-chooser-list]");
+    var empty = root.querySelector("[data-plan-chooser-empty]");
+    if (list) list.textContent = "";
+    if (loading) setChooserStatus("Loading your plans\u2026");
+    else setChooserStatus("");
+    var choices = loading ? [] : recentPlanChoices(slug);
+    if (empty) empty.hidden = loading || choices.length !== 0;
+    var recentLabel = root.querySelector("[data-plan-chooser-recent]");
+    if (recentLabel) recentLabel.hidden = loading || choices.length === 0;
+    if (!list) return;
+    choices.forEach(function (plan) {
+      var inPlan = planHasDrill(plan, slug);
+      var name = plan.title.trim() || "Untitled plan";
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "plan-choice";
+      button.setAttribute("aria-pressed", inPlan ? "true" : "false");
+      button.setAttribute(
+        "aria-label",
+        (inPlan ? "Remove " + drillTitle + " from " : "Add " + drillTitle + " to ") + name
+      );
+      var title = document.createElement("span");
+      title.className = "plan-choice-title";
+      title.textContent = name;
+      var meta = document.createElement("span");
+      meta.className = "plan-choice-meta";
+      var countLabel = drillCountLabel(planDrillCount(plan));
+      meta.textContent = inPlan ? countLabel + " \u00b7 In plan" : countLabel;
+      button.appendChild(title);
+      button.appendChild(meta);
+      button.addEventListener("click", function () {
+        if (!planChooserOpener) return;
+        if (inPlan) removeDrillFromSavedPlan(plan, slug, planChooserOpener);
+        else addDrillToSavedPlan(plan, slug, planChooserOpener);
+      });
+      var li = document.createElement("li");
+      li.appendChild(button);
+      list.appendChild(li);
+    });
+  }
+
+  function openPlanChooser(button) {
+    var slug = button.getAttribute("data-plan-slug");
+    if (!slug) return;
+    var root = ensurePlanChooser();
+    planChooserOpener = button;
+    planChooserSlug = slug;
+    var drillTitle = button.getAttribute("data-plan-title") || "this drill";
+    root.hidden = false;
+    renderPlanChooser(slug, drillTitle, !savedPlansCache);
+    placePlanChooser(button);
+    var create = root.querySelector("[data-plan-create]");
+    if (create) create.focus();
+    if (savedPlansCache) return;
+    refreshSavedPlans().then(function (ok) {
+      if (root.hidden || planChooserSlug !== slug) return;
+      if (!ok) {
+        setChooserStatus("Could not load your plans.");
+        if (root.querySelector("[data-plan-chooser-empty]")) {
+          root.querySelector("[data-plan-chooser-empty]").hidden = true;
+        }
+        return;
+      }
+      renderPlanChooser(slug, drillTitle, false);
+      placePlanChooser(button);
+    });
+  }
+
+  function closePlanChooser() {
+    if (!planChooser || planChooser.hidden) return;
+    planChooser.hidden = true;
+    setChooserBusy(false);
+    var opener = planChooserOpener;
+    planChooserOpener = null;
+    planChooserSlug = "";
+    if (opener && opener.focus) opener.focus();
+  }
+
+  function savedPlanPayload(plan, items) {
+    var payload = {
+      title: plan.title || "",
+      notes: plan.notes || "",
+      items: items.map(function (item) {
+        var minutes = item.minutes;
+        if (minutes === "" || minutes === undefined) minutes = null;
+        return { slug: item.slug, minutes: minutes, note: item.note || "" };
+      })
+    };
+    if (plan.practiceDate) payload.practiceDate = plan.practiceDate;
+    return payload;
+  }
+
+  function createPlanWithDrill(slug, button) {
+    setChooserBusy(true);
+    setChooserStatus("Saving\u2026");
+    var day = todayIso();
+    var payload = {
+      title: defaultPlanTitle(day),
+      notes: "",
+      practiceDate: day,
+      items: [{ slug: slug, minutes: null, note: "" }]
+    };
+    fetchJson(apiUrl("api/plans"), { method: "POST", body: JSON.stringify(payload) }).then(function (result) {
+      setChooserBusy(false);
+      finishChooserSave(result, button, true, payload.title);
+    }, function () {
+      setChooserBusy(false);
+      setChooserStatus("Could not reach your account.");
+    });
+  }
+
+  function addDrillToSavedPlan(plan, slug, button) {
+    var items = plan.items.slice();
+    items.push({ slug: slug, minutes: null, note: "" });
+    patchSavedPlan(plan, items, button, true);
+  }
+
+  function removeDrillFromSavedPlan(plan, slug, button) {
+    var items = plan.items.filter(function (item) { return item.slug !== slug; });
+    patchSavedPlan(plan, items, button, false);
+  }
+
+  function patchSavedPlan(plan, items, button, adding) {
+    setChooserBusy(true);
+    setChooserStatus(adding ? "Saving\u2026" : "Removing\u2026");
+    fetchJson(apiUrl("api/plans/" + plan.id), {
+      method: "PATCH",
+      body: JSON.stringify(savedPlanPayload(plan, items))
+    }).then(function (result) {
+      setChooserBusy(false);
+      finishChooserSave(result, button, adding, plan.title);
+    }, function () {
+      setChooserBusy(false);
+      setChooserStatus("Could not reach your account.");
+    });
+  }
+
+  function finishChooserSave(result, button, adding, fallbackTitle) {
+    var record = result && result.data && result.data.plan;
+    if (!result || !result.ok || !record || !record.id) {
+      setChooserStatus((result && result.data && result.data.error) || "Could not save the plan.");
+      return;
+    }
+    var tracked = planChooserSlug;
+    rememberSavedPlan(record);
+    closePlanChooser();
+    var name = (record.title || fallbackTitle || "").trim() || "your plan";
+    showPlanNote(
+      button,
+      (adding ? "Added to " : "Removed from ") + name + ".",
+      planOpenHref({ savedId: record.id })
+    );
+    if (adding && tracked) track("drill_add_to_plan", { drill: tracked });
+  }
+
+  function planOpenHref(plan) {
+    if (plan && plan.savedId) return new URL("plan/?saved=" + encodeURIComponent(plan.savedId), rootUrl).href;
+    return new URL("plan/", rootUrl).href;
+  }
+
+  function showPlanNote(button, message, href) {
+    if (!button || !button.parentNode) return;
+    var note = button.nextElementSibling;
+    if (!note || !note.classList || !note.classList.contains("plan-confirm")) {
+      note = document.createElement("p");
+      note.className = "plan-confirm";
+      note.setAttribute("role", "status");
+      button.insertAdjacentElement("afterend", note);
+    }
+    note.textContent = "";
+    note.appendChild(document.createTextNode(message));
+    if (href) {
+      var link = document.createElement("a");
+      link.href = href;
+      link.textContent = "Open plan";
+      note.appendChild(link);
+    }
+  }
+
+  function todayIso() {
+    var now = new Date();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    return now.getFullYear() + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day;
+  }
+
+  function defaultPlanTitle(iso) {
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+    if (!match) return "Practice";
+    var monthName = months[Number(match[2]) - 1];
+    if (!monthName) return "Practice";
+    return "Practice \u2013 " + monthName + " " + Number(match[3]) + ", " + match[1];
   }
 
   // Usage counts for the private stats page. A random browser ID only: no
@@ -259,12 +742,32 @@
   document.addEventListener("click", function (event) {
     var button = event.target.closest("[data-plan-slug]");
     if (!button) return;
-    toggleSlug(button.getAttribute("data-plan-slug"));
+    var slug = button.getAttribute("data-plan-slug");
+    if (accountState.ready && accountState.enabled && accountState.user) {
+      openPlanChooser(button);
+      return;
+    }
+    if (!accountState.ready) {
+      whenAccountReady(function () {
+        if (accountState.enabled && accountState.user) openPlanChooser(button);
+        else toggleSlug(slug, button);
+      });
+      return;
+    }
+    toggleSlug(slug, button);
   });
 
   var refreshPlan = null;
+  var refreshPlans = null;
   var firstShow = true;
   syncToggles(readPlan());
+  whenAccountReady(function () {
+    if (accountState.enabled && accountState.user && document.querySelector("[data-plan-slug]")) {
+      refreshSavedPlans();
+    } else {
+      syncToggles(readPlan());
+    }
+  });
   window.addEventListener("pageshow", function () {
     if (firstShow) {
       firstShow = false;
@@ -1732,7 +2235,7 @@
       body: JSON.stringify(planPayload(existing))
     }).then(function (result) {
       if (!result.ok || !result.data.plan) {
-        var status = document.getElementById("plan-status") || document.getElementById("account-status");
+        var status = accountStatusNode();
         if (status) status.textContent = (result.data && result.data.error) || "Could not save the plan.";
         return;
       }
@@ -1743,12 +2246,13 @@
         banner.hidden = true;
         banner.dataset.done = "1";
       }
-      var statusNode = document.getElementById("plan-status") || document.getElementById("account-status");
+      var statusNode = accountStatusNode();
       if (statusNode) statusNode.textContent = "Saved the browser plan to your account.";
       if (document.getElementById("account-list")) loadAccountPlans();
       if (typeof refreshPlan === "function" && document.getElementById("plan-list")) refreshPlan();
+      if (typeof refreshPlans === "function") refreshPlans();
     }, function () {
-      var statusNode = document.getElementById("plan-status") || document.getElementById("account-status");
+      var statusNode = accountStatusNode();
       if (statusNode) statusNode.textContent = "Could not reach your account.";
     });
   }
@@ -1931,6 +2435,12 @@
     return /\/plans\/(index\.html)?$/.test(path) || /\/plans$/.test(path);
   }
 
+  function accountStatusNode() {
+    return document.getElementById("plan-status") ||
+      document.getElementById("account-status") ||
+      document.getElementById("plans-status");
+  }
+
   function initPlansPage() {
     var list = document.getElementById("plans-list");
     if (!list) return;
@@ -1940,9 +2450,22 @@
     var empty = document.getElementById("plans-empty");
     var status = document.getElementById("plans-status");
     var signIn = document.getElementById("plans-signin");
+    var outText = document.getElementById("plans-out-text");
+    var importBanner = document.getElementById("plans-import");
+    var importYes = document.getElementById("plans-import-yes");
+    var importNo = document.getElementById("plans-import-no");
+
+    if (importYes) importYes.addEventListener("click", function () { importLocalPlan(importBanner); });
+    if (importNo) importNo.addEventListener("click", function () { dismissImport(importBanner); });
+
+    refreshPlans = function () {
+      renderLocalPlan();
+      if (accountState.user) loadPlansList();
+    };
 
     whenAccountReady(function () {
       if (signIn) signIn.href = signInHref();
+      renderLocalPlan();
       if (!accountState.enabled) {
         if (unavailable) unavailable.hidden = false;
         if (signedOut) signedOut.hidden = true;
@@ -1957,8 +2480,56 @@
       }
       if (signedOut) signedOut.hidden = true;
       if (signedIn) signedIn.hidden = false;
+      offerPlansImport();
       loadPlansList();
     });
+
+    function localPlanEntry() {
+      var plan = readPlan();
+      if (!plan.items.length || plan.savedId) return null;
+      return plan;
+    }
+
+    function renderLocalPlan() {
+      var host = document.getElementById("plans-local");
+      if (!host) return;
+      var plan = localPlanEntry();
+      host.textContent = "";
+      host.hidden = !plan;
+      if (outText && !accountState.user) {
+        outText.textContent = plan
+          ? "Sign in to save this plan and see the plans on your account."
+          : "Sign in to see the practice plans saved to your account.";
+      }
+      if (!plan) return;
+      var drills = plan.items.length === 1 ? "1 drill" : plan.items.length + " drills";
+      var savedList = document.createElement("ul");
+      savedList.className = "plans-list";
+      var li = document.createElement("li");
+      li.className = "plans-unsaved";
+      var link = document.createElement("a");
+      link.href = new URL("plan/", rootUrl).href;
+      var title = document.createElement("strong");
+      title.textContent = "Unsaved plan, " + drills;
+      link.appendChild(title);
+      var prompt = document.createElement("p");
+      prompt.className = "plans-local-prompt";
+      if (!accountState.enabled) prompt.textContent = "Only in this browser.";
+      else if (!accountState.user) prompt.textContent = "Sign in to save this plan.";
+      else prompt.textContent = "Not saved to your account yet.";
+      li.appendChild(link);
+      li.appendChild(prompt);
+      savedList.appendChild(li);
+      host.appendChild(savedList);
+    }
+
+    function offerPlansImport() {
+      if (!importBanner || !accountState.user || importBanner.dataset.done) return;
+      var existing = readPlan();
+      if (existing.savedId || !planWorthSaving(existing) || importSeen(accountState.user.id)) return;
+      importBanner.hidden = false;
+      importBanner.dataset.done = "show";
+    }
 
     function loadPlansList() {
       fetchJson(apiUrl("api/plans")).then(function (result) {
@@ -1975,7 +2546,9 @@
           list.appendChild(row);
           shown += 1;
         });
-        if (empty) empty.hidden = shown !== 0;
+        var localHost = document.getElementById("plans-local");
+        var localShown = !!(localHost && !localHost.hidden);
+        if (empty) empty.hidden = shown !== 0 || localShown;
       }, function () {
         if (status) status.textContent = "Could not reach your account.";
       });
