@@ -940,7 +940,7 @@ function pageShell(body: string): string {
     .bar-g {
       position: absolute;
       top: 50%;
-      height: 4px;
+      height: 8px;
       transform: translateY(-50%);
       background: var(--g-ink);
       border-radius: 2px 0 0 2px;
@@ -949,18 +949,18 @@ function pageShell(body: string): string {
     .bar-a {
       position: absolute;
       top: 50%;
-      height: 4px;
+      height: 8px;
       transform: translateY(-50%);
       background: var(--a-ink);
     }
 
     .bar-a.has-gap {
-      box-shadow: inset 1.5px 0 0 var(--bg);
+      box-shadow: inset 2px 0 0 var(--bg);
     }
 
     .dot-pts {
-      width: 6.5px;
-      height: 6.5px;
+      width: 10px;
+      height: 10px;
       background: var(--ink);
       z-index: 2;
     }
@@ -1130,7 +1130,9 @@ function pageShell(body: string): string {
       .sk-num { font-size: 13px; }
       .sk-team { font-size: 13px; flex-shrink: 0; }
       .sk-row { padding: 6px 0; }
-      .sk-track { height: 22px; }
+      .sk-track { height: 24px; }
+      .bar-g, .bar-a { height: 11px; }
+      .dot-pts { width: 13px; height: 13px; }
       .sm-team { font-size: 15px; }
       .sm-meta { font-size: 13px; }
       .sm-scale { font-size: 12px; }
