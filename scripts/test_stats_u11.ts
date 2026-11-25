@@ -78,6 +78,19 @@ async function main(): Promise<void> {
   assert.match(html, /Nov 25, 2026/)
   assert.match(html, /3:27/)
   assert.doesNotMatch(html, /SV%/)
+  assert.doesNotMatch(html, /\b\d+pp\b/)
+  assert.doesNotMatch(html, /\b\d+sh\b/)
+  assert.doesNotMatch(html, /\b\d+gw\b/)
+  assert.doesNotMatch(html, /GWG|SHG|PPG/)
+  assert.match(html, /Stars/)
+  assert.match(html, /Mustangs/)
+  assert.match(html, /Falcons/)
+  assert.doesNotMatch(html, /\bSTA\b/)
+  assert.doesNotMatch(html, /\bMUS\b/)
+  assert.doesNotMatch(html, /\bFAL\b/)
+  assert.match(html, /@media \(min-width: 700px\)/)
+  assert.match(html, /body \{ font-size: 17px; \}/)
+
 
   console.log("stats u11 ok")
 }

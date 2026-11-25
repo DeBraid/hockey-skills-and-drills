@@ -6,16 +6,6 @@ const STATS_KEY = "u11_house_2026-27"
 const TIME_ZONE = "America/Toronto"
 const FOCUS_TEAM = "Stars"
 
-const TEAM_CODES: Record<string, string> = {
-  Stars: "STA",
-  Mustangs: "MUS",
-  Falcons: "FAL",
-  Lightning: "LIG",
-  Hurricanes: "HUR",
-  "Top Guns": "TPG",
-  Spitfires: "SPI",
-}
-
 export interface SkaterRow {
   rank: number
   number: number
@@ -114,12 +104,6 @@ export async function loadLeagueStats(key = STATS_KEY): Promise<LeagueStatsRecor
   }
 }
 
-function teamCode(team: string): string {
-  const mapped = TEAM_CODES[team]
-  if (mapped) return mapped
-  return team.replace(/[^A-Za-z0-9]/g, "").slice(0, 3).toUpperCase() || "TM"
-}
-
 function median(values: number[]): number {
   if (!values.length) return 0
   const sorted = [...values].sort((a, b) => a - b)
@@ -204,7 +188,7 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
       <div class="macro-item">
         <span class="macro-val">${leader ? `${leader.PTS} pts` : "—"}</span>
         <span class="macro-lbl">scoring lead</span>
-        <span class="macro-sub">${leader ? `#${leader.number} ${esc(leader.first_name)} (${esc(teamCode(leader.team))})<br>${leader.G}G · ${leader.A}A` : "—"}</span>
+        <span class="macro-sub">${leader ? `#${leader.number} ${esc(leader.first_name)} (${esc(leader.team)})<br>${leader.G}G · ${leader.A}A` : "—"}</span>
       </div>
       <div class="macro-item">
         <span class="macro-val">${starsRow ? ordinal(starsIndex + 1) : "—"}</span>
@@ -277,19 +261,17 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
       const ptsLeft = pct(s.PTS, skaterScaleMax, TRACK_SPAN)
       const directLeft = `calc(${ptsLeft} + 7px)`
       const ppg = s.GP > 0 ? (s.PTS / s.GP).toFixed(2) : "0.00"
-      const specials: string[] = []
-      if (s.PPG > 0) specials.push(`${s.PPG}pp`)
-      if (s.SHG > 0) specials.push(`${s.SHG}sh`)
-      if (s.GWG > 0) specials.push(`${s.GWG}gw`)
       return `
       <div class="sk-row${isFocus ? " is-focus" : ""}" data-team="${esc(s.team)}" data-rank="${s.rank}" data-pts="${s.PTS}" data-g="${s.G}" data-a="${s.A}" data-ppg="${ppg}">
         <div class="sk-label">
           <span class="rank">${s.rank}</span>
           <span class="sk-who">
-            <span class="sk-name">${esc(s.first_name)}</span>
-            <span class="sk-num">#${s.number}</span>
+            <span class="sk-name-line">
+              <span class="sk-name">${esc(s.first_name)}</span>
+              <span class="sk-num">#${s.number}</span>
+            </span>
+            <span class="sk-team">${esc(s.team)}</span>
           </span>
-          <span class="sk-team">${esc(teamCode(s.team))}</span>
         </div>
         <div class="sk-track" aria-label="${esc(s.first_name)} #${s.number} (${esc(s.team)}): ${s.PTS} points (${s.G} goals, ${s.A} assists) in ${s.GP} games">
           ${skaterTicks.map((v) => `<span class="grid-v" style="left:${pct(v, skaterScaleMax, TRACK_SPAN)}"></span>`).join("")}
@@ -298,7 +280,7 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
           ${s.A > 0 ? `<span class="bar-a${s.G > 0 ? " has-gap" : ""}" style="left:${aLeft};width:${aWidth}"></span>` : ""}
           <span class="dot dot-pts" style="left:${ptsLeft}"></span>
           <span class="direct-lbl" style="left:${directLeft}">
-            <strong class="v-main">${s.PTS}</strong> <span class="v-sub muted">${s.G}·${s.A}</span>${specials.length ? `<span class="v-spec muted"> ${esc(specials.join(" "))}</span>` : ""}
+            <strong class="v-main">${s.PTS}</strong> <span class="v-sub muted">${s.G}·${s.A}</span>
           </span>
         </div>
       </div>`
@@ -353,7 +335,10 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
           <span class="rank">${idx + 1}</span>
           <span class="gl-who">
             <span class="gl-name">${esc(g.first_name)} <span class="sk-num">#${g.number}</span></span>
-            <span class="gl-sub muted">${esc(teamCode(g.team))} · ${g.GP}gp · ${g.W}–${g.L}–${g.T} · ${g.GA} GA</span>
+            <span class="gl-meta muted">
+              <span class="gl-team">${esc(g.team)}</span>
+              <span class="gl-sub">${g.GP}gp · ${g.W}–${g.L}–${g.T} · ${g.GA} GA</span>
+            </span>
           </span>
         </div>
         <div class="gl-track" aria-label="${esc(g.first_name)} #${g.number} (${esc(g.team)}): ${g.GAA.toFixed(2)} GAA">
@@ -897,25 +882,35 @@ function pageShell(body: string): string {
     .sk-label-head { padding-left: 22px; }
 
     .sk-row {
-      padding: 3.5px 0;
+      padding: 4.5px 0;
       border-bottom: 1px solid var(--grid);
     }
 
     .sk-label {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 5px;
       min-width: 0;
       padding-left: 2px;
     }
 
     .sk-who {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      line-height: 1.2;
+    }
+
+    .sk-name-line {
       display: inline-flex;
       align-items: baseline;
       gap: 3px;
       min-width: 0;
-      flex: 1;
-      overflow: hidden;
+      max-width: 100%;
     }
 
     .sk-name {
@@ -927,7 +922,15 @@ function pageShell(body: string): string {
     }
 
     .sk-num { font-size: 10.5px; color: var(--muted); flex-shrink: 0; }
-    .sk-team { font-size: 10px; color: var(--muted); letter-spacing: 0.03em; flex-shrink: 0; }
+    .sk-team {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
 
     .sk-track {
       position: relative;
@@ -961,8 +964,6 @@ function pageShell(body: string): string {
       background: var(--ink);
       z-index: 2;
     }
-
-    .v-spec { display: none; font-size: 10px; }
 
     /* Small multiples */
     .sm-grid {
@@ -1057,6 +1058,8 @@ function pageShell(body: string): string {
 
     .gl-who { display: flex; flex-direction: column; min-width: 0; }
     .gl-name { font-size: 12.5px; font-weight: 500; }
+    .gl-meta { display: flex; flex-direction: column; line-height: 1.25; }
+    .gl-team { font-size: 10px; }
     .gl-sub { font-size: 10.5px; white-space: nowrap; }
 
     .gl-track {
@@ -1088,8 +1091,6 @@ function pageShell(body: string): string {
 
     .colophon p { margin: 0; }
 
-    @media (min-width: 520px) { .v-spec { display: inline; } }
-
     @media (min-width: 600px) {
       .sheet { padding: 24px 24px 56px; }
       .st-axis-head, .st-row { grid-template-columns: 220px 1fr; gap: 16px; }
@@ -1097,6 +1098,50 @@ function pageShell(body: string): string {
       .sk-axis-head, .sk-row { grid-template-columns: 205px 1fr; gap: 16px; }
       .gl-axis-head, .gl-row { grid-template-columns: 225px 1fr; gap: 16px; }
       .sm-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    /* Desktop: bump type a few ticks. Phone typography is unchanged. */
+    @media (min-width: 700px) {
+      body { font-size: 17px; }
+      .sheet { max-width: 960px; padding: 32px 36px 80px; }
+      .crumb { font-size: 15px; margin-bottom: 16px; }
+      .mast h1 { font-size: 2rem; }
+      .subtitle { font-size: 16px; }
+      .macro { gap: 16px; margin: 22px 0 28px; padding: 14px 0; }
+      .macro-val { font-size: 1.65rem; }
+      .macro-lbl, .macro-sub { font-size: 13px; }
+      .block { margin-top: 36px; }
+      .block-head h2 { font-size: 1.4rem; }
+      .legend { font-size: 14px; }
+      .axis-tick { font-size: 13px; }
+      .rank { font-size: 13px; width: 20px; }
+      .direct-lbl { font-size: 14px; }
+      .st-axis-head, .sk-axis-head, .gl-axis-head { font-size: 13px; }
+      .st-axis-head, .st-row { grid-template-columns: 280px 1fr; gap: 20px; }
+      .st-team { font-size: 16px; }
+      .st-rec { font-size: 13px; }
+      .st-pts { font-size: 16px; min-width: 26px; }
+      .st-plot { height: 28px; }
+      .sort-lbl { font-size: 14px; }
+      .tab { font-size: 15px; }
+      .sk-axis-head, .sk-row { grid-template-columns: 280px 1fr; gap: 20px; }
+      .sk-who { flex-direction: row; align-items: baseline; gap: 8px; }
+      .sk-name { font-size: 15px; }
+      .sk-num { font-size: 13px; }
+      .sk-team { font-size: 13px; flex-shrink: 0; }
+      .sk-row { padding: 6px 0; }
+      .sk-track { height: 22px; }
+      .sm-team { font-size: 15px; }
+      .sm-meta { font-size: 13px; }
+      .sm-scale { font-size: 12px; }
+      .gl-axis-head, .gl-row { grid-template-columns: 280px 1fr; gap: 20px; }
+      .gl-name { font-size: 15px; }
+      .gl-meta { flex-direction: row; flex-wrap: wrap; }
+      .gl-team { font-size: 13px; }
+      .gl-team::after { content: " · "; }
+      .gl-sub { font-size: 13px; }
+      .gl-track { height: 26px; }
+      .colophon { font-size: 14px; margin-top: 36px; }
     }
   </style>
 </head>
