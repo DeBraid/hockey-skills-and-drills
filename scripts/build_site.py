@@ -1073,6 +1073,8 @@ def check_output(drills: list[dict]) -> None:
             raise SystemExit(f"{html_path.relative_to(ROOT)} is missing the Vercel Web Analytics script")
         if "/admin" in text:
             raise SystemExit(f"{html_path.relative_to(ROOT)} should not link the admin page")
+        if "/stats/u11" in text:
+            raise SystemExit(f"{html_path.relative_to(ROOT)} should not link private stats")
         if 'privacy/">Privacy</a>' not in text or 'terms/">Terms</a>' not in text:
             raise SystemExit(f"{html_path.relative_to(ROOT)} is missing the Privacy and Terms footer links")
         if "Fork or star" in text or "github.com" in text.lower():

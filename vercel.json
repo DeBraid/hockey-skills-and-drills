@@ -253,6 +253,14 @@
       "destination": "/api/admin"
     },
     {
+      "source": "/stats/u11",
+      "destination": "/api/admin?__admin=u11"
+    },
+    {
+      "source": "/stats/u11/",
+      "destination": "/api/admin?__admin=u11"
+    },
+    {
       "source": "/hockey-skills-and-drills/api/:path*",
       "destination": "/api/:path*"
     },
