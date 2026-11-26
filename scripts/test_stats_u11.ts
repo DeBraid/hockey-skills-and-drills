@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { JSDOM } from "jsdom"
 import adminHandler from "../api/admin.js"
 import {
   handleU11SelectStats,
@@ -7,6 +8,26 @@ import {
   U11_SELECT_CONFIG,
   type LeagueStatsRecord,
 } from "../lib/stats-u11.js"
+
+function openStats(html: string): JSDOM {
+  return new JSDOM(html, {
+    url: "https://hockey.derekbraid.com/stats/u11",
+    runScripts: "dangerously",
+    pretendToBeVisual: true,
+  })
+}
+
+function focusedTeams(dom: JSDOM, selector: string): string[] {
+  return [...dom.window.document.querySelectorAll(`${selector}.is-focus`)].map(
+    (el) => el.getAttribute("data-team") || ""
+  )
+}
+
+function standingsRow(dom: JSDOM, team: string): HTMLElement {
+  const row = dom.window.document.querySelector(`.st-row[data-team="${team}"]`)
+  assert.ok(row, `missing standings row for ${team}`)
+  return row as HTMLElement
+}
 
 const SAMPLE: LeagueStatsRecord = {
   source: "GameSheet, Sample League 2026-27, U11",
@@ -178,6 +199,77 @@ async function main(): Promise<void> {
   assert.match(filledHtml, /SkaterAce/)
   assert.doesNotMatch(filledHtml, /SV%/)
   assert.doesNotMatch(filledHtml, /otp/i)
+
+  // Standings rows are buttons; default highlight is the focus team (Stars / West Niagara).
+  assert.match(html, /cursor: pointer/)
+  assert.match(html, /id="st-list"/)
+  const houseDom = openStats(html)
+  const starsRow = standingsRow(houseDom, "Stars")
+  const mustangsRow = standingsRow(houseDom, "Mustangs")
+  assert.equal(starsRow.getAttribute("role"), "button")
+  assert.equal(starsRow.getAttribute("tabindex"), "0")
+  assert.equal(starsRow.getAttribute("aria-pressed"), "true")
+  assert.equal(mustangsRow.getAttribute("role"), "button")
+  assert.equal(mustangsRow.getAttribute("tabindex"), "0")
+  assert.equal(mustangsRow.getAttribute("aria-pressed"), "false")
+  assert.deepEqual(focusedTeams(houseDom, ".st-row"), ["Stars"])
+  assert.deepEqual(focusedTeams(houseDom, "#sk-list .sk-row"), ["Stars"])
+  assert.deepEqual(focusedTeams(houseDom, ".gl-row"), ["Stars"])
+  assert.deepEqual(focusedTeams(houseDom, ".sm-card"), ["Stars"])
+
+  mustangsRow.click()
+  assert.deepEqual(focusedTeams(houseDom, ".st-row"), ["Mustangs"])
+  assert.deepEqual(focusedTeams(houseDom, "#sk-list .sk-row"), ["Mustangs"])
+  assert.deepEqual(focusedTeams(houseDom, ".gl-row"), ["Mustangs"])
+  assert.deepEqual(focusedTeams(houseDom, ".sm-card"), ["Mustangs"])
+  assert.equal(starsRow.getAttribute("aria-pressed"), "false")
+  assert.equal(mustangsRow.getAttribute("aria-pressed"), "true")
+
+  // Filter and sort stay independent of the standings highlight.
+  const mustangFilter = houseDom.window.document.querySelector('#team-filters button[data-filter="Mustangs"]') as HTMLButtonElement
+  const allFilter = houseDom.window.document.querySelector('#team-filters button[data-filter="all"]') as HTMLButtonElement
+  const goalsSort = houseDom.window.document.querySelector('#skater-sorts button[data-sort="g"]') as HTMLButtonElement
+  const pointsSort = houseDom.window.document.querySelector('#skater-sorts button[data-sort="rank"]') as HTMLButtonElement
+  assert.ok(mustangFilter && allFilter && goalsSort && pointsSort)
+  mustangFilter.click()
+  const visibleAfterFilter = [...houseDom.window.document.querySelectorAll("#sk-list .sk-row")].filter((el) => !(el as HTMLElement).hidden)
+  assert.deepEqual(visibleAfterFilter.map((el) => el.getAttribute("data-team")), ["Mustangs"])
+  assert.deepEqual(focusedTeams(houseDom, "#sk-list .sk-row"), ["Mustangs"])
+  allFilter.click()
+  goalsSort.click()
+  assert.deepEqual(focusedTeams(houseDom, ".st-row"), ["Mustangs"])
+  assert.deepEqual(focusedTeams(houseDom, "#sk-list .sk-row"), ["Mustangs"])
+  pointsSort.click()
+
+  // Clicking the highlighted row again resets to Stars.
+  mustangsRow.click()
+  assert.deepEqual(focusedTeams(houseDom, ".st-row"), ["Stars"])
+  assert.deepEqual(focusedTeams(houseDom, "#sk-list .sk-row"), ["Stars"])
+  assert.deepEqual(focusedTeams(houseDom, ".gl-row"), ["Stars"])
+  assert.equal(starsRow.getAttribute("aria-pressed"), "true")
+  assert.equal(mustangsRow.getAttribute("aria-pressed"), "false")
+
+  // Enter and Space also switch the highlight.
+  const falconsRow = standingsRow(houseDom, "Falcons")
+  falconsRow.dispatchEvent(new houseDom.window.KeyboardEvent("keydown", { key: "Enter", bubbles: true }))
+  assert.deepEqual(focusedTeams(houseDom, ".st-row"), ["Falcons"])
+  assert.deepEqual(focusedTeams(houseDom, "#sk-list .sk-row"), ["Falcons"])
+  falconsRow.dispatchEvent(new houseDom.window.KeyboardEvent("keydown", { key: " ", bubbles: true }))
+  assert.deepEqual(focusedTeams(houseDom, ".st-row"), ["Stars"])
+  houseDom.window.close()
+
+  const selectDom = openStats(selectHtml)
+  const acesRow = standingsRow(selectDom, "West Niagara Flying Aces U11")
+  const wsmhaRow = standingsRow(selectDom, "WSMHA U11 Select")
+  assert.equal(acesRow.getAttribute("aria-pressed"), "true")
+  assert.deepEqual(focusedTeams(selectDom, ".st-row"), ["West Niagara Flying Aces U11"])
+  assert.deepEqual(focusedTeams(selectDom, "#sk-list .sk-row"), ["West Niagara Flying Aces U11"])
+  wsmhaRow.click()
+  assert.deepEqual(focusedTeams(selectDom, ".st-row"), ["WSMHA U11 Select"])
+  assert.deepEqual(focusedTeams(selectDom, "#sk-list .sk-row"), ["WSMHA U11 Select"])
+  wsmhaRow.click()
+  assert.deepEqual(focusedTeams(selectDom, ".st-row"), ["West Niagara Flying Aces U11"])
+  selectDom.window.close()
 
   console.log("stats u11 ok")
 }

@@ -341,7 +341,7 @@ export function renderU11StatsPage(
       const gfLeft = pct(row.GF, standingsScaleMax, 64)
       const labelLeft = `calc(${pct(rightVal, standingsScaleMax, 64)} + 8px)`
       return `
-      <div class="st-row${isFocus ? " is-focus" : ""}">
+      <div class="st-row${isFocus ? " is-focus" : ""}" data-team="${esc(row.team)}" role="button" tabindex="0" aria-pressed="${isFocus ? "true" : "false"}" aria-label="Highlight ${esc(row.team)}">
         <div class="st-meta">
           <span class="rank">${idx + 1}</span>
           <span class="st-team-wrap">
@@ -424,7 +424,7 @@ export function renderU11StatsPage(
         })
         .join("")
       return `
-      <div class="sm-card${isFocus ? " is-focus" : ""}">
+      <div class="sm-card${isFocus ? " is-focus" : ""}" data-team="${esc(st.team)}">
         <div class="sm-head">
           <span class="sm-team">${esc(st.team)}</span>
           <span class="sm-meta muted">${teamSkaters.length} in top 40 · ${top40Goals}/${st.GF} GF</span>
@@ -454,7 +454,7 @@ export function renderU11StatsPage(
       const gaaLeft = pct(g.GAA, goalieScaleMax, GOALIE_SPAN)
       const directLeft = `calc(${gaaLeft} + 7px)`
       return `
-      <div class="gl-row${isFocus ? " is-focus" : ""}">
+      <div class="gl-row${isFocus ? " is-focus" : ""}" data-team="${esc(g.team)}">
         <div class="gl-label">
           <span class="rank">${idx + 1}</span>
           <span class="gl-who">
@@ -541,7 +541,7 @@ export function renderU11StatsPage(
         <div class="st-meta-head muted"><span>Team</span><span>PTS</span></div>
         <div class="st-plot-head muted">${standingsAxisTicksHtml}</div>
       </div>
-      <div class="st-list">
+      <div class="st-list" id="st-list" data-default-focus="${esc(focusTeam)}">
         ${standingsRowsHtml}
       </div>
     </section>
@@ -644,6 +644,45 @@ export function renderU11StatsPage(
   </main>
 
   <script>
+  (function () {
+    var standings = document.getElementById("st-list");
+    if (!standings) return;
+    var defaultTeam = standings.getAttribute("data-default-focus") || "";
+    var highlighted = defaultTeam;
+
+    function setHighlight(team) {
+      highlighted = team;
+      var nodes = document.querySelectorAll(".st-row[data-team], #sk-list .sk-row[data-team], .gl-row[data-team], .sm-card[data-team]");
+      Array.prototype.forEach.call(nodes, function (el) {
+        var on = el.getAttribute("data-team") === highlighted;
+        el.classList.toggle("is-focus", on);
+        if (el.classList.contains("st-row")) {
+          el.setAttribute("aria-pressed", on ? "true" : "false");
+        }
+      });
+    }
+
+    function onActivate(row) {
+      var team = row.getAttribute("data-team");
+      if (!team) return;
+      setHighlight(team === highlighted ? defaultTeam : team);
+    }
+
+    standings.addEventListener("click", function (e) {
+      var row = e.target.closest(".st-row[data-team]");
+      if (!row || !standings.contains(row)) return;
+      onActivate(row);
+    });
+
+    standings.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      var row = e.target.closest(".st-row[data-team]");
+      if (!row || !standings.contains(row)) return;
+      e.preventDefault();
+      onActivate(row);
+    });
+  })();
+
   (function () {
     var list = document.getElementById("sk-list");
     var filters = document.getElementById("team-filters");
@@ -967,6 +1006,13 @@ function pageShell(body: string, config: StatsViewConfig = U11_HOUSE_CONFIG): st
     .st-row {
       padding: 5px 0;
       border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+
+    .st-row:focus { outline: none; }
+    .st-row:focus-visible {
+      outline: 2px solid var(--link);
+      outline-offset: 2px;
     }
 
     .st-meta {
