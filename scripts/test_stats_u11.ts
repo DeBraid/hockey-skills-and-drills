@@ -134,6 +134,50 @@ async function main(): Promise<void> {
   assert.match(selectHtml, /SkaterAce/)
   assert.match(selectHtml, /No goalie stats loaded yet/)
   assert.match(selectHtml, /7 team-gp/)
+  assert.doesNotMatch(selectHtml, /otp/i)
+
+  // Goalie numeric coercion, omitted jersey numbers, and optional team roster.
+  const selectFilled: LeagueStatsRecord = {
+    source: "GameSheet, OMHA Exhibition Select 2026-27, U11",
+    pulledAt: "2026-11-26T00:27:00.000Z",
+    payload: {
+      focus_team: "West Niagara Flying Aces U11",
+      skaters: [
+        { rank: 1, number: 16, first_name: "SkaterTop", team: "WSMHA U11 Select", GP: 4, G: 5, A: 2, PTS: 7, PIM: 2, PPG: 0, SHG: 0, GWG: 1 },
+        { rank: 24, number: null, first_name: "SkaterBlank", team: "Quinte West", GP: 1, G: 2, A: 1, PTS: 3, PIM: 0, PPG: 0, SHG: 0, GWG: 1 },
+      ],
+      team_skaters: [
+        { rank: 4, number: 93, first_name: "SkaterAce", team: "West Niagara Flying Aces U11", GP: 3, G: 4, A: 1, PTS: 5, PIM: 0, PPG: 0, SHG: 1, GWG: 1 },
+      ],
+      goalies: [
+        {
+          number: 5,
+          first_name: "GoalieAce",
+          team: "West Niagara Flying Aces U11",
+          GP: "1" as unknown as number,
+          GA: "1" as unknown as number,
+          GAA: "2.19" as unknown as number,
+          W: "0" as unknown as number,
+          L: "0" as unknown as number,
+          T: "0" as unknown as number,
+          SO: "0" as unknown as number,
+        },
+      ],
+      standings: [
+        { team: "WSMHA U11 Select", GP: 4, W: 3, L: 1, T: 0, PTS: 6, GF: 22, GA: 7 },
+        { team: "West Niagara Flying Aces U11", GP: 3, W: 1, L: 2, T: 0, PTS: 2, GF: 10, GA: 18 },
+      ],
+    },
+  }
+  const filledHtml = renderU11StatsPage(selectFilled, U11_SELECT_CONFIG)
+  assert.match(filledHtml, /GoalieAce/)
+  assert.match(filledHtml, /2\.19/)
+  assert.match(filledHtml, /SkaterBlank/)
+  assert.doesNotMatch(filledHtml, /#null/)
+  assert.match(filledHtml, /id="h-roster"/)
+  assert.match(filledHtml, /SkaterAce/)
+  assert.doesNotMatch(filledHtml, /SV%/)
+  assert.doesNotMatch(filledHtml, /otp/i)
 
   console.log("stats u11 ok")
 }
