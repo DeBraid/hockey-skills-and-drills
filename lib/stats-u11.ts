@@ -3,12 +3,54 @@ import { readSession, type AccountUser } from "./auth.js"
 import { getPool } from "./db.js"
 
 const STATS_KEY = "u11_house_2026-27"
+const SELECT_STATS_KEY = "u11_select_2026-27"
 const TIME_ZONE = "America/Toronto"
 const FOCUS_TEAM = "Stars"
 
+export interface StatsViewConfig {
+  key: string
+  title: string
+  pageTitle: string
+  subtitle: string
+  missingMessage: string
+  defaultFocusTeam: string
+  focusShortLabel: string
+  defaultSource: string
+  colophonNote: string
+  otherView: { href: string; label: string }
+}
+
+export const U11_HOUSE_CONFIG: StatsViewConfig = {
+  key: STATS_KEY,
+  title: "WNMH U11 House League",
+  pageTitle: "WNMH U11 Stats · Hockey Skills & Drills",
+  subtitle: "2026–27 Season · Top 40 skaters, goalies & standings",
+  missingMessage: "No U11 stats snapshot is loaded yet.",
+  defaultFocusTeam: FOCUS_TEAM,
+  focusShortLabel: "Stars",
+  defaultSource: "GameSheet, WNMH House League 2026-27, U11",
+  colophonNote:
+    "Save percentage is omitted because shots on goal are not tracked. Stars game log trails the WNMH site by about one game.",
+  otherView: { href: "/stats/u11-select", label: "U11 Select" },
+}
+
+export const U11_SELECT_CONFIG: StatsViewConfig = {
+  key: SELECT_STATS_KEY,
+  title: "U11 Select · West Niagara Flying Aces",
+  pageTitle: "U11 Select Stats · Hockey Skills & Drills",
+  subtitle: "OMHA Exhibition Select 2026–27 · Top skaters, goalies & standings",
+  missingMessage: "No U11 Select stats snapshot is loaded yet.",
+  defaultFocusTeam: "West Niagara Flying Aces U11",
+  focusShortLabel: "West Niagara",
+  defaultSource: "GameSheet, OMHA Exhibition Select 2026-27, U11",
+  colophonNote:
+    "Save percentage is omitted because shots on goal are not tracked. Includes OMHA Exhibition Select games on GameSheet; tournament games (Lefroy) and earlier non-GameSheet exhibitions are separate.",
+  otherView: { href: "/stats/u11", label: "U11 House" },
+}
+
 export interface SkaterRow {
   rank: number
-  number: number
+  number: number | null
   first_name: string
   team: string
   GP: number
@@ -22,7 +64,7 @@ export interface SkaterRow {
 }
 
 export interface GoalieRow {
-  number: number
+  number: number | null
   first_name: string
   team: string
   GP: number
@@ -46,7 +88,9 @@ export interface StandingRow {
 }
 
 export interface LeagueStatsPayload {
+  focus_team?: string
   skaters: SkaterRow[]
+  team_skaters?: SkaterRow[]
   goalies: GoalieRow[]
   standings: StandingRow[]
   source?: string
@@ -60,17 +104,29 @@ export interface LeagueStatsRecord {
 }
 
 export async function handleU11Stats(request: Request, verifiedUser?: AccountUser): Promise<Response> {
+  return handleStatsView(request, U11_HOUSE_CONFIG, verifiedUser)
+}
+
+export async function handleU11SelectStats(request: Request, verifiedUser?: AccountUser): Promise<Response> {
+  return handleStatsView(request, U11_SELECT_CONFIG, verifiedUser)
+}
+
+async function handleStatsView(
+  request: Request,
+  config: StatsViewConfig,
+  verifiedUser?: AccountUser
+): Promise<Response> {
   if (request.method !== "GET" && request.method !== "HEAD") return notFound()
   const user = verifiedUser ?? (await readSession(request))
   if (!isAdmin(user)) return notFound()
 
   let html: string
   try {
-    const record = await loadLeagueStats(STATS_KEY)
-    html = record ? renderU11StatsPage(record) : renderMissing()
+    const record = await loadLeagueStats(config.key)
+    html = record ? renderU11StatsPage(record, config) : renderMissing(config.missingMessage, config)
   } catch (error) {
     console.error("u11 stats failed", error instanceof Error ? error.message : error)
-    html = renderMissing("Could not load league stats right now.")
+    html = renderMissing("Could not load league stats right now.", config)
   }
 
   return new Response(request.method === "HEAD" ? null : html, {
@@ -127,36 +183,104 @@ function ordinal(n: number): string {
   }
 }
 
+
+function toNum(value: unknown, fallback = 0): number {
+  const n = typeof value === "number" ? value : Number(value)
+  return Number.isFinite(n) ? n : fallback
+}
+
+function jerseyText(n: unknown): string {
+  if (n === null || n === undefined || n === "") return ""
+  const v = typeof n === "number" ? n : Number(n)
+  return Number.isFinite(v) ? `#${v}` : ""
+}
+
+function jerseyMark(n: unknown): string {
+  const label = jerseyText(n)
+  return label ? `<span class="sk-num">${label}</span>` : ""
+}
+
+function normalizeSkater(row: SkaterRow): SkaterRow {
+  return {
+    ...row,
+    rank: toNum(row.rank),
+    number: jerseyText(row.number) ? toNum(row.number) : null,
+    first_name: String(row.first_name ?? ""),
+    team: String(row.team ?? ""),
+    GP: toNum(row.GP),
+    G: toNum(row.G),
+    A: toNum(row.A),
+    PTS: toNum(row.PTS),
+    PIM: toNum(row.PIM),
+    PPG: toNum(row.PPG),
+    SHG: toNum(row.SHG),
+    GWG: toNum(row.GWG),
+  }
+}
+
+function normalizeGoalie(row: GoalieRow): GoalieRow {
+  return {
+    ...row,
+    number: jerseyText(row.number) ? toNum(row.number) : null,
+    first_name: String(row.first_name ?? ""),
+    team: String(row.team ?? ""),
+    GP: toNum(row.GP),
+    GA: toNum(row.GA),
+    GAA: toNum(row.GAA),
+    W: toNum(row.W),
+    L: toNum(row.L),
+    T: toNum(row.T),
+    SO: toNum(row.SO),
+  }
+}
+
 function pct(value: number, max: number, span = 100): string {
   if (max <= 0 || value <= 0) return "0%"
   const clamped = Math.min(value, max)
   return `${((clamped / max) * span).toFixed(2)}%`
 }
 
-export function renderU11StatsPage(record: LeagueStatsRecord): string {
+export function renderU11StatsPage(
+  record: LeagueStatsRecord,
+  config: StatsViewConfig = U11_HOUSE_CONFIG
+): string {
   const { payload, source, pulledAt } = record
-  const skaters = Array.isArray(payload.skaters) ? [...payload.skaters] : []
-  const goalies = Array.isArray(payload.goalies) ? [...payload.goalies] : []
+  const focusTeam =
+    typeof payload.focus_team === "string" && payload.focus_team.trim()
+      ? payload.focus_team.trim()
+      : config.defaultFocusTeam
+  const skaters = (Array.isArray(payload.skaters) ? payload.skaters : []).map(normalizeSkater)
+  const teamSkaters = (Array.isArray(payload.team_skaters) ? payload.team_skaters : []).map(normalizeSkater)
+  const goalies = (Array.isArray(payload.goalies) ? payload.goalies : []).map(normalizeGoalie)
   const standings = Array.isArray(payload.standings) ? [...payload.standings] : []
 
   skaters.sort((a, b) => a.rank - b.rank || b.PTS - a.PTS || b.G - a.G)
+  teamSkaters.sort((a, b) => a.rank - b.rank || b.PTS - a.PTS || b.G - a.G)
   goalies.sort((a, b) => a.GAA - b.GAA || a.GA - b.GA)
 
   const totalGoals = standings.reduce((sum, s) => sum + Number(s.GF || 0), 0)
   const totalTeamGames = standings.reduce((sum, s) => sum + Number(s.GP || 0), 0)
   const leagueGames = totalTeamGames / 2
   const goalsPerGame = leagueGames > 0 ? (totalGoals / leagueGames).toFixed(1) : "0.0"
+  const gamesSubLabel =
+    totalTeamGames <= 0
+      ? "0 games"
+      : totalTeamGames % 2 === 0
+        ? `${leagueGames} games · ${goalsPerGame}/gm`
+        : `${totalTeamGames} team-gp · ${(totalGoals / totalTeamGames).toFixed(2)} GF/gp`
 
   const leader = skaters[0]
-  const starsIndex = standings.findIndex((s) => s.team === FOCUS_TEAM)
+  const starsIndex = standings.findIndex((s) => s.team === focusTeam)
   const starsRow = starsIndex >= 0 ? standings[starsIndex] : null
   const starsDiff = starsRow ? starsRow.GF - starsRow.GA : 0
 
-  const maxStandingsGoals = Math.max(80, ...standings.map((s) => Math.max(s.GF, s.GA)))
+  const maxStandingsGoals = Math.max(20, ...standings.map((s) => Math.max(s.GF, s.GA)))
   const standingsScaleMax = Math.ceil(maxStandingsGoals / 10) * 10
+  const standingsStep = standingsScaleMax <= 50 ? 10 : standingsScaleMax <= 80 ? 20 : 30
 
   const maxPts = Math.max(10, ...skaters.map((s) => s.PTS))
   const skaterScaleMax = Math.ceil(maxPts / 5) * 5
+  const skaterStep = skaterScaleMax <= 15 ? 5 : 10
   const skaterMedianPts = median(skaters.map((s) => s.PTS))
   const TRACK_SPAN = 68 // leave 26% on right for direct point + G·A labels
 
@@ -183,23 +307,23 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
       <div class="macro-item">
         <span class="macro-val">${totalGoals}</span>
         <span class="macro-lbl">league goals</span>
-        <span class="macro-sub">${leagueGames % 1 === 0 ? leagueGames : leagueGames.toFixed(1)} games · ${goalsPerGame}/gm</span>
+        <span class="macro-sub">${gamesSubLabel}</span>
       </div>
       <div class="macro-item">
         <span class="macro-val">${leader ? `${leader.PTS} pts` : "—"}</span>
         <span class="macro-lbl">scoring lead</span>
-        <span class="macro-sub">${leader ? `#${leader.number} ${esc(leader.first_name)} (${esc(leader.team)})<br>${leader.G}G · ${leader.A}A` : "—"}</span>
+        <span class="macro-sub">${leader ? `${jerseyText(leader.number) ? `${jerseyText(leader.number)} ` : ""}${esc(leader.first_name)} (${esc(leader.team)})<br>${leader.G}G · ${leader.A}A` : "—"}</span>
       </div>
       <div class="macro-item">
         <span class="macro-val">${starsRow ? ordinal(starsIndex + 1) : "—"}</span>
-        <span class="macro-lbl">${esc(FOCUS_TEAM)} standing</span>
+        <span class="macro-lbl">${esc(config.focusShortLabel)} standing</span>
         <span class="macro-sub">${starsRow ? `${starsRow.W}–${starsRow.L}–${starsRow.T} · ${starsDiff >= 0 ? `+${starsDiff}` : starsDiff} diff` : "—"}</span>
       </div>
     </section>`
 
   // Standings ticks: 0, 30, 60, 90 (or multiples of 30 up to scale max)
   const standingsTicks: number[] = []
-  for (let v = 0; v <= standingsScaleMax; v += 30) standingsTicks.push(v)
+  for (let v = 0; v <= standingsScaleMax; v += standingsStep) standingsTicks.push(v)
   const standingsAxisTicksHtml = standingsTicks
     .map((v) => `<span class="axis-tick" style="left:${pct(v, standingsScaleMax, 64)}">${v}</span>`)
     .join("")
@@ -208,7 +332,7 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
     .map((row, idx) => {
       const diff = row.GF - row.GA
       const diffLabel = diff > 0 ? `+${diff}` : String(diff)
-      const isFocus = row.team === FOCUS_TEAM
+      const isFocus = row.team === focusTeam
       const leftVal = Math.min(row.GF, row.GA)
       const rightVal = Math.max(row.GF, row.GA)
       const stemLeft = pct(leftVal, standingsScaleMax, 64)
@@ -241,7 +365,7 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
 
   // Skater reference ticks: 0, 10, 20, 30
   const skaterTicks: number[] = []
-  for (let v = 0; v <= skaterScaleMax; v += 10) skaterTicks.push(v)
+  for (let v = 0; v <= skaterScaleMax; v += skaterStep) skaterTicks.push(v)
   const skaterMedianLeft = pct(skaterMedianPts, skaterScaleMax, TRACK_SPAN)
 
   const skaterFilterButtons = [
@@ -254,7 +378,7 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
 
   const skaterRowsHtml = skaters
     .map((s) => {
-      const isFocus = s.team === FOCUS_TEAM
+      const isFocus = s.team === focusTeam
       const gWidth = pct(s.G, skaterScaleMax, TRACK_SPAN)
       const aLeft = pct(s.G, skaterScaleMax, TRACK_SPAN)
       const aWidth = pct(s.A, skaterScaleMax, TRACK_SPAN)
@@ -268,12 +392,12 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
           <span class="sk-who">
             <span class="sk-name-line">
               <span class="sk-name">${esc(s.first_name)}</span>
-              <span class="sk-num">#${s.number}</span>
+              ${jerseyMark(s.number)}
             </span>
             <span class="sk-team">${esc(s.team)}</span>
           </span>
         </div>
-        <div class="sk-track" aria-label="${esc(s.first_name)} #${s.number} (${esc(s.team)}): ${s.PTS} points (${s.G} goals, ${s.A} assists) in ${s.GP} games">
+        <div class="sk-track" aria-label="${esc(s.first_name)}${jerseyText(s.number) ? ` ${jerseyText(s.number)}` : ""} (${esc(s.team)}): ${s.PTS} points (${s.G} goals, ${s.A} assists) in ${s.GP} games">
           ${skaterTicks.map((v) => `<span class="grid-v" style="left:${pct(v, skaterScaleMax, TRACK_SPAN)}"></span>`).join("")}
           <span class="grid-med" style="left:${skaterMedianLeft}"></span>
           ${s.G > 0 ? `<span class="bar-g" style="left:0;width:${gWidth}"></span>` : ""}
@@ -292,11 +416,11 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
     .map((st) => {
       const teamSkaters = skaters.filter((s) => s.team === st.team)
       const top40Goals = teamSkaters.reduce((sum, s) => sum + s.G, 0)
-      const isFocus = st.team === FOCUS_TEAM
+      const isFocus = st.team === focusTeam
       const dotsHtml = teamSkaters
         .map((s) => {
           const left = pct(s.PTS, skaterScaleMax, 92)
-          return `<span class="sm-dot" style="left:${left}" title="#${s.number} ${esc(s.first_name)}: ${s.PTS} pts (${s.G}G ${s.A}A)"></span>`
+          return `<span class="sm-dot" style="left:${left}" title="${jerseyText(s.number) ? `${jerseyText(s.number)} ` : ""}${esc(s.first_name)}: ${s.PTS} pts (${s.G}G ${s.A}A)"></span>`
         })
         .join("")
       return `
@@ -326,7 +450,7 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
 
   const goalieRowsHtml = goalies
     .map((g, idx) => {
-      const isFocus = g.team === FOCUS_TEAM
+      const isFocus = g.team === focusTeam
       const gaaLeft = pct(g.GAA, goalieScaleMax, GOALIE_SPAN)
       const directLeft = `calc(${gaaLeft} + 7px)`
       return `
@@ -334,14 +458,14 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
         <div class="gl-label">
           <span class="rank">${idx + 1}</span>
           <span class="gl-who">
-            <span class="gl-name">${esc(g.first_name)} <span class="sk-num">#${g.number}</span></span>
+            <span class="gl-name">${esc(g.first_name)} ${jerseyMark(g.number)}</span>
             <span class="gl-meta muted">
               <span class="gl-team">${esc(g.team)}</span>
               <span class="gl-sub">${g.GP}gp · ${g.W}–${g.L}–${g.T} · ${g.GA} GA</span>
             </span>
           </span>
         </div>
-        <div class="gl-track" aria-label="${esc(g.first_name)} #${g.number} (${esc(g.team)}): ${g.GAA.toFixed(2)} GAA">
+        <div class="gl-track" aria-label="${esc(g.first_name)}${jerseyText(g.number) ? ` ${jerseyText(g.number)}` : ""} (${esc(g.team)}): ${g.GAA.toFixed(2)} GAA">
           ${goalieTicks.map((v) => `<span class="grid-v" style="left:${pct(v, goalieScaleMax, GOALIE_SPAN)}"></span>`).join("")}
           <span class="grid-med" style="left:${avgGaaLeft}" title="Weighted average ${totalGoalieGaaWeighted.toFixed(2)}"></span>
           <span class="gl-stem" style="left:0;width:${gaaLeft}"></span>
@@ -352,8 +476,40 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
     })
     .join("\n")
 
+  const teamSkaterRowsHtml = teamSkaters
+    .map((s) => {
+      const gWidth = pct(s.G, skaterScaleMax, TRACK_SPAN)
+      const aLeft = pct(s.G, skaterScaleMax, TRACK_SPAN)
+      const aWidth = pct(s.A, skaterScaleMax, TRACK_SPAN)
+      const ptsLeft = pct(s.PTS, skaterScaleMax, TRACK_SPAN)
+      const directLeft = `calc(${ptsLeft} + 7px)`
+      return `
+      <div class="sk-row is-focus">
+        <div class="sk-label">
+          <span class="rank">${s.rank}</span>
+          <span class="sk-who">
+            <span class="sk-name-line">
+              <span class="sk-name">${esc(s.first_name)}</span>
+              ${jerseyMark(s.number)}
+            </span>
+            <span class="sk-team">${s.GP}gp · ${s.G}G · ${s.A}A</span>
+          </span>
+        </div>
+        <div class="sk-track" aria-label="${esc(s.first_name)}${jerseyText(s.number) ? ` ${jerseyText(s.number)}` : ""}: ${s.PTS} points (${s.G} goals, ${s.A} assists) in ${s.GP} games">
+          ${skaterTicks.map((v) => `<span class="grid-v" style="left:${pct(v, skaterScaleMax, TRACK_SPAN)}"></span>`).join("")}
+          ${s.G > 0 ? `<span class="bar-g" style="left:0;width:${gWidth}"></span>` : ""}
+          ${s.A > 0 ? `<span class="bar-a${s.G > 0 ? " has-gap" : ""}" style="left:${aLeft};width:${aWidth}"></span>` : ""}
+          <span class="dot dot-pts" style="left:${ptsLeft}"></span>
+          <span class="direct-lbl" style="left:${directLeft}">
+            <strong>${s.PTS}</strong> <span class="muted">${s.G}·${s.A}</span>
+          </span>
+        </div>
+      </div>`
+    })
+    .join("\n")
+
   const pulledLabel = formatTorontoTime(pulledAt)
-  const sourceLabel = source || "GameSheet, WNMH House League 2026-27, U11"
+  const sourceLabel = source || config.defaultSource
 
   const body = `
   <main class="sheet">
@@ -361,11 +517,13 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
       <a href="/">← Drill library</a>
       <span aria-hidden="true">·</span>
       <a href="/admin/">Site stats</a>
+      <span aria-hidden="true">·</span>
+      <a href="${esc(config.otherView.href)}">${esc(config.otherView.label)}</a>
     </nav>
 
     <header class="mast">
-      <h1>WNMH U11 House League</h1>
-      <p class="subtitle">2026–27 Season · Top 40 skaters, goalies &amp; standings</p>
+      <h1>${esc(config.title)}</h1>
+      <p class="subtitle">${esc(config.subtitle)}</p>
     </header>
 
     ${macroHtml}
@@ -434,14 +592,40 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
       </div>
     </section>
 
+    ${
+      teamSkaters.length
+        ? `<section class="block" aria-labelledby="h-roster">
+      <div class="block-head">
+        <h2 id="h-roster">${esc(focusTeam)}</h2>
+        <p class="legend muted">${teamSkaters.length} skaters · league ranks shown at left · same 0–${skaterScaleMax} point axis as the top 40</p>
+      </div>
+      <div class="sk-axis-head">
+        <div class="sk-label-head muted">Skater</div>
+        <div class="sk-track-head muted">
+          ${skaterTicks.map((v) => `<span class="axis-tick" style="left:${pct(v, skaterScaleMax, TRACK_SPAN)}">${v}</span>`).join("")}
+        </div>
+      </div>
+      <div class="sk-list" id="roster-list">
+        ${teamSkaterRowsHtml}
+      </div>
+    </section>`
+        : ""
+    }
+
     <section class="block" aria-labelledby="h-goalies">
       <div class="block-head">
         <h2 id="h-goalies">Goalies · Goals Against Average</h2>
-        <p class="legend muted">
-          Ranked by GAA · dashed rule = weighted mean (${totalGoalieGaaWeighted.toFixed(2)}) · ${totalGoalieGA} total GA · 0 shutouts
-        </p>
+        ${
+          goalies.length > 0
+            ? `<p class="legend muted">
+          Ranked by GAA · dashed rule = weighted mean (${totalGoalieGaaWeighted.toFixed(2)}) · ${totalGoalieGA} total GA · ${goalies.reduce((sum, g) => sum + Number(g.SO || 0), 0)} shutouts
+        </p>`
+            : `<p class="legend muted">No goalie stats loaded yet for this snapshot.</p>`
+        }
       </div>
-      <div class="gl-axis-head">
+      ${
+        goalies.length > 0
+          ? `<div class="gl-axis-head">
         <div class="gl-label-head muted">Goalie</div>
         <div class="gl-track-head muted">
           ${goalieTicks.map((v) => `<span class="axis-tick" style="left:${pct(v, goalieScaleMax, GOALIE_SPAN)}">${v}</span>`).join("")}
@@ -449,11 +633,13 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
       </div>
       <div class="gl-list">
         ${goalieRowsHtml}
-      </div>
+      </div>`
+          : ""
+      }
     </section>
 
     <footer class="colophon muted">
-      <p>Source: ${esc(sourceLabel)} · Pulled ${esc(pulledLabel)}. Save percentage is omitted because shots on goal are not tracked. Stars game log trails the WNMH site by about one game.</p>
+      <p>Source: ${esc(sourceLabel)} · Pulled ${esc(pulledLabel)}. ${esc(config.colophonNote)}</p>
     </footer>
   </main>
 
@@ -515,21 +701,24 @@ export function renderU11StatsPage(record: LeagueStatsRecord): string {
   })();
   </script>`
 
-  return pageShell(body)
+  return pageShell(body, config)
 }
 
-function renderMissing(message = "No U11 stats snapshot is loaded yet."): string {
+function renderMissing(
+  message = "No U11 stats snapshot is loaded yet.",
+  config: StatsViewConfig = U11_HOUSE_CONFIG
+): string {
   return pageShell(`
   <main class="sheet">
-    <nav class="crumb muted"><a href="/">← Drill library</a> · <a href="/admin/">Site stats</a></nav>
+    <nav class="crumb muted"><a href="/">← Drill library</a> · <a href="/admin/">Site stats</a> · <a href="${esc(config.otherView.href)}">${esc(config.otherView.label)}</a></nav>
     <header class="mast">
-      <h1>WNMH U11 House League</h1>
+      <h1>${esc(config.title)}</h1>
       <p class="subtitle">${esc(message)}</p>
     </header>
-  </main>`)
+  </main>`, config)
 }
 
-function pageShell(body: string): string {
+function pageShell(body: string, config: StatsViewConfig = U11_HOUSE_CONFIG): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -538,7 +727,7 @@ function pageShell(body: string): string {
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light dark">
-  <title>WNMH U11 Stats · Hockey Skills &amp; Drills</title>
+  <title>${esc(config.pageTitle)}</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <style>
     :root {
