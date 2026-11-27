@@ -71,6 +71,22 @@ def anim_path(slug: str) -> Path:
     return ROOT / "media" / slug / anim_name(slug)
 
 
+def game_anim_name(slug: str) -> str:
+    return f"{slug}-game-anim.html"
+
+
+def game_anim_rel(slug: str) -> str:
+    return f"media/{slug}/{game_anim_name(slug)}"
+
+
+def game_anim_path(slug: str) -> Path:
+    return ROOT / "media" / slug / game_anim_name(slug)
+
+
+def game_media_rel(slug: str, ext: str) -> str:
+    return f"media/{slug}/{slug}-game.{ext}"
+
+
 def css_num(value: float) -> str:
     return f"{value:.4f}".rstrip("0").rstrip(".")
 
@@ -360,6 +376,13 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     width, height = png_size(png)
     points = "\n".join(f"        <li>{esc(point)}</li>" for point in drill["coachingPoints"])
     steps = "\n".join(f"        <li>{esc(step)}</li>" for step in drill["steps"])
+    game_points_html = ""
+    game_steps_html = ""
+    if drill.get("tacticsViews"):
+        game_points_html = "\n".join(
+            f"        <li>{esc(point)}</li>" for point in drill["gameCoachingPoints"]
+        )
+        game_steps_html = "\n".join(f"        <li>{esc(step)}</li>" for step in drill["gameSteps"])
     series = ""
     note = SERIES_NOTES.get(drill.get("series") or "")
     if note:
@@ -389,18 +412,80 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     anim_w = css_num(anim_width)
     anim_h = css_num(anim_height)
     anim_src = f"{prefix}{anim_rel(slug)}"
+    toggle = ""
+    iframe_attrs = ""
+    lede = f'<p class="lede">{esc(drill["subtitle"])}</p>'
+    diagram_attrs = ""
+    points_block = f"""    <section class="panel" aria-labelledby="points-heading">
+      <h2 id="points-heading">Coaching points</h2>
+      <ul class="points">
+{points}
+      </ul>
+    </section>"""
+    steps_block = f"""    <section class="panel" aria-labelledby="steps-heading">
+      <h2 id="steps-heading">How it runs</h2>
+      <ol class="steps">
+{steps}
+      </ol>
+    </section>"""
+    if drill.get("tacticsViews"):
+        game_png = ROOT / "media" / slug / f"{slug}-game.png"
+        game_w, game_h = anim_size(game_anim_path(slug))
+        gw, gh = css_num(game_w), css_num(game_h)
+        game_src = f"{prefix}{game_anim_rel(slug)}"
+        game_poster = f"{prefix}{game_media_rel(slug, 'png')}"
+        toggle = f"""
+      <div class="view-toggle" data-tactics-views role="tablist" aria-label="Drill view">
+        <button type="button" role="tab" data-view="practice" aria-selected="true">Practice drill</button>
+        <button type="button" role="tab" data-view="game" aria-selected="false">5v5 game</button>
+      </div>"""
+        iframe_attrs = (
+            f' data-practice-src="{anim_src}" data-game-src="{game_src}"'
+            f' data-practice-w="{anim_w}" data-practice-h="{anim_h}"'
+            f' data-game-w="{gw}" data-game-h="{gh}"'
+        )
+        lede = (
+            f'<p class="lede" data-tactics-lede data-practice-lede="{esc(drill["subtitle"])}" '
+            f'data-game-lede="{esc(drill["gameSubtitle"])}">{esc(drill["subtitle"])}</p>'
+        )
+        diagram_attrs = (
+            f' data-tactics-diagram data-practice-src="{poster}" data-game-src="{game_poster}" '
+            f'data-practice-alt="{esc(drill["diagramAlt"])}" data-game-alt="{esc(drill["gameDiagramAlt"])}"'
+        )
+        points_block = f"""    <section class="panel" aria-labelledby="points-heading">
+      <h2 id="points-heading">Coaching points</h2>
+      <ul class="points" data-tactics-copy="practice">
+{points}
+      </ul>
+      <ul class="points" data-tactics-copy="game" hidden>
+{game_points_html}
+      </ul>
+    </section>"""
+        steps_block = f"""    <section class="panel" aria-labelledby="steps-heading">
+      <h2 id="steps-heading">How it runs</h2>
+      <ol class="steps" data-tactics-copy="practice">
+{steps}
+      </ol>
+      <ol class="steps" data-tactics-copy="game" hidden>
+{game_steps_html}
+      </ol>
+    </section>"""
+        # silence unused
+        _ = (game_png,)
+    frame_attrs = ' data-tactics-frame' if drill.get("tacticsViews") else ""
+    open_attrs = " data-tactics-open" if drill.get("tacticsViews") else ""
     watch = f"""    <section class="panel" aria-labelledby="watch-heading">
-      <h2 id="watch-heading">Watch</h2>
-      <div class="anim-frame" style="--anim-w: {anim_w}; --anim-h: {anim_h}">
-        <iframe class="drill-anim" src="{anim_src}" title="Animation of {esc(drill['title'])}" style="aspect-ratio: {anim_w} / {anim_h}" loading="lazy" scrolling="no" data-anim-w="{anim_w}" data-anim-h="{anim_h}"></iframe>
+      <h2 id="watch-heading">Watch</h2>{toggle}
+      <div class="anim-frame"{frame_attrs} style="--anim-w: {anim_w}; --anim-h: {anim_h}">
+        <iframe class="drill-anim" src="{anim_src}" title="Animation of {esc(drill['title'])}" style="aspect-ratio: {anim_w} / {anim_h}" loading="lazy" scrolling="no" data-anim-w="{anim_w}" data-anim-h="{anim_h}"{iframe_attrs}></iframe>
       </div>
-      <p class="anim-open"><a href="{anim_src}">Open full screen</a></p>
+      <p class="anim-open"><a{open_attrs} href="{anim_src}">Open full screen</a></p>
     </section>"""
     body = f"""  <main id="content" class="wrap-read">
     <p class="back"><a href="{prefix}">All drills</a></p>
     <header class="drill-head">{kicker}
       <h1>{esc(drill['title'])}</h1>
-      <p class="lede">{esc(drill['subtitle'])}</p>
+      {lede}
       {tag_list(drill, labels)}{series}
       <div class="plan-row">{plan_button(slug, drill['title'])}</div>
     </header>
@@ -410,23 +495,13 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     <section class="panel" aria-labelledby="diagram-heading">
       <h2 id="diagram-heading">Diagram</h2>
       <figure class="diagram">
-        <img src="{poster}" width="{width}" height="{height}" alt="{esc(drill['diagramAlt'])}">
+        <img src="{poster}" width="{width}" height="{height}" alt="{esc(drill['diagramAlt'])}"{diagram_attrs}>
       </figure>
     </section>
 
-    <section class="panel" aria-labelledby="points-heading">
-      <h2 id="points-heading">Coaching points</h2>
-      <ul class="points">
-{points}
-      </ul>
-    </section>
+{points_block}
 
-    <section class="panel" aria-labelledby="steps-heading">
-      <h2 id="steps-heading">How it runs</h2>
-      <ol class="steps">
-{steps}
-      </ol>
-    </section>
+{steps_block}
 
     <section class="panel" aria-labelledby="files-heading">
       <h2 id="files-heading">Downloads</h2>
@@ -527,21 +602,29 @@ def plan_catalog(data: dict, labels: dict[str, str]) -> str:
     for drill in data["drills"]:
         slug = drill["slug"]
         width, height = anim_size(anim_path(slug))
-        catalog.append(
-            {
-                "slug": slug,
-                "title": drill["title"],
-                "series": drill.get("series") or "",
-                "tags": [labels[tag] for tag in drill["tags"]],
-                "png": f"../{media_rel(slug, 'png')}",
-                "anim": f"../{anim_rel(slug)}",
-                "animW": width,
-                "animH": height,
-                "page": f"../drills/{slug}/",
-                "alt": drill["diagramAlt"],
-                "points": drill["coachingPoints"],
-            }
-        )
+        item = {
+            "slug": slug,
+            "title": drill["title"],
+            "series": drill.get("series") or "",
+            "tags": [labels[tag] for tag in drill["tags"]],
+            "png": f"../{media_rel(slug, 'png')}",
+            "anim": f"../{anim_rel(slug)}",
+            "animW": width,
+            "animH": height,
+            "page": f"../drills/{slug}/",
+            "alt": drill["diagramAlt"],
+            "points": drill["coachingPoints"],
+        }
+        if drill.get("tacticsViews"):
+            game_w, game_h = anim_size(game_anim_path(slug))
+            item["tacticsViews"] = True
+            item["gameAnim"] = f"../{game_anim_rel(slug)}"
+            item["gameAnimW"] = game_w
+            item["gameAnimH"] = game_h
+            item["gamePng"] = f"../{game_media_rel(slug, 'png')}"
+            item["gameAlt"] = drill["gameDiagramAlt"]
+            item["gamePoints"] = drill["gameCoachingPoints"]
+        catalog.append(item)
     return json.dumps(catalog, ensure_ascii=False).replace("<", "\\u003c")
 
 

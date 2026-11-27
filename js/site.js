@@ -844,6 +844,113 @@
     document.querySelectorAll(".drill-anim").forEach(fitAfterLayout);
   });
 
+  function readTacticsView() {
+    try {
+      var query = new URLSearchParams(window.location.search).get("view");
+      if (query === "game" || query === "practice") return query;
+    } catch (error) {}
+    var hash = (window.location.hash || "").replace(/^#/, "");
+    if (hash === "view=game" || hash === "game") return "game";
+    if (hash === "view=practice" || hash === "practice") return "practice";
+    return "practice";
+  }
+
+  function writeTacticsView(view) {
+    try {
+      var url = new URL(window.location.href);
+      if (view === "game") url.searchParams.set("view", "game");
+      else url.searchParams.delete("view");
+      if (/^(view=)?(game|practice)$/.test((url.hash || "").replace(/^#/, ""))) {
+        url.hash = "";
+      }
+      var next = url.pathname + url.search + url.hash;
+      if (next !== window.location.pathname + window.location.search + window.location.hash) {
+        window.history.replaceState(null, "", next);
+      }
+    } catch (error) {}
+  }
+
+  function applyTacticsView(root, view) {
+    if (!root) return;
+    var buttons = root.querySelectorAll("[data-tactics-views] [data-view]");
+    buttons.forEach(function (button) {
+      button.setAttribute("aria-selected", button.getAttribute("data-view") === view ? "true" : "false");
+    });
+    var lede = root.querySelector("[data-tactics-lede]");
+    if (lede) {
+      var nextLede = lede.getAttribute(view === "game" ? "data-game-lede" : "data-practice-lede");
+      if (nextLede) lede.textContent = nextLede;
+    }
+    var diagram = root.querySelector("[data-tactics-diagram]");
+    if (diagram) {
+      var src = diagram.getAttribute(view === "game" ? "data-game-src" : "data-practice-src");
+      var alt = diagram.getAttribute(view === "game" ? "data-game-alt" : "data-practice-alt");
+      if (src) diagram.setAttribute("src", src);
+      if (alt) diagram.setAttribute("alt", alt);
+    }
+    root.querySelectorAll("[data-tactics-copy]").forEach(function (node) {
+      if (node.getAttribute("data-tactics-copy") === view) node.removeAttribute("hidden");
+      else node.setAttribute("hidden", "");
+    });
+    var frame = root.querySelector("[data-tactics-frame]") || root.querySelector(".anim-frame");
+    var iframe = root.querySelector("iframe.drill-anim");
+    if (iframe && iframe.getAttribute("data-game-src")) {
+      var prefix = view === "game" ? "game" : "practice";
+      var anim = iframe.getAttribute("data-" + prefix + "-src");
+      var animW = iframe.getAttribute("data-" + prefix + "-w");
+      var animH = iframe.getAttribute("data-" + prefix + "-h");
+      if (animW && animH) {
+        iframe.setAttribute("data-anim-w", animW);
+        iframe.setAttribute("data-anim-h", animH);
+        iframe.style.aspectRatio = animW + " / " + animH;
+        if (frame) {
+          frame.style.setProperty("--anim-w", animW);
+          frame.style.setProperty("--anim-h", animH);
+        }
+      }
+      if (anim) {
+        iframe.setAttribute("data-src", anim);
+        if (iframe.getAttribute("src") && iframe.getAttribute("src") !== anim) {
+          iframe.src = anim;
+        }
+      }
+    }
+    var open = root.querySelector("[data-tactics-open]");
+    if (open && iframe) {
+      var href = iframe.getAttribute("data-src") || iframe.getAttribute("src");
+      if (href) open.setAttribute("href", href);
+    }
+  }
+
+  function initTacticsViews(root) {
+    root = root || document;
+    var groups = [].slice.call(root.querySelectorAll("[data-tactics-views]"));
+    if (!groups.length) return;
+    var view = readTacticsView();
+    groups.forEach(function (group) {
+      var scope = group.closest("[data-tactics-root]") || group.closest("article") || group.closest("li") || group.closest("main") || document;
+      if (!scope.getAttribute("data-tactics-bound")) {
+        scope.setAttribute("data-tactics-bound", "1");
+        group.querySelectorAll("[data-view]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            var next = button.getAttribute("data-view") === "game" ? "game" : "practice";
+            writeTacticsView(next);
+            document.querySelectorAll("[data-tactics-views]").forEach(function (other) {
+              var otherScope = other.closest("[data-tactics-root]") || other.closest("article") || other.closest("li") || other.closest("main") || document;
+              applyTacticsView(otherScope, next);
+            });
+          });
+        });
+      }
+      applyTacticsView(scope, view);
+    });
+  }
+
+  initTacticsViews();
+  window.addEventListener("popstate", function () {
+    initTacticsViews();
+  });
+
   var buttons = document.querySelectorAll("[data-filter]");
   var sortButtons = document.querySelectorAll("[data-sort]");
   var grid = document.querySelector(".grid");
@@ -1828,12 +1935,25 @@
         li.appendChild(pointsHeading);
         var points = document.createElement("ul");
         points.className = "points";
+        points.setAttribute("data-tactics-copy", "practice");
         drill.points.forEach(function (point) {
           var pointItem = document.createElement("li");
           pointItem.textContent = point;
           points.appendChild(pointItem);
         });
         li.appendChild(points);
+        if (drill.tacticsViews && drill.gamePoints && drill.gamePoints.length) {
+          var gamePoints = document.createElement("ul");
+          gamePoints.className = "points";
+          gamePoints.setAttribute("data-tactics-copy", "game");
+          gamePoints.setAttribute("hidden", "");
+          drill.gamePoints.forEach(function (point) {
+            var pointItem = document.createElement("li");
+            pointItem.textContent = point;
+            gamePoints.appendChild(pointItem);
+          });
+          li.appendChild(gamePoints);
+        }
       }
       var more = document.createElement("p");
       more.className = "practice-more";
@@ -1852,13 +1972,38 @@
       img.className = "practice-still";
       img.src = drill.png;
       img.alt = drill.alt || "";
+      if (drill.tacticsViews && drill.gamePng) {
+        img.setAttribute("data-tactics-diagram", "");
+        img.setAttribute("data-practice-src", drill.png);
+        img.setAttribute("data-game-src", drill.gamePng);
+        img.setAttribute("data-practice-alt", drill.alt || "");
+        img.setAttribute("data-game-alt", drill.gameAlt || "");
+      }
       media.appendChild(img);
       if (!drill.anim || !drill.animW || !drill.animH) {
         media.classList.add("is-fallback");
         return media;
       }
+      if (drill.tacticsViews && drill.gameAnim) {
+        var toggle = document.createElement("div");
+        toggle.className = "view-toggle";
+        toggle.setAttribute("data-tactics-views", "");
+        toggle.setAttribute("role", "tablist");
+        toggle.setAttribute("aria-label", "Drill view");
+        ["practice", "game"].forEach(function (view) {
+          var button = document.createElement("button");
+          button.type = "button";
+          button.setAttribute("role", "tab");
+          button.setAttribute("data-view", view);
+          button.setAttribute("aria-selected", view === "practice" ? "true" : "false");
+          button.textContent = view === "game" ? "5v5 game" : "Practice drill";
+          toggle.appendChild(button);
+        });
+        media.appendChild(toggle);
+      }
       var frame = document.createElement("div");
       frame.className = "anim-frame";
+      frame.setAttribute("data-tactics-frame", "");
       frame.style.setProperty("--anim-w", String(drill.animW));
       frame.style.setProperty("--anim-h", String(drill.animH));
       var iframe = document.createElement("iframe");
@@ -1869,6 +2014,14 @@
       iframe.setAttribute("scrolling", "no");
       iframe.setAttribute("data-anim-w", String(drill.animW));
       iframe.setAttribute("data-anim-h", String(drill.animH));
+      if (drill.tacticsViews && drill.gameAnim) {
+        iframe.setAttribute("data-practice-src", drill.anim);
+        iframe.setAttribute("data-game-src", drill.gameAnim);
+        iframe.setAttribute("data-practice-w", String(drill.animW));
+        iframe.setAttribute("data-practice-h", String(drill.animH));
+        iframe.setAttribute("data-game-w", String(drill.gameAnimW));
+        iframe.setAttribute("data-game-h", String(drill.gameAnimH));
+      }
       if (index === 0) iframe.setAttribute("data-eager", "1");
       frame.appendChild(iframe);
       media.appendChild(frame);
@@ -1876,6 +2029,7 @@
     }
 
     function armAnimations(root) {
+      initTacticsViews(root);
       var frames = [].slice.call(root.querySelectorAll(".drill-anim"));
       frames.forEach(watchAnim);
       function loadFrame(frame) {
