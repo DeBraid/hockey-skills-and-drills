@@ -21,10 +21,16 @@ REQUIRED_MEDIA = ("png", "excalidraw")
 LINK_RE = re.compile(r"(?:href|src|poster)=\"([^\"]+)\"|\[[^\]]*\]\(([^)\s]+)\)")
 VIEWBOX_RE = re.compile(r"<svg\b[^>]*\bviewBox=\"([^\"]+)\"")
 FONT_FILES = ("Virgil.woff2", "Virgil-OFL.txt")
-SERIES_NOTE = (
-    "Same entry for every low-to-high drill: carry in, drive to the dot, "
-    "curl toward the boards, and pass up the wall. Only the finish changes."
-)
+SERIES_NOTES = {
+    "Low-to-high": (
+        "Same entry for every low-to-high drill: carry in, drive to the dot, "
+        "curl toward the boards, and pass up the wall. Only the finish changes."
+    ),
+    "Zone Exit": (
+        "Don't jam it up the strong-side wall. Go behind the net, then either "
+        "skate the weak side or reverse it to your partner."
+    ),
+}
 
 
 def esc(value: str) -> str:
@@ -355,8 +361,9 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     points = "\n".join(f"        <li>{esc(point)}</li>" for point in drill["coachingPoints"])
     steps = "\n".join(f"        <li>{esc(step)}</li>" for step in drill["steps"])
     series = ""
-    if drill.get("series"):
-        series = f'\n      <p class="series-note">{esc(SERIES_NOTE)}</p>'
+    note = SERIES_NOTES.get(drill.get("series") or "")
+    if note:
+        series = f'\n      <p class="series-note">{esc(note)}</p>'
     kicker = ""
     if drill.get("series"):
         kicker = f'\n      <p class="kicker">{esc(drill["series"])}</p>'
@@ -463,8 +470,9 @@ def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]
     points = "\n".join(f"- {point}" for point in drill["coachingPoints"])
     steps = "\n".join(f"{index}. {step}" for index, step in enumerate(drill["steps"], start=1))
     series = ""
-    if drill.get("series"):
-        series = f"\n{SERIES_NOTE}\n"
+    note = SERIES_NOTES.get(drill.get("series") or "")
+    if note:
+        series = f"\n{note}\n"
     related = ""
     if drill.get("related"):
         lines = "\n".join(f"- [{by_slug[other]['title']}]({other}.md)" for other in drill["related"])
