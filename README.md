@@ -502,6 +502,14 @@ A passing and edges drill that runs in both end-zone circles at once. A passer s
 
 [Note](drills/circle-bump-passes.md) · [Drill page](drills/circle-bump-passes/) · [Animation](media/circle-bump-passes/circle-bump-passes-anim.html) · [PNG](media/circle-bump-passes/circle-bump-passes.png) · [Excalidraw](media/circle-bump-passes/circle-bump-passes.excalidraw)
 
+### [Dump and Chase](drills/dump-and-chase.md)
+
+A basic 5-on-5 tactic. The puck carrier comes in on one side and gets swarmed by two D and a backchecker. When there is no lane, they dump the puck into the weak-side corner — the one opposite the carrier and the swarm — so the other two forwards can hunt it down. The attacking D hold the blue line. Dump only when you cannot carry it in.
+
+**Tags:** `full-ice`, `zone-entry`, `tactics`
+
+[Note](drills/dump-and-chase.md) · [Drill page](drills/dump-and-chase/) · [Animation](media/dump-and-chase/dump-and-chase-anim.html) · [PNG](media/dump-and-chase/dump-and-chase.png) · [Excalidraw](media/dump-and-chase/dump-and-chase.excalidraw)
+
 
 ## Add a drill
 

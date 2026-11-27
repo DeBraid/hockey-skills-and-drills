@@ -23,7 +23,7 @@ Add an object to the `drills` array:
 - `slug` matches the folder and the file names.
 - `added` is the day the drill joins the library, as an ISO date (`YYYY-MM-DD`). Use today's date. The home page sorts by it ("Most recent") and marks drills from the last 14 days with a New badge. Dates already in git history can be filled with `python3 scripts/backfill_added_dates.py`. That script stores the calendar day only. Do not add a name, an email, or any other identity.
 - `title`, `subtitle`, `blurb`, and `diagramAlt` are the words on the card and the drill page.
-- `tags` is a list of ids from the top-level `tags` array (`full-ice`, `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`, `skating`, `breakout`, `small-area-game`). Add a new tag there first if you need a new chip on the home page. The home-page filters are generated from that list.
+- `tags` is a list of ids from the top-level `tags` array (`full-ice`, `half-ice`, `zone-entry`, `passing`, `shooting`, `defence`, `skating`, `breakout`, `small-area-game`, `stickhandling`, `tactics`). Add a new tag there first if you need a new chip on the home page. The home-page filters are generated from that list.
 - `series` is optional. Set it to `"Low-to-high"` when the drill uses that same zone entry.
 - `excalidrawUrl` is the public Excalidraw share link, or `null` when there is only the file.
 - `coachingPoints` and `steps` are arrays of plain sentences, in skate order.
