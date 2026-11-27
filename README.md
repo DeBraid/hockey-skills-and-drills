@@ -520,7 +520,7 @@ A common failing: our D get the puck in our corner and throw it up the strong-si
 
 ### [Zone Exit: Reverse to Partner](drills/zone-exit-reverse.md)
 
-Same setup as skating it out the weak side: D1 has the puck in our corner, and rimming it up the strong-side wall will turn over. This time D1 bounces or reverses the puck off the end boards behind the net to D2, who is waiting in the far corner. D2 then makes a play up the weak-side wall to the winger. D2 talks, calls "over", and stays in that far corner so the reverse has a target.
+Same setup as skating it out the weak side: D1 has the puck in our corner, and rimming it up the strong-side wall will turn over. This time D1 banks the puck off the end boards behind the net to D2, who is waiting in the far corner. D2 then makes a play up the weak-side wall to the winger. D2 talks, calls "over", and stays in that far corner so the reverse has a target.
 
 **Tags:** `half-ice`, `tactics`, `breakout`, `passing`, `defence`
 

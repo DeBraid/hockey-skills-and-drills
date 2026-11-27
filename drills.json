@@ -1903,20 +1903,20 @@
       "slug": "zone-exit-reverse",
       "added": "2026-11-27",
       "title": "Zone Exit: Reverse to Partner",
-      "subtitle": "Coach dumps it in. D1 reverses behind the net to D2, who hits the winger.",
-      "blurb": "Same setup as skating it out the weak side: D1 has the puck in our corner, and rimming it up the strong-side wall will turn over. This time D1 bounces or reverses the puck off the end boards behind the net to D2, who is waiting in the far corner. D2 then makes a play up the weak-side wall to the winger. D2 talks, calls \"over\", and stays in that far corner so the reverse has a target.",
+      "subtitle": "Coach dumps it in. D1 banks it off the end boards to D2, who hits the winger.",
+      "blurb": "Same setup as skating it out the weak side: D1 has the puck in our corner, and rimming it up the strong-side wall will turn over. This time D1 banks the puck off the end boards behind the net to D2, who is waiting in the far corner. D2 then makes a play up the weak-side wall to the winger. D2 talks, calls \"over\", and stays in that far corner so the reverse has a target.",
       "diagramAlt": "Half-ice practice diagram of Zone Exit: Reverse to Partner. A coach at the blue line dumps the puck into the strong-side corner. D1 retrieves it and banks the puck off the end boards behind the net to D2 in the far corner. D2 passes up the weak-side wall to the winger, who carries toward the blue line. The centre stays low and the strong-side winger stays on the wall. Waiting D and winger lines stand at the blue and along the walls. Pylons mark their pressure on the strong side.",
       "tags": ["half-ice", "tactics", "breakout", "passing", "defence"],
       "series": "Zone Exit",
       "tacticsViews": true,
-      "gameSubtitle": "Wrong way first: a rim up the strong side turns over. Then reverse it to your partner.",
+      "gameSubtitle": "Wrong way first: a rim up the strong side turns over. Then bank it off the end boards to D2.",
       "gameDiagramAlt": "Half-ice 5-on-5 diagram of Zone Exit: Reverse to Partner, in our defensive zone. Our team is blue and the forecheck is violet, with all ten skaters shown. D1 has the puck in the strong-side corner. The wrong way is a rim up the strong-side wall, which their pinching D picks off. The right way is D1 banking the puck off the end boards behind the net to D2 in the far corner, who then passes up the weak-side wall to our winger. The centre stays low and the strong-side winger stays on the wall.",
       "excalidrawUrl": null,
       "coachingPoints": [
         "The coach dumps the puck into the strong-side corner. D1 goes to get it.",
         "Shoulder check before you get the puck.",
         "The pylons are their pressure. Don't rim it up that wall.",
-        "Use the net as a shield. Bounce or reverse the puck behind it to your partner.",
+        "Use the net as a shield. Bank the puck off the end boards behind the net to your partner.",
         "D2 talks, calls \"over\", and stays in the far corner.",
         "The winger on the weak-side boards shows a target with the stick."
       ],
@@ -1924,14 +1924,14 @@
         "Shoulder check before you get the puck.",
         "Wrong way: a rim up the strong-side wall is picked off. Their D is pinching.",
         "The strong-side wall is where their pressure is. Don't jam it up there.",
-        "Right way: use the net as a shield. Bounce or reverse the puck behind it to your partner.",
+        "Right way: use the net as a shield. Bank the puck off the end boards behind the net to your partner.",
         "D2 talks, calls \"over\", and stays in the far corner.",
         "The winger on the weak-side boards shows a target with the stick."
       ],
       "steps": [
         "Setup: Same as Zone Exit: Skate the Weak Side. D1 starts in front of the net, D2 stays in the far corner, and the centre is low in support. Winger lines stand on each wall, and a waiting D line stands at the blue line. The coach has pucks at the blue. Pylons mark their pressure on the strong side.",
         "The coach dumps the puck into the strong-side corner. D1 skates to it and shoulder checks. D2 stays on the far side and calls \"over\".",
-        "D1 carries toward the net and bounces the puck off the end boards behind the net to D2 in the other corner.",
+        "D1 carries toward the net and banks the puck off the end boards behind the net to D2 in the other corner.",
         "D2 passes up the weak-side wall to the winger, who shows a target and carries toward the blue line.",
         "The next pair is ready."
       ],
@@ -1939,7 +1939,7 @@
         "Setup: 5-on-5 in our defensive zone. D1 has the puck in the strong-side corner. D2 stays in the far corner. The centre is low in support. One winger is on each wall. Their five skaters are in a forecheck, with a forward pressing D1 and their D pinching at the strong-side point.",
         "D1 gets the puck and shoulder checks. D2 stays on the far side and calls \"over\".",
         "Wrong way: D1 rims it up the strong side. That pass goes to their pinching D.",
-        "Right way: From the same corner, D1 carries toward the net and bounces the puck off the end boards behind the net to D2.",
+        "Right way: From the same corner, D1 carries toward the net and banks the puck off the end boards behind the net to D2.",
         "D2 passes up the weak-side wall to the winger, who shows a target and carries toward the blue line."
       ],
       "related": ["zone-exit-skate-weak-side", "d-to-wall-breakout", "controlled-skating-breakout"]
