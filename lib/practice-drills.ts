@@ -305,5 +305,10 @@ export const PRACTICE_DRILLS: Record<string, PracticeDrill> = {
     "title": "Circle Bump Passes",
     "png": "/media/circle-bump-passes/circle-bump-passes.png",
     "alt": "Half-ice diagram of Circle Bump Passes. Both end-zone circles are used at once. A passer stands on each faceoff dot with a few pucks, and 4 pylons sit on each circle at the top, bottom, left and right. A line of skaters waits beside each circle, toward the blue line. In step 1 the skater does one lap counter-clockwise just outside the pylons, and at each pylon gets a pass from the passer and bumps it straight back, for 4 forehand touches. In step 2 the skater reverses and does a lap clockwise just inside the pylons, receiving and bumping on the backhand at each pylon. Then the skater goes to the back of the line. Passes are dashed arrows and skating is a solid arrow."
+  },
+  "dump-and-chase": {
+    "title": "Dump and Chase",
+    "png": "/media/dump-and-chase/dump-and-chase.png",
+    "alt": "Full-ice diagram of Dump and Chase. The attacking team (blue) comes up ice 5-on-5, with F1 carrying the puck up the strong-side wall. Two defending D and a backchecker (violet) swarm F1 at the offensive blue line. F1 dumps the puck diagonally into the weak-side corner. F2 chases it down the far wall and retrieves it, while F3 supports inside the zone and the attacking D hold the blue line."
   }
 }
