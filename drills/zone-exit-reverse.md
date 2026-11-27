@@ -1,6 +1,6 @@
 # Zone Exit: Reverse to Partner
 
-Coach dumps it in. D1 reverses behind the net to D2, who hits the winger.
+Coach dumps it in. D1 banks it off the end boards to D2, who hits the winger.
 
 **Tags:** `half-ice`, `tactics`, `breakout`, `passing`, `defence`
 
@@ -17,7 +17,7 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 - The coach dumps the puck into the strong-side corner. D1 goes to get it.
 - Shoulder check before you get the puck.
 - The pylons are their pressure. Don't rim it up that wall.
-- Use the net as a shield. Bounce or reverse the puck behind it to your partner.
+- Use the net as a shield. Bank the puck off the end boards behind the net to your partner.
 - D2 talks, calls "over", and stays in the far corner.
 - The winger on the weak-side boards shows a target with the stick.
 
@@ -25,7 +25,7 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 1. Setup: Same as Zone Exit: Skate the Weak Side. D1 starts in front of the net, D2 stays in the far corner, and the centre is low in support. Winger lines stand on each wall, and a waiting D line stands at the blue line. The coach has pucks at the blue. Pylons mark their pressure on the strong side.
 2. The coach dumps the puck into the strong-side corner. D1 skates to it and shoulder checks. D2 stays on the far side and calls "over".
-3. D1 carries toward the net and bounces the puck off the end boards behind the net to D2 in the other corner.
+3. D1 carries toward the net and banks the puck off the end boards behind the net to D2 in the other corner.
 4. D2 passes up the weak-side wall to the winger, who shows a target and carries toward the blue line.
 5. The next pair is ready.
 
