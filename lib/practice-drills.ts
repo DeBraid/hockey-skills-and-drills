@@ -310,5 +310,15 @@ export const PRACTICE_DRILLS: Record<string, PracticeDrill> = {
     "title": "Dump and Chase",
     "png": "/media/dump-and-chase/dump-and-chase.png",
     "alt": "Full-ice diagram of Dump and Chase. The attacking team (blue) comes up ice 5-on-5, with F1 carrying the puck a few strides ahead on the strong-side wall and F2 and F3 trailing in the far-wall and middle lanes. The attacking D stay back near their own blue line. Two defending D and a backchecker (violet) swarm F1 at the offensive blue line. F1 dumps the puck diagonally into the weak-side corner. F2 and F3 both chase it into that corner to retrieve it, and F1 skates to the back post. F2, first to the puck, fires a hard pass from the corner to F1, who taps it into the net."
+  },
+  "zone-exit-skate-weak-side": {
+    "title": "Zone Exit: Skate the Weak Side",
+    "png": "/media/zone-exit-skate-weak-side/zone-exit-skate-weak-side.png",
+    "alt": "Half-ice diagram of our defensive zone, attacking toward centre ice. Our team is blue and the forecheck is violet. D1 has the puck in the strong-side corner. Their forward closes on D1, and their D pinches at the strong-side point. The bad option is a rim up the strong-side wall, which their pinching D picks off. Instead, D1 carries behind the net and out the weak side, then passes to our winger on the weak-side boards, who carries toward the blue line. The centre stays low in support, D2 stays in the far corner, and the strong-side winger stays on the wall."
+  },
+  "zone-exit-reverse": {
+    "title": "Zone Exit: Reverse to Partner",
+    "png": "/media/zone-exit-reverse/zone-exit-reverse.png",
+    "alt": "Half-ice diagram of our defensive zone, attacking toward centre ice. Our team is blue and the forecheck is violet. D1 has the puck in the strong-side corner and carries toward the net, then banks the puck off the end boards behind the net to D2 in the far corner. D2 passes up the weak-side wall to our winger, who carries toward the blue line. The centre stays low in support, the strong-side winger stays on the wall, and their forward and pinching D are on the strong side."
   }
 }

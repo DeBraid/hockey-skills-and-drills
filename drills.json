@@ -1832,6 +1832,57 @@
         "F2, first to the puck, fires a hard pass from the corner to F1 at the back post. F1 taps it in."
       ],
       "related": ["wide-entry-drive-net", "zone-entry-delay", "two-v-two-hard-rim"]
+    },
+    {
+      "slug": "zone-exit-skate-weak-side",
+      "added": "2026-11-27",
+      "title": "Zone Exit: Skate the Weak Side",
+      "subtitle": "Don't rim the strong-side wall. Go behind the net and hit the weak-side winger.",
+      "blurb": "A common failing: our D get the puck in our corner and throw it up the strong-side wall. That almost always turns over, because their D is pinching. Instead, go behind the net, use it as a shield, skate out the weak side, and pass to the winger on the weak-side boards. The centre stays low in support, the strong-side winger stays on the wall, and D2 stays in the far corner.",
+      "diagramAlt": "Half-ice diagram of our defensive zone, attacking toward centre ice. Our team is blue and the forecheck is violet. D1 has the puck in the strong-side corner. Their forward closes on D1, and their D pinches at the strong-side point. The bad option is a rim up the strong-side wall, which their pinching D picks off. Instead, D1 carries behind the net and out the weak side, then passes to our winger on the weak-side boards, who carries toward the blue line. The centre stays low in support, D2 stays in the far corner, and the strong-side winger stays on the wall.",
+      "tags": ["half-ice", "tactics", "breakout", "passing", "defence"],
+      "series": "Zone Exit",
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Shoulder check before you get the puck.",
+        "The strong-side wall is where their pressure is. Don't jam it up there — their D is pinching, and a rim almost always turns over.",
+        "Use the net as a shield. Go behind it and skate out the weak side.",
+        "D2 talks, calls \"over\", and stays in the far corner.",
+        "The winger on the weak-side boards shows a target with the stick."
+      ],
+      "steps": [
+        "Setup: Our defensive zone, half ice. D1 has the puck in the strong-side corner. D2 is in the far corner. The centre is low in support. One winger is on each wall. Their forward is coming to pressure D1, and their D is pinching at the strong-side point. A goalie is in our net.",
+        "D1 gets the puck and shoulder checks. Their forward closes, and their D pinches on the strong-side wall.",
+        "Don't rim it up the strong side. That pass goes to their pinching D.",
+        "Instead, D1 goes behind the net, using it as a shield, and skates out the weak side.",
+        "D1 passes to the winger on the weak-side boards, who shows a target and carries toward the blue line."
+      ],
+      "related": ["zone-exit-reverse", "d-to-wall-breakout", "controlled-skating-breakout"]
+    },
+    {
+      "slug": "zone-exit-reverse",
+      "added": "2026-11-27",
+      "title": "Zone Exit: Reverse to Partner",
+      "subtitle": "Bounce it behind the net to your partner. D2 goes up the weak-side wall.",
+      "blurb": "Same setup as skating it out the weak side: D1 has the puck in our corner, and rimming it up the strong-side wall will turn over. This time D1 bounces or reverses the puck off the end boards behind the net to D2, who is waiting in the far corner. D2 then makes a play up the weak-side wall to the winger. D2 talks, calls \"over\", and stays in that far corner so the reverse has a target.",
+      "diagramAlt": "Half-ice diagram of our defensive zone, attacking toward centre ice. Our team is blue and the forecheck is violet. D1 has the puck in the strong-side corner and carries toward the net, then banks the puck off the end boards behind the net to D2 in the far corner. D2 passes up the weak-side wall to our winger, who carries toward the blue line. The centre stays low in support, the strong-side winger stays on the wall, and their forward and pinching D are on the strong side.",
+      "tags": ["half-ice", "tactics", "breakout", "passing", "defence"],
+      "series": "Zone Exit",
+      "excalidrawUrl": null,
+      "coachingPoints": [
+        "Shoulder check before you get the puck.",
+        "The strong-side wall is where their pressure is. Don't jam it up there — their D is pinching.",
+        "Use the net as a shield. Bounce or reverse the puck behind it to your partner.",
+        "D2 talks, calls \"over\", and stays in the far corner.",
+        "The winger on the weak-side boards shows a target with the stick."
+      ],
+      "steps": [
+        "Setup: Same as Zone Exit: Skate the Weak Side. D1 has the puck in the strong-side corner. D2 stays in the far corner. The centre is low in support. One winger is on each wall. Their forward pressures D1, and their D pinches at the strong-side point.",
+        "D1 gets the puck and shoulder checks. D2 stays on the far side and calls \"over\".",
+        "D1 carries toward the net and bounces the puck off the end boards behind the net to D2 in the other corner.",
+        "D2 passes up the weak-side wall to the winger, who shows a target and carries toward the blue line."
+      ],
+      "related": ["zone-exit-skate-weak-side", "d-to-wall-breakout", "controlled-skating-breakout"]
     }
   ]
 }

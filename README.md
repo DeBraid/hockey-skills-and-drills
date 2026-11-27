@@ -510,6 +510,22 @@ A basic 5-on-5 tactic. F1 leads the rush by a few strides, with F2 and F3 traili
 
 [Note](drills/dump-and-chase.md) · [Drill page](drills/dump-and-chase/) · [Animation](media/dump-and-chase/dump-and-chase-anim.html) · [PNG](media/dump-and-chase/dump-and-chase.png) · [Excalidraw](media/dump-and-chase/dump-and-chase.excalidraw)
 
+### [Zone Exit: Skate the Weak Side](drills/zone-exit-skate-weak-side.md)
+
+A common failing: our D get the puck in our corner and throw it up the strong-side wall. That almost always turns over, because their D is pinching. Instead, go behind the net, use it as a shield, skate out the weak side, and pass to the winger on the weak-side boards. The centre stays low in support, the strong-side winger stays on the wall, and D2 stays in the far corner.
+
+**Tags:** `half-ice`, `tactics`, `breakout`, `passing`, `defence`
+
+[Note](drills/zone-exit-skate-weak-side.md) · [Drill page](drills/zone-exit-skate-weak-side/) · [Animation](media/zone-exit-skate-weak-side/zone-exit-skate-weak-side-anim.html) · [PNG](media/zone-exit-skate-weak-side/zone-exit-skate-weak-side.png) · [Excalidraw](media/zone-exit-skate-weak-side/zone-exit-skate-weak-side.excalidraw)
+
+### [Zone Exit: Reverse to Partner](drills/zone-exit-reverse.md)
+
+Same setup as skating it out the weak side: D1 has the puck in our corner, and rimming it up the strong-side wall will turn over. This time D1 bounces or reverses the puck off the end boards behind the net to D2, who is waiting in the far corner. D2 then makes a play up the weak-side wall to the winger. D2 talks, calls "over", and stays in that far corner so the reverse has a target.
+
+**Tags:** `half-ice`, `tactics`, `breakout`, `passing`, `defence`
+
+[Note](drills/zone-exit-reverse.md) · [Drill page](drills/zone-exit-reverse/) · [Animation](media/zone-exit-reverse/zone-exit-reverse-anim.html) · [PNG](media/zone-exit-reverse/zone-exit-reverse.png) · [Excalidraw](media/zone-exit-reverse/zone-exit-reverse.excalidraw)
+
 
 ## Add a drill
 
