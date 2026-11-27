@@ -309,6 +309,6 @@ export const PRACTICE_DRILLS: Record<string, PracticeDrill> = {
   "dump-and-chase": {
     "title": "Dump and Chase",
     "png": "/media/dump-and-chase/dump-and-chase.png",
-    "alt": "Full-ice diagram of Dump and Chase. The attacking team (blue) comes up ice 5-on-5, with F1 carrying the puck a few strides ahead on the strong-side wall and F2 and F3 trailing in the far-wall and middle lanes. The attacking D stay back near their own blue line. Two defending D and a backchecker (violet) swarm F1 at the offensive blue line. F1 dumps the puck diagonally into the weak-side corner. F2 and F3 both chase it into that corner to retrieve it, and F1 skates to the back post."
+    "alt": "Full-ice diagram of Dump and Chase. The attacking team (blue) comes up ice 5-on-5, with F1 carrying the puck a few strides ahead on the strong-side wall and F2 and F3 trailing in the far-wall and middle lanes. The attacking D stay back near their own blue line. Two defending D and a backchecker (violet) swarm F1 at the offensive blue line. F1 dumps the puck diagonally into the weak-side corner. F2 and F3 both chase it into that corner to retrieve it, and F1 skates to the back post. F2, first to the puck, fires a hard pass from the corner to F1, who taps it into the net."
   }
 }

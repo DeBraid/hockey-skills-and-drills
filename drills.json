@@ -1810,8 +1810,8 @@
       "added": "2026-11-27",
       "title": "Dump and Chase",
       "subtitle": "When the strong side is swarmed, dump to the weak-side corner and go get it.",
-      "blurb": "A basic 5-on-5 tactic. F1 leads the rush by a few strides, with F2 and F3 trailing in the middle and far-wall lanes. When two D and a backchecker swarm the carrier and there is no lane, F1 dumps the puck into the weak-side corner — the one opposite the carrier and the swarm. F2 and F3 both go hard to the corner to retrieve it, and F1 drives to the back post. The attacking D stay back near their own blue line. Dump only when you cannot carry it in.",
-      "diagramAlt": "Full-ice diagram of Dump and Chase. The attacking team (blue) comes up ice 5-on-5, with F1 carrying the puck a few strides ahead on the strong-side wall and F2 and F3 trailing in the far-wall and middle lanes. The attacking D stay back near their own blue line. Two defending D and a backchecker (violet) swarm F1 at the offensive blue line. F1 dumps the puck diagonally into the weak-side corner. F2 and F3 both chase it into that corner to retrieve it, and F1 skates to the back post.",
+      "blurb": "A basic 5-on-5 tactic. F1 leads the rush by a few strides, with F2 and F3 trailing in the middle and far-wall lanes. When two D and a backchecker swarm the carrier and there is no lane, F1 dumps the puck into the weak-side corner — the one opposite the carrier and the swarm. F2 and F3 both go hard to the corner to retrieve it, and F1 drives to the back post. The first one to the puck (F2, who has the shorter path) fires a hard pass out to F1, who taps it in. The attacking D stay back near their own blue line. Dump only when you cannot carry it in.",
+      "diagramAlt": "Full-ice diagram of Dump and Chase. The attacking team (blue) comes up ice 5-on-5, with F1 carrying the puck a few strides ahead on the strong-side wall and F2 and F3 trailing in the far-wall and middle lanes. The attacking D stay back near their own blue line. Two defending D and a backchecker (violet) swarm F1 at the offensive blue line. F1 dumps the puck diagonally into the weak-side corner. F2 and F3 both chase it into that corner to retrieve it, and F1 skates to the back post. F2, first to the puck, fires a hard pass from the corner to F1, who taps it into the net.",
       "tags": ["full-ice", "zone-entry", "tactics"],
       "excalidrawUrl": null,
       "coachingPoints": [
@@ -1819,7 +1819,8 @@
         "Dump to the weak-side corner — the one opposite you and the swarm. The defenders are stacked on the puck side, so the far corner is open.",
         "Chip it so the puck dies in the corner. A hard rim can go to the goalie or all the way around, and they will play it first.",
         "F2 and F3 both go hard to the puck in the weak-side corner. Win the race.",
-        "F1, after the dump, drives to the back post — the far side of the net from the puck.",
+        "The first one to the puck fires a hard pass to the back post.",
+        "F1, stick on the ice at the back post.",
         "Attacking D: stay back near our blue line. Don't pinch up during the retrieval."
       ],
       "steps": [
@@ -1827,7 +1828,8 @@
         "F1 carries up the strong-side wall toward the offensive blue line. F2 and F3 trail in their lanes.",
         "Two D and a backchecker swarm F1 and take away the lane.",
         "F1 dumps the puck into the weak-side corner, the one opposite the swarm.",
-        "F2 and F3 both go hard to the corner to retrieve the puck. F1 skates to the back post. The attacking D stay back near their own blue line."
+        "F2 and F3 both go hard to the corner to retrieve the puck. F1 skates to the back post. The attacking D stay back near their own blue line.",
+        "F2, first to the puck, fires a hard pass from the corner to F1 at the back post. F1 taps it in."
       ],
       "related": ["wide-entry-drive-net", "zone-entry-delay", "two-v-two-hard-rim"]
     }
