@@ -31,6 +31,12 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.
 
+## Building blocks
+
+- [Zone Exits: Bounce Pass](zone-exit-bounce-pass.md)
+- [Breakout: D to the Wall](d-to-wall-breakout.md)
+- [Controlled-Skating Breakout](controlled-skating-breakout.md)
+
 ## Same series
 
 - [Zone Exit: Skate the Weak Side](zone-exit-skate-weak-side.md)

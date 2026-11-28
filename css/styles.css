@@ -574,6 +574,40 @@ main {
   font-weight: 600;
 }
 
+.crumb {
+  margin: 0 0 0.8rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.crumb a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.thread-links {
+  margin: 0.75rem 0 0;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.thread-links .thread-label {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.thread-links a {
+  display: inline-block;
+  padding: 0.15rem 0;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .drill-head {
   margin-bottom: 1.25rem;
 }

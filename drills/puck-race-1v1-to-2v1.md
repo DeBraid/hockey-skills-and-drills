@@ -26,3 +26,7 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 4. The winner passes low-to-high to the high player.
 5. The high player attacks and shoots while the winner drives the net. The loser defends the 2v1. Play it out, then the next pair goes.
 
+## Builds toward
+
+- [Dump and Chase](dump-and-chase.md)
+

@@ -27,6 +27,10 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 6. Bank a stretch pass off the boards past the D to the teammate, who carries it out.
 7. Players switch lines and the next pair goes.
 
+## Builds toward
+
+- [Zone Exit: Reverse to Partner](zone-exit-reverse.md)
+
 ## Related drills
 
 - [Olympic Breakout to 2-on-1](olympic-breakout-pass.md)

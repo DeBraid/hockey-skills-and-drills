@@ -960,8 +960,37 @@
     });
     var empty = document.getElementById("empty-filter");
     var count = document.getElementById("drill-count");
-    var activeTag = "all";
     var NEW_DAYS = 14;
+
+    function knownDrillTags() {
+      var ids = { all: true };
+      buttons.forEach(function (button) {
+        var id = button.getAttribute("data-filter");
+        if (id) ids[id] = true;
+      });
+      return ids;
+    }
+
+    function readDrillTag() {
+      var params = new URLSearchParams(window.location.search);
+      var tag = params.get("tag");
+      var known = knownDrillTags();
+      if (tag && known[tag]) return tag;
+      return "all";
+    }
+
+    function writeDrillTag(tag) {
+      var url = new URL(window.location.href);
+      if (tag && tag !== "all") url.searchParams.set("tag", tag);
+      else url.searchParams.delete("tag");
+      var next = url.pathname + url.search + url.hash;
+      var current = window.location.pathname + window.location.search + window.location.hash;
+      if (next !== current) {
+        history.replaceState(null, "", next);
+      }
+    }
+
+    var activeTag = readDrillTag();
 
     function readDrillSort() {
       try {
@@ -1046,8 +1075,14 @@
     buttons.forEach(function (button) {
       button.addEventListener("click", function () {
         activeTag = button.getAttribute("data-filter") || "all";
+        writeDrillTag(activeTag);
         apply();
       });
+    });
+
+    window.addEventListener("popstate", function () {
+      activeTag = readDrillTag();
+      apply();
     });
 
     sortButtons.forEach(function (button) {

@@ -30,6 +30,14 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.
 
+## Building blocks
+
+- [2v2 Hard Rim](two-v-two-hard-rim.md)
+- [1v1 Puck Race to 2v1](puck-race-1v1-to-2v1.md)
+- [Wide Entry, Drive the Net](wide-entry-drive-net.md)
+- [Explosive Starts Race](explosive-starts-race.md)
+- [Net-Front Tips and Screens](net-front-tips-screens.md)
+
 ## Related drills
 
 - [Wide Entry, Drive the Net](wide-entry-drive-net.md)
