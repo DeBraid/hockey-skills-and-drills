@@ -170,6 +170,14 @@ def validate(data: dict) -> None:
         for slug in related:
             if slug not in known or slug == drill["slug"]:
                 raise SystemExit(f"{drill['slug']} has a bad related slug: {slug}")
+    tactic_slugs = {drill["slug"] for drill in drills if "tactics" in drill.get("tags", [])}
+    for drill in drills:
+        builds = drill.get("builds_toward", [])
+        if "builds_toward" in drill and not isinstance(builds, list):
+            raise SystemExit(f"{drill['slug']} builds_toward must be a list")
+        for slug in builds:
+            if slug not in known or slug == drill["slug"] or slug not in tactic_slugs:
+                raise SystemExit(f"{drill['slug']} has a bad builds_toward slug: {slug}")
 
 
 def png_size(path: Path) -> tuple[int, int]:
@@ -198,6 +206,35 @@ def anim_size(path: Path) -> tuple[float, float]:
 
 def tag_labels(data: dict) -> dict[str, str]:
     return {tag["id"]: tag["label"] for tag in data["tags"]}
+
+
+SITE_ORIGIN = "https://hockey.derekbraid.com"
+
+
+def building_blocks_map(drills: list) -> dict:
+    blocks = {}
+    for drill in drills:
+        for tactic in drill.get("builds_toward") or []:
+            blocks.setdefault(tactic, []).append(drill["slug"])
+    return blocks
+
+
+def thread_links_html(label: str, items: list) -> str:
+    if not items:
+        return ""
+    links = ", ".join(f'<a href="{esc(href)}">{esc(title)}</a>' for href, title in items)
+    return (
+        f'      <p class="thread-links">'
+        f'<span class="thread-label">{esc(label)}:</span> {links}</p>\n'
+    )
+
+
+def nested_extensions(drills: list) -> list:
+    pairs = []
+    for drill in drills:
+        for tactic in drill.get("builds_toward") or []:
+            pairs.append((drill["slug"], tactic))
+    return pairs
 
 
 def plan_button(slug: str, title: str) -> str:
@@ -292,7 +329,10 @@ def tag_list(drill: dict, labels: dict[str, str]) -> str:
 
 def write_index(data: dict, labels: dict[str, str]) -> None:
     filters = ['        <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>']
-    for tag in data["tags"]:
+    tags = list(data["tags"])
+    pinned = [tag for tag in tags if tag["id"] == "tactics"]
+    rest = [tag for tag in tags if tag["id"] != "tactics"]
+    for tag in pinned + rest:
         filters.append(
             f'        <button class="filter" type="button" data-filter="{esc(tag["id"])}" aria-pressed="false">{esc(tag["label"])}</button>'
         )
@@ -369,9 +409,15 @@ def download_links(drill: dict, prefix: str) -> str:
     return "\n".join(parts)
 
 
-def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]) -> None:
+def write_drill_html(
+    drill: dict,
+    by_slug: dict[str, dict],
+    labels: dict[str, str],
+    blocks_map: dict,
+    prefix: str = "../../",
+    parent: dict = None,
+) -> None:
     slug = drill["slug"]
-    prefix = "../../"
     png = ROOT / "media" / slug / media_name(slug, "png")
     width, height = png_size(png)
     points = "\n".join(f"        <li>{esc(point)}</li>" for point in drill["coachingPoints"])
@@ -393,7 +439,7 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     related_html = ""
     if drill.get("related"):
         links = "\n".join(
-            f'        <li><a href="../{other}/">{esc(by_slug[other]["title"])}</a></li>'
+            f'        <li><a href="{prefix}drills/{other}/">{esc(by_slug[other]["title"])}</a></li>'
             for other in drill["related"]
         )
         related_heading = "Same series" if drill.get("series") else "Related drills"
@@ -481,13 +527,37 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
       </div>
       <p class="anim-open"><a{open_attrs} href="{anim_src}">Open full screen</a></p>
     </section>"""
+    builds_html = ""
+    if parent is None and drill.get("builds_toward"):
+        builds_html = thread_links_html(
+            "Builds toward",
+            [(f"tactics/{other}/", by_slug[other]["title"]) for other in drill["builds_toward"]],
+        )
+    blocks_html = ""
+    incoming = blocks_map.get(slug) or []
+    if incoming:
+        blocks_html = thread_links_html(
+            "Building blocks",
+            [(f"{prefix}drills/{other}/", by_slug[other]["title"]) for other in incoming],
+        )
+    crumb = ""
+    extra_head = ""
+    if parent is not None:
+        crumb = (
+            f'    <nav class="crumb" aria-label="Breadcrumb">'
+            f'<a href="{prefix}drills/{parent["slug"]}/">{esc(parent["title"])}</a>'
+            f' <span aria-hidden="true">&gt;</span> '
+            f'<span>Tactic: {esc(drill["title"])}</span>'
+            f"</nav>\n"
+        )
+        extra_head = f'  <link rel="canonical" href="{esc(SITE_ORIGIN + "/drills/" + slug + "/")}">\n'
     body = f"""  <main id="content" class="wrap-read">
     <p class="back"><a href="{prefix}">All drills</a></p>
-    <header class="drill-head">{kicker}
+{crumb}    <header class="drill-head">{kicker}
       <h1>{esc(drill['title'])}</h1>
       {lede}
       {tag_list(drill, labels)}{series}
-      <div class="plan-row">{plan_button(slug, drill['title'])}</div>
+{builds_html}{blocks_html}      <div class="plan-row">{plan_button(slug, drill['title'])}</div>
     </header>
 
 {watch}
@@ -511,10 +581,16 @@ def write_drill_html(drill: dict, by_slug: dict[str, dict], labels: dict[str, st
     </section>{related_html}
   </main>
 """
-    out_dir = ROOT / "drills" / slug
+    if parent is None:
+        out_dir = ROOT / "drills" / slug
+    else:
+        out_dir = ROOT / "drills" / parent["slug"] / "tactics" / slug
     out_dir.mkdir(parents=True, exist_ok=True)
     title = f"{drill['title']} · Hockey Skills & Drills"
-    (out_dir / "index.html").write_text(page_shell(title, prefix, body, page="drill", drill=slug), encoding="utf-8")
+    (out_dir / "index.html").write_text(
+        page_shell(title, prefix, body, page="drill", drill=slug, extra_head=extra_head),
+        encoding="utf-8",
+    )
 
 
 def md_links(drill: dict, root_prefix: str, page_prefix: str) -> str:
@@ -539,7 +615,7 @@ def media_block(drill: dict) -> str:
     )
 
 
-def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]) -> None:
+def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str], blocks_map: dict) -> None:
     slug = drill["slug"]
     tags = ", ".join(f"`{tag}`" for tag in drill["tags"])
     points = "\n".join(f"- {point}" for point in drill["coachingPoints"])
@@ -548,6 +624,17 @@ def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]
     note = SERIES_NOTES.get(drill.get("series") or "")
     if note:
         series = f"\n{note}\n"
+    builds = ""
+    if drill.get("builds_toward"):
+        lines = "\n".join(
+            f"- [{by_slug[other]['title']}]({other}.md)" for other in drill["builds_toward"]
+        )
+        builds = f"\n## Builds toward\n\n{lines}\n"
+    blocks = ""
+    incoming = blocks_map.get(slug) or []
+    if incoming:
+        lines = "\n".join(f"- [{by_slug[other]['title']}]({other}.md)" for other in incoming)
+        blocks = f"\n## Building blocks\n\n{lines}\n"
     related = ""
     if drill.get("related"):
         lines = "\n".join(f"- [{by_slug[other]['title']}]({other}.md)" for other in drill["related"])
@@ -573,7 +660,7 @@ def write_drill_md(drill: dict, by_slug: dict[str, dict], labels: dict[str, str]
 ## How it runs
 
 {steps}
-{edit_note}{related}
+{edit_note}{builds}{blocks}{related}
 """
     (ROOT / "drills" / f"{slug}.md").write_text(text, encoding="utf-8")
 
@@ -1018,6 +1105,7 @@ def local_targets(text: str) -> list[str]:
 
 
 def check_output(drills: list[dict]) -> None:
+    by_slug = {drill["slug"]: drill for drill in drills}
     files = [
         ROOT / "index.html",
         ROOT / "README.md",
@@ -1031,6 +1119,9 @@ def check_output(drills: list[dict]) -> None:
     for drill in drills:
         files.append(ROOT / "drills" / f"{drill['slug']}.md")
         files.append(ROOT / "drills" / drill["slug"] / "index.html")
+    extensions = nested_extensions(drills)
+    for parent_slug, tactic_slug in extensions:
+        files.append(ROOT / "drills" / parent_slug / "tactics" / tactic_slug / "index.html")
     missing = []
     for path in files:
         text = path.read_text(encoding="utf-8")
@@ -1073,6 +1164,38 @@ def check_output(drills: list[dict]) -> None:
             raise SystemExit(f"{slug} markdown is missing the animation link")
         if ".gif" in note or ".mp4" in note:
             raise SystemExit(f"{slug} markdown still links a GIF or MP4")
+        for tactic in drill.get("builds_toward") or []:
+            href = f'href="tactics/{tactic}/"'
+            if href not in page or "Builds toward" not in page:
+                raise SystemExit(f"{slug} page is missing the nested Builds toward link for {tactic}")
+            if f"[{by_slug[tactic]['title']}]({tactic}.md)" not in note or "Builds toward" not in note:
+                raise SystemExit(f"{slug} markdown is missing Builds toward for {tactic}")
+        incoming = [other["slug"] for other in drills if slug in (other.get("builds_toward") or [])]
+        if incoming:
+            if "Building blocks" not in page:
+                raise SystemExit(f"{slug} page is missing Building blocks")
+            for other in incoming:
+                if f'href="../../drills/{other}/"' not in page:
+                    raise SystemExit(f"{slug} page is missing a Building blocks link to {other}")
+    for parent_slug, tactic_slug in extensions:
+        page_path = ROOT / "drills" / parent_slug / "tactics" / tactic_slug / "index.html"
+        page = page_path.read_text(encoding="utf-8")
+        parent = by_slug[parent_slug]
+        tactic = by_slug[tactic_slug]
+        canonical = f'{SITE_ORIGIN}/drills/{tactic_slug}/'
+        if f'rel="canonical" href="{canonical}"' not in page:
+            raise SystemExit(f"{page_path.relative_to(ROOT)} is missing the canonical link")
+        if f'href="../../../../drills/{parent_slug}/">{parent["title"]}</a>' not in page:
+            raise SystemExit(f"{page_path.relative_to(ROOT)} is missing the parent breadcrumb")
+        if f"Tactic: {tactic['title']}" not in page:
+            raise SystemExit(f"{page_path.relative_to(ROOT)} is missing the tactic breadcrumb")
+        if f'src="../../../../{anim_rel(tactic_slug)}"' not in page:
+            raise SystemExit(f"{page_path.relative_to(ROOT)} is missing the prefixed animation")
+        if tactic.get("tacticsViews"):
+            if 'data-view="game"' not in page or f'data-game-src="../../../../{game_anim_rel(tactic_slug)}"' not in page:
+                raise SystemExit(f"{page_path.relative_to(ROOT)} is missing the 5v5 game view")
+        if "index.html" in page:
+            raise SystemExit(f"{page_path.relative_to(ROOT)} still links index.html")
     home = (ROOT / "index.html").read_text(encoding="utf-8")
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     for label, text in (("home page", home), ("README", readme)):
@@ -1082,6 +1205,12 @@ def check_output(drills: list[dict]) -> None:
         raise SystemExit("home page should stay read-only")
     if 'href="plan/"' not in home or "data-plan-count" not in home:
         raise SystemExit("home page is missing the plan link")
+    if not re.search(
+        r'data-filter="all"[^>]*>All</button>\s*'
+        r'<button class="filter" type="button" data-filter="tactics"',
+        home,
+    ):
+        raise SystemExit("home page should show the Tactics filter right after All")
     for drill in drills:
         if f'data-plan-slug="{drill["slug"]}"' not in home:
             raise SystemExit(f"home page is missing Add to plan for {drill['slug']}")
@@ -1156,6 +1285,10 @@ def check_output(drills: list[dict]) -> None:
         ROOT / "terms" / "index.html",
     ]
     html_pages.extend(ROOT / "drills" / drill["slug"] / "index.html" for drill in drills)
+    html_pages.extend(
+        ROOT / "drills" / parent_slug / "tactics" / tactic_slug / "index.html"
+        for parent_slug, tactic_slug in extensions
+    )
     for html_path in html_pages:
         text = html_path.read_text(encoding="utf-8")
         if "index.html" in text:
@@ -1193,6 +1326,14 @@ def publish_site() -> None:
             dest = drills / entry.name
             dest.mkdir()
             shutil.copy2(page, dest / "index.html")
+            tactics_src = entry / "tactics"
+            if tactics_src.is_dir():
+                for tactic_dir in tactics_src.iterdir():
+                    tactic_page = tactic_dir / "index.html"
+                    if tactic_dir.is_dir() and tactic_page.is_file():
+                        dest_t = dest / "tactics" / tactic_dir.name
+                        dest_t.mkdir(parents=True)
+                        shutil.copy2(tactic_page, dest_t / "index.html")
     banned_names = {
         "package.json",
         "package-lock.json",
@@ -1231,6 +1372,7 @@ def publish_site() -> None:
         SITE / "media" / "fonts" / "Virgil.woff2",
         SITE / "media" / "cone-weave" / "cone-weave-anim.html",
         SITE / "drills" / "cone-weave" / "index.html",
+        SITE / "drills" / "d-to-wall-breakout" / "tactics" / "zone-exit-reverse" / "index.html",
     ]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing:
@@ -1241,10 +1383,23 @@ def main() -> None:
     data = load()
     labels = tag_labels(data)
     by_slug = {drill["slug"]: drill for drill in data["drills"]}
+    blocks_map = building_blocks_map(data["drills"])
+    for path in (ROOT / "drills").glob("*/tactics"):
+        if path.is_dir():
+            shutil.rmtree(path)
     write_index(data, labels)
     for drill in data["drills"]:
-        write_drill_html(drill, by_slug, labels)
-        write_drill_md(drill, by_slug, labels)
+        write_drill_html(drill, by_slug, labels, blocks_map)
+        write_drill_md(drill, by_slug, labels, blocks_map)
+        for tactic_slug in drill.get("builds_toward") or []:
+            write_drill_html(
+                by_slug[tactic_slug],
+                by_slug,
+                labels,
+                blocks_map,
+                prefix="../../../../",
+                parent=drill,
+            )
     write_readme(data["drills"], labels)
     write_plan(data, labels)
     write_practice(data, labels)

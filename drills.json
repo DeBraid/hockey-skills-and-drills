@@ -177,7 +177,8 @@
       "related": [
         "d-to-wall-breakout",
         "zone-exit-bounce-pass"
-      ]
+      ],
+      "builds_toward": ["zone-exit-skate-weak-side"]
     },
     {
       "slug": "zone-exit-bounce-pass",
@@ -203,7 +204,8 @@
         "Bank a stretch pass off the boards past the D to the teammate, who carries it out.",
         "Players switch lines and the next pair goes."
       ],
-      "related": ["olympic-breakout-pass"]
+      "related": ["olympic-breakout-pass"],
+      "builds_toward": ["zone-exit-reverse"]
     },
     {
       "slug": "tip-and-dig-shooting",
@@ -468,7 +470,8 @@
         "If the D win the puck, they pass or rim it to the next pair in line. Then the D go out and the O become D.",
         "Start from the blue line for longer rims. Run the same drill on the other side of the ice."
       ],
-      "related": []
+      "related": [],
+      "builds_toward": ["dump-and-chase"]
     },
     {
       "slug": "three-v-three-circle-game",
@@ -620,7 +623,8 @@
         "The high player attacks and shoots while the winner drives the net. The loser defends the 2v1. Play it out, then the next pair goes."
       ],
       "excalidrawUrl": "https://excalidraw.com/#json=KL4tW9041BEB-XQh7Xgmf,-zxqXq6WmGDGtFSI1gIOYw",
-      "related": []
+      "related": [],
+      "builds_toward": ["dump-and-chase"]
     },
     {
       "slug": "rebounds-in-tight",
@@ -810,6 +814,7 @@
         "olympic-breakout-pass",
         "zone-exit-bounce-pass"
       ],
+      "builds_toward": ["zone-exit-skate-weak-side", "zone-exit-reverse"],
       "excalidrawUrl": null
     },
     {
@@ -876,6 +881,7 @@
         "Option: the coach calls which spot gets the pass. Later, add a D at the far blue line for a 1-on-1."
       ],
       "related": ["d-to-wall-breakout", "olympic-breakout-pass"],
+      "builds_toward": ["zone-exit-skate-weak-side", "zone-exit-reverse"],
       "excalidrawUrl": null
     },
     {
@@ -902,6 +908,7 @@
         "Alternate sides each round. Progression: add a D at the blue line for a 1-on-1."
       ],
       "related": ["two-on-zero-wide-and-middle", "zone-entry-delay"],
+      "builds_toward": ["dump-and-chase"],
       "excalidrawUrl": "https://excalidraw.com/#json=QggkHSIQB9fxeKdPa58M0,oq0VSZv6oSIBDI1Ts_ZAvg"
     },
     {
@@ -1184,7 +1191,8 @@
         "stops-and-starts",
         "crossover-circles",
         "backward-c-cuts"
-      ]
+      ],
+      "builds_toward": ["dump-and-chase"]
     },
     {
       "slug": "backward-c-cuts",
@@ -1479,7 +1487,8 @@
         "rebounds-in-tight",
         "low-to-high-shot",
         "two-v-two-point-shot"
-      ]
+      ],
+      "builds_toward": ["dump-and-chase"]
     },
     {
       "slug": "nz-regroup-d-to-d",

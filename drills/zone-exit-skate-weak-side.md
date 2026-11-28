@@ -31,6 +31,12 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.
 
+## Building blocks
+
+- [Olympic Breakout to 2-on-1](olympic-breakout-pass.md)
+- [Breakout: D to the Wall](d-to-wall-breakout.md)
+- [Controlled-Skating Breakout](controlled-skating-breakout.md)
+
 ## Same series
 
 - [Zone Exit: Reverse to Partner](zone-exit-reverse.md)

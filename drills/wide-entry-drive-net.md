@@ -26,6 +26,10 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 4. Shoot, then drive the net for a rebound. Join the back of the line.
 5. Alternate sides each round. Progression: add a D at the blue line for a 1-on-1.
 
+## Builds toward
+
+- [Dump and Chase](dump-and-chase.md)
+
 ## Related drills
 
 - [2-on-0 Wide and Middle](two-on-zero-wide-and-middle.md)

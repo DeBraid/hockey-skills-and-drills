@@ -32,6 +32,10 @@ The drill page embeds the HTML animation. The PNG is the still diagram and the h
 
 Open the Excalidraw file above in [Excalidraw](https://excalidraw.com) to change the diagram.
 
+## Builds toward
+
+- [Zone Exit: Skate the Weak Side](zone-exit-skate-weak-side.md)
+
 ## Related drills
 
 - [Breakout: D to the Wall](d-to-wall-breakout.md)
